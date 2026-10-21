@@ -83,3 +83,21 @@ test('finishing a replay returns to saved main progress and enables a fresh repl
   assert.equal(s.chapter,1);assert.equal(s.line,5);
   assert.equal(transition(s,{type:'START',chapter:0}).line,0);
 });
+
+test('expanded story establishes the city before the encounter and separates narrative scenes',()=>{
+  assert.ok(chapters[0].lines.length>=30);
+  assert.ok(chapters.reduce((sum,c)=>sum+c.lines.length,0)>=140);
+  assert.match(chapters[0].lines[0].text,/彼得堡/);
+  assert.ok(chapters.every(c=>new Set(c.lines.map(l=>l.section)).size>=2));
+});
+test('previous paragraph stops at the beginning and persists the corrected cursor',()=>{
+  let s=transition(transition(createState(),{type:'START',chapter:0}),{type:'ARRIVE'});
+  s=transition(s,{type:'NEXT'});s=transition(s,{type:'PREVIOUS'});
+  assert.equal(s.line,0);assert.equal(s.cursors[0],0);
+  assert.equal(transition(s,{type:'PREVIOUS'}).line,0);
+});
+test('old edition saves retain unlocks and open the expanded beginning',()=>{
+  const saved=readSave({getItem(){return JSON.stringify({completed:4,chapter:4,line:5,cursors:[0,0,0,0,5]})}});
+  const s=createState(saved);
+  assert.equal(s.completed,4);assert.equal(s.chapter,0);assert.equal(s.line,0);
+});

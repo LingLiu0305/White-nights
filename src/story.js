@@ -1,5 +1,6 @@
 import { chapters } from './content.js';
 export const SAVE_KEY = 'white-nights-progress-v1';
+export const TEXT_REVISION = 2;
 const integerIn=(v,min,max)=>Number.isInteger(v)&&v>=min&&v<=max;
 export function createState(saved) {
   const completed=integerIn(saved?.completed,-1,chapters.length-1)?saved.completed:-1;
@@ -10,7 +11,7 @@ export function createState(saved) {
     const cursor=saved?.cursors?.[index];
     return integerIn(cursor,0,c.lines.length-1)?cursor:index===chapter?line:0;
   });
-  return {chapter,line:cursors[chapter],cursors,completed,mode:'map'};
+  return {chapter,line:cursors[chapter],cursors,completed,mode:'map',textRevision:TEXT_REVISION};
 }
 export function transition(state,event) {
   switch(event.type) {
@@ -20,6 +21,9 @@ export function transition(state,event) {
       return {...state,chapter,line:state.cursors[chapter],mode:'travel'};
     }
     case 'ARRIVE': return state.mode==='travel'?{...state,mode:'reading'}:state;
+    case 'PREVIOUS':
+      if(state.mode!=='reading'||state.line===0)return state;
+      return {...state,line:state.line-1,cursors:state.cursors.map((v,i)=>i===state.chapter?state.line-1:v)};
     case 'NEXT':
       if(state.mode!=='reading') return state;
       if(state.line+1<chapters[state.chapter].lines.length) return {...state,line:state.line+1,cursors:state.cursors.map((v,i)=>i===state.chapter?state.line+1:v)};
@@ -35,8 +39,14 @@ export function transition(state,event) {
   }
 }
 export function readSave(storage) {
-  try {return JSON.parse(storage.getItem(SAVE_KEY));} catch {return null;}
+  try {
+    const saved=JSON.parse(storage.getItem(SAVE_KEY));
+    // Paragraph numbers from the short edition no longer refer to the same text.
+    // Preserve chapter unlocks, while introducing the revised story from its beginning.
+    if(saved&&saved.textRevision!==TEXT_REVISION)return {completed:saved.completed,chapter:0,line:0,textRevision:TEXT_REVISION,editionUpdated:true};
+    return saved;
+  } catch {return null;}
 }
 export function writeSave(storage,state) {
-  try {storage.setItem(SAVE_KEY,JSON.stringify(state));return true;} catch {return false;}
+  try {storage.setItem(SAVE_KEY,JSON.stringify({...state,textRevision:TEXT_REVISION}));return true;} catch {return false;}
 }

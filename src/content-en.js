@@ -1,6 +1,6 @@
 // English companion to the project's Chinese abridgment, not a verbatim edition.
 export const speakersEn={
-  '独白':'Inner voice','旁白':'Narration','梦想家':'The Dreamer',
+  '姑娘':'The young woman','独白':'Inner voice','旁白':'Narration','梦想家':'The Dreamer',
   '娜斯坚卡':'Nastenka','娜斯坚卡的信':'Nastenka’s letter',
 };
 export const locationsEn={
@@ -10,81 +10,9 @@ export const locationsEn={
   bridge:{descriptionEn:'The bridge joins the two banks, just as a walk joins fragments of conversation. These paths suggest the story’s spaces rather than trace a historical route.',noteEn:'A literary walking route · Not a historical reconstruction'},
 };
 export const chaptersEn={
-  'night-1':{
-    labelEn:'First Night',endingEn:'Tomorrow. The same place.',lines:[
-      'It was a night so bright it seemed unwilling to end. I had lived in the city for years, yet felt I knew no one at all.',
-      'I knew the houses on each corner, and the faces I passed every day. But today everyone seemed to have gone away, leaving me alone in the city.',
-      'A young woman leaned against the railing by the water. Her head was bowed; she seemed to be crying. I slowed my steps, but could not bring myself to speak.',
-      'A drunken man began to follow her. I stepped forward and offered her my arm. We walked away together, our steps gradually growing steady.',
-      'Your hand is trembling. How can you be more frightened than I am?',
-      'Because I am not used to talking like this. Most of my life takes place in my imagination. In the real world, I am almost always alone.',
-      'You say that so earnestly. But look—you are talking to me now.',
-      'At the sound of her laughter, the empty streets seemed suddenly to lead somewhere.',
-      'May I come here again tomorrow? I shall remember this evening, and every stone along this bank.',
-      'I have my own reason for coming here tomorrow evening. You may come too, but promise me one thing first: do not fall in love with me.',
-      'I promise.',
-      'She told me her name was Nastenka. After we parted, I did not go home. I walked for a long time, thinking only of tomorrow.',
-    ],
-  },
-  'night-2':{
-    labelEn:'Second Night',endingEn:'A letter, and a promise to wait.',lines:[
-      'I arrived at the riverbank early. When she appeared, last night’s meeting became more than a memory: she was here again.',
-      'Today we ought to get to know one another properly. First, tell me what sort of person you are.',
-      'I am a dreamer. In my little room, something that has never happened can keep me happy for an entire night.',
-      'I spoke at length. Now that someone was willing to listen, all those years of silence seemed to pour out of me.',
-      'Then listen to my story, too.',
-      'I live with my grandmother. She cannot see, and is so afraid I will wander off that she even pins my dress to her own.',
-      'Then a young man rented the room upstairs. He lent us books and took us to the theatre. From then on, life began to take on other colours.',
-      'But he had to go to Moscow. He said that if he returned a year later and my feelings had not changed, we could be together.',
-      'She said he was already back in the city. Yet for several days he had neither written nor come to see her.',
-      'Perhaps he does not know how you feel. You could write him a letter, and tell him you are still waiting.',
-      'A letter… I have already written one. Would you take it to the people we agreed would pass it on?',
-      'She placed the sealed letter in my hand. I was helping her wait for another man, yet her trust in me made me happy.',
-    ],
-  },
-  'night-3':{
-    labelEn:'Third Night',endingEn:'The rain falls. The promise remains.',lines:[
-      'It is raining today. She said she would not come if it rained. I sit in my room, remembering the night of our third meeting.',
-      'That evening she arrived early, full of joy, waiting for an answer. What she was really waiting for was the man himself.',
-      'Do you know why I am so fond of you today? Because you have not fallen in love with me. You are such a good friend.',
-      'I smiled too. But her words settled in my heart like something I had always known and never dared admit.',
-      'After we marry, we shall still see you often. We shall be like brother and sister.',
-      'Footsteps sounded in the distance. We both fell silent. But the person who approached was a stranger.',
-      'Why did you let go of my hand? We can wait for him together.',
-      'Perhaps the letter has not reached him yet. Perhaps he cannot come until tomorrow.',
-      'I found reasons for his absence, keeping her hope alive.',
-      'Why can people not be more open, and say what is in their hearts? You are different. I know how kind you are to me.',
-      'It was very late. He had not come. She said she would wait again tomorrow—or, if it rained, the day after.',
-      'And today I went to the riverbank in the rain, then walked near her house. I did not knock. In the end, I returned to my room alone.',
-    ],
-  },
-  'night-4':{
-    labelEn:'Fourth Night',endingEn:'Still, the river flows on.',lines:[
-      'At nine o’clock she was already there. As on the first night, her arms rested on the railing. She did not hear me approach.',
-      'Is there a letter? Tell me quickly.',
-      'No.',
-      'She turned away and began to cry. I wanted to comfort her, but could no longer make excuses for him.',
-      'Why has he not sent even a word? If he does not want to come back, he only has to tell me.',
-      'Nastenka, there is something I have kept from you. I love you. I know I should never have said it.',
-      'She looked at me without drawing away. I said I would not burden her with my feelings. Her tears fell onto my hands.',
-      'Perhaps one day I could love you that way, too. You would not leave me here alone as he has done.',
-      'We began to walk, now crying, now laughing. We spoke of tomorrow, of rooms to live in, of a life together that seemed already to have begun.',
-      'I almost believed that all those days spent imagining life alone in my room were finally over.',
-      'A young man passed us and stopped. Suddenly her hand began to tremble.',
-      'It is him.',
-      'She ran towards him, then suddenly came back, threw her arms around me, and kissed me. A moment later, she ran to him once more.',
-      'I stood where I was and watched them leave together, until both figures disappeared into the night.',
-      'The riverbank grew quiet. The railing, the water, the distant lit windows—everything remained where it had been.',
-    ],
-  },
-  morning:{
-    labelEn:'Morning',endingEn:'White Nights · The End',lines:[
-      'Morning brought rain. The little room was dim, and the world beyond the window was grey. A letter arrived. It was from her.',
-      'Please forgive me. I deceived you, and I deceived myself. But I am still grateful to you, and still wish to keep you close as a friend.',
-      'She wrote that they were to marry, and hoped I would visit. As I read, the room returned to its old silence.',
-      'For a moment I saw myself many years from now, still sitting in this very room.',
-      'But I would not let bitterness enter her happiness. May her sky be clear; may she remember me without a shadow in her heart.',
-      'There had been such a moment of happiness in my life. It was brief, but that did not make it any less real.',
-    ],
-  },
+ 'night-1':{labelEn:'First Night',endingEn:'Tomorrow. The same place.'},
+ 'night-2':{labelEn:'Second Night',endingEn:'One letter. Two different kinds of waiting.'},
+ 'night-3':{labelEn:'Third Night',endingEn:'When the rain ends, we shall meet again.'},
+ 'night-4':{labelEn:'Fourth Night',endingEn:'Still, the river flows on.'},
+ morning:{labelEn:'Morning',endingEn:'White Nights · The End'},
 };

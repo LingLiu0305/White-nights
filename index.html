@@ -11,47 +11,43 @@
   <div id="map-view">
     <header class="site-header">
       <a href="./" class="wordmark" aria-label="白夜首页"><span class="brand-symbol">✳</span><span>白夜<small>WHITE NIGHTS</small></span></a>
-      <nav class="top-nav" aria-label="网站导航"><span class="current-nav">故事地图</span><button id="about-open">关于白夜 <span>↗</span></button></nav>
-      <button class="sound-button" id="sound" aria-label="开启环境音" aria-pressed="false"><span class="sound-bars" aria-hidden="true">ıııı</span><span id="sound-label">环境音 · 关</span></button>
+      <span class="edition-note">一座城 · 四个夜晚 · 一个梦想家</span>
+      <nav class="top-nav" aria-label="网站导航"><button id="about-open">关于白夜 <span>↗</span></button><button id="sound" aria-label="开启环境音" aria-pressed="false"><span aria-hidden="true">♫</span> <span id="sound-label">音乐 · 关</span></button></nav>
     </header>
     <main>
       <section class="map-composition" aria-label="彼得堡故事地图">
-        <div class="intro">
-          <div class="eyebrow"><span class="little-star">✧</span> 彼得堡 · 夏日的夜晚</div>
-          <h1>有些相遇，<br>只属于<span>白夜。</span></h1>
-          <p class="intro-copy">沿着河岸，走进一个梦想家的世界。<br>四个夜晚，一次相遇，<br>和一段不愿醒来的梦。</p>
-          <div class="intro-rule"></div>
-          <div class="current-chapter"><span id="chapter-number">01</span><div><small id="chapter-label">第一夜</small><h2 id="chapter-title">在夜色中相遇</h2><small class="chapter-en" id="chapter-title-en" lang="en"></small></div></div>
-          <button id="start-story" class="primary-button">开始第一夜 <span aria-hidden="true">↗</span></button>
-          <p class="save-status" id="save-status" role="status">约 10 分钟的故事 · 进度自动保存在本机</p>
-        </div>
+        <div class="scene-heading"><p>ST. PETERSBURG, 1848</p><h1>夜未央，<em>故事未眠。</em></h1><span>A DREAMER’S JOURNAL</span></div>
         <div class="map-stage" id="map-stage">
-          <div class="map-coordinate"><span>ST. PETERSBURG</span><span>59°56′ N · 30°18′ E</span></div>
           <div id="map-canvas"></div>
-          <div id="map-fallback" hidden><span class="fallback-star">✧</span><h2>彼得堡的夜晚</h2><p>此设备暂时无法显示 3D 地图。<br>你仍可通过下方地点按钮探索并阅读故事。</p></div>
-          <div class="map-legend"><span class="gold-dot"></span> 梦想家所在的位置</div>
-          <button class="reset-view" id="reset-view" aria-label="恢复地图视角">⌖ <span>恢复视角</span></button>
+          <div id="map-fallback" hidden><span>✧</span><h2>彼得堡的夜晚</h2><p>此设备暂时无法显示 3D 地图。<br>你仍可通过地点目录探索并阅读故事。</p></div>
+          <div class="map-coordinate">59°56′ N<br>30°18′ E</div>
+          <div class="map-legend"><span class="gold-dot"></span> 梦想家的足迹</div>
+          <button id="reset-view" class="reset-view" aria-label="恢复地图视角">⌖ <span>恢复视角</span></button>
           <div class="map-hint">拖动旋转 · 滚动缩放 · 点击地点探索</div>
-          <div class="compass" aria-hidden="true"><span>N</span>⌁</div>
+          <span class="compass" aria-hidden="true">N ↑</span>
+        </div>
+        <div class="journey-dock">
+          <div class="current-chapter"><span id="chapter-number">01</span><div><small id="chapter-label">第一夜</small><h2 id="chapter-title">从孤独走向相遇</h2><small id="chapter-title-en" lang="en"></small></div></div>
+          <button id="start-story" class="primary-button">开始第一夜 <span aria-hidden="true">↗</span></button>
         </div>
       </section>
-      <section class="places" aria-label="探索地点"><span class="section-caption">沿途的风景 <span>—</span></span><div id="place-buttons"></div></section>
-      <section class="chapter-section" aria-label="故事章节"><div class="section-heading"><span>四个夜晚，一个清晨</span><small>A DREAMER’S JOURNAL</small></div><div class="chapter-list" id="chapter-list"></div></section>
+      <section class="chapter-section" aria-label="故事章节"><div id="chapter-list" class="chapter-list"></div></section>
+      <footer class="map-footer"><button id="places-open">地点目录 / Places ↗</button><span id="save-status" role="status">中英对照 · 进度自动保存在本机</span><span>改编自陀思妥耶夫斯基《白夜》</span></footer>
     </main>
-    <footer class="site-footer"><span>改编自陀思妥耶夫斯基《白夜》 · 1848</span><span>一个关于相遇、等待与告别的故事 <span class="footer-star">✧</span></span></footer>
   </div>
+  <dialog id="places-dialog" aria-label="地点目录"><button class="close-dialog" aria-label="关闭地点目录">×</button><span class="eyebrow">PLACES IN THE STORY</span><h2>沿途的风景</h2><div id="place-buttons"></div></dialog>
 
-  <section id="travel-overlay" hidden aria-label="章节过场"><div><span id="travel-roman"></span><p id="travel-title"></p><small>沿着记忆里的路，走向今夜。</small></div><button id="skip-travel">跳过过场 →</button></section>
+  <section id="travel-overlay" hidden aria-label="章节过场"><div><span id="travel-roman"></span><p id="travel-title"></p><small id="travel-subtitle">沿着记忆里的路，走向今夜。</small></div><button id="skip-travel">跳过过场 →</button></section>
 
   <section id="reader" hidden tabindex="-1" aria-label="故事阅读">
     <div id="scene-backdrop"></div><div class="scene-vignette"></div>
-    <header class="reader-header"><button id="back-map" class="reader-control" aria-label="返回地图">← <span>返回地图</span></button><div><span id="reader-chapter"></span><small id="reader-subtitle"></small></div><button id="history-open" class="reader-control" aria-label="对话记录"><span>对话记录</span> ☷</button></header>
+    <header class="reader-header"><button id="back-map" class="reader-control" aria-label="返回地图">← <span>返回地图</span></button><div><span id="reader-chapter"></span><small id="reader-subtitle"></small></div><div class="reader-tools"><button id="reader-sound" class="reader-control" aria-label="开启阅读音乐" aria-pressed="false">♫</button><input id="music-volume" type="range" min="0" max="100" value="45" aria-label="音乐音量"><button id="history-open" class="reader-control" aria-label="对话记录"><span>对话记录</span> ☷</button></div></header>
     <div id="silhouettes" data-visual="together" aria-hidden="true">
       <svg class="silhouette dreamer" viewBox="0 0 120 360"><path d="M49 35Q36 20 44 9Q62-5 77 13L79 29L72 40L72 55L88 66L99 145L85 157L78 109L83 210L78 257L82 340L93 351L92 359L65 358L57 246L53 339L58 355L32 359L27 350L35 334L31 245L36 202L29 118L23 157L12 151L24 73L45 56Z"/></svg>
       <svg class="silhouette nastenka" viewBox="0 0 140 360"><path d="M54 38Q37 35 40 19Q44-1 65 3Q88 3 86 27L80 44L77 56L91 65L105 129L98 146L83 106L91 177L116 280L127 322Q82 344 20 325L29 281L50 174L46 107L31 144L22 138L36 72L55 56Z M53 329L51 348L41 353L41 359L67 359L69 329Z M76 329L78 359L102 359L102 353L91 348L88 328Z"/></svg>
       <svg class="silhouette stranger" viewBox="0 0 120 360"><path d="M45 34L42 17L33 16L34 10L47 8L48 0L74 0L78 9L91 12L90 18L78 18L77 36L72 51L89 64L101 158L89 167L79 114L87 235L78 252L83 341L96 351L94 359L67 358L58 253L51 343L55 359L28 359L27 351L36 338L32 246L33 204L30 114L22 164L10 160L23 68L44 52Z"/></svg>
     </div>
-    <div class="dialogue-wrap" id="dialogue-wrap"><div class="dialogue-meta"><span id="speaker"></span><span id="line-count"></span></div><div id="dialogue" aria-live="polite"><p id="dialogue-zh" lang="zh-CN"></p><p id="dialogue-en" lang="en"></p></div><div class="dialogue-bottom"><span>点击或按空格继续 · Click or press Space</span><button id="next-line" aria-label="继续阅读">继续 / Next <span aria-hidden="true">→</span></button></div><div class="reading-progress"><span id="reading-progress"></span></div></div>
+    <div class="dialogue-wrap" id="dialogue-wrap"><div class="reading-scene" id="reading-scene"></div><div class="dialogue-meta"><span id="speaker"></span><span id="line-count"></span></div><div id="dialogue" aria-live="polite"><p id="dialogue-zh" lang="zh-CN"></p><p id="dialogue-en" lang="en"></p></div><div class="dialogue-bottom"><button id="previous-line" aria-label="上一段">← 上一段 / Back</button><span class="reading-hint">空格继续 · Space to continue</span><button id="next-line" aria-label="继续阅读">继续 / Next <span aria-hidden="true">→</span></button></div><div class="reading-progress"><span id="reading-progress"></span></div></div>
     <section id="chapter-end" hidden><span class="end-symbol">✧</span><p id="end-label"></p><h2 id="end-title"></h2><p id="end-title-en" lang="en"></p><button class="primary-button" id="end-map">返回地图，继续故事 <span>↗</span></button></section>
   </section>
 

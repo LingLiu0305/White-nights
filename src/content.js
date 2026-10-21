@@ -1,5 +1,6 @@
 // Original Chinese abridgment after Dostoevsky, informed by Garnett's translation.
 // This is not a quotation from a published Chinese translation.
+import {storyText} from './story-text.js';
 import {chaptersEn,locationsEn,speakersEn} from './content-en.js';
 export const locations = [
   {id:'home', name:'梦想家的住处', en:'THE LITTLE ROOM', position:[-7,0,4], number:'01', description:'一间熟悉得近乎停滞的小屋。每天的散步从这里开始，梦想也从这里出发。', note:'故事里的住处 · 地图位置为示意'},
@@ -7,82 +8,16 @@ export const locations = [
   {id:'house', name:'娜斯坚卡家附近', en:'HER NEIGHBOURHOOD', position:[7,0,-4], number:'03', description:'街巷深处是一所小房子。她与祖母一起生活，也在这里开始讲述关于等待的往事。', note:'人物背景地点 · 介绍不推进故事'},
   {id:'bridge', name:'夜间散步的街巷', en:'THE NIGHT WALK', position:[0,0,-5.5], number:'04', description:'桥连接着两岸，也连接着散步时断断续续的谈话。这里的路线是文学地图的空间示意。', note:'散步路线 · 非历史街区复原'},
 ];
-const p=(speaker,text,visual='together')=>({speaker,text,visual});
 export const chapters = [
- {id:'night-1', label:'第一夜', roman:'I', title:'在夜色中相遇', en:'A CHANCE ENCOUNTER', subtitle:'一个没有熟人的城市，一场没有预告的相遇。', place:'canal', image:'canal-night.png', tint:'first', route:[[-7,4],[-3,4],[-3,1.3],[2.5,1.3]], ending:'明天。同样的地方。', lines:[
- p('独白','那是一个明亮得不肯结束的夜晚。我在城里住了许多年，却仿佛没有一个真正认识的人。','alone'),
- p('独白','我熟悉街角的房屋，熟悉每天经过的面孔。可今天，人们像是全都离开了，只把我留在城里。','alone'),
- p('旁白','河岸边，一个姑娘倚着栏杆。她低着头，像是在哭。我放慢脚步，却不敢开口。','apart'),
- p('旁白','一个醉汉追上了她。我走过去，把手臂递给她。我们并肩离开，脚步渐渐安稳下来。','together'),
- p('娜斯坚卡','你的手在发抖。你怎么比我还害怕？'),
- p('梦想家','因为我还不习惯这样说话。我的生活大多发生在想象里；在现实中，我几乎总是一个人。'),
- p('娜斯坚卡','你说得这样认真。可是，现在你已经在和我说话了。'),
- p('独白','她的笑声让我觉得，刚才那些空荡荡的街道忽然有了去处。'),
- p('梦想家','明天我还可以来这里吗？我会记住今晚，记住这里每一块石头。'),
- p('娜斯坚卡','我明晚有自己的事要到这里来。你也可以来，但先答应我一件事：不要爱上我。'),
- p('梦想家','我答应你。'),
- p('旁白','她告诉我，她叫娜斯坚卡。分别后，我没有回家。我走了很久，心里只剩下明天。','alone'),
- ]},
- {id:'night-2', label:'第二夜', roman:'II', title:'听她讲一个故事', en:'A STORY WITHIN A STORY', subtitle:'当一个人开始倾诉，陌生的城市也有了温度。', place:'canal', image:'canal-night.png', tint:'second', route:[[-7,4],[-3,4],[-3,-5.5],[3,-5.5],[3,1.3]], ending:'一封信，和一个等待的约定。', lines:[
- p('旁白','我提早来到河岸。她一出现，昨晚的相遇便从回忆重新变成了眼前的事实。'),
- p('娜斯坚卡','今天我们该更认真地认识一下。先告诉我，你是怎样的人？'),
- p('梦想家','我是一个梦想家。在我的小房间里，一件没有发生的事，也能让我快乐一整夜。'),
- p('独白','我说了很多，仿佛终于有人愿意听，过去的沉默就全都涌了出来。'),
- p('娜斯坚卡','那么，现在也听一听我的故事吧。'),
- p('娜斯坚卡','我和祖母一起住。她看不见，怕我跑远，甚至用别针把我的衣服和她的连在一起。'),
- p('娜斯坚卡','后来，楼上住进一个年轻人。他借书给我们，还陪我们去看戏。生活从那时开始有了别的颜色。'),
- p('娜斯坚卡','可他要去莫斯科。他说，如果一年以后回来，我的心意还没有改变，我们就可以在一起。'),
- p('旁白','她说，他已经回到城里。但这几天，既没有来信，也没有来见她。'),
- p('梦想家','也许他还不知道你的心意。你可以写一封信，让他知道你还在等。'),
- p('娜斯坚卡','信……其实已经写好了。你愿意替我送到约定的人那里吗？'),
- p('独白','她把封好的信放进我手里。我帮助她等待另一个人，却也因她愿意信任我而感到幸福。'),
- ]},
- {id:'night-3', label:'第三夜', roman:'III', title:'等待另一个人的脚步', en:'THE SHAPE OF WAITING', subtitle:'我们站在同一处，望向的却是不同的未来。', place:'canal', image:'canal-night.png', tint:'third', route:[[7,-4],[4,-4],[4,1.3],[2.5,1.3]], ending:'雨落下来，约定还留在河岸。', lines:[
- p('独白','今天下着雨。她说过，下雨就不来了。我坐在屋里，想起我们第三次相见的那个夜晚。','alone'),
- p('旁白','那一夜，她很早就到了，满怀喜悦地等着回信。她真正等待的，是他本人。'),
- p('娜斯坚卡','知道我今天为什么这样喜欢你吗？因为你没有爱上我，你真是一个好朋友。'),
- p('独白','我也笑着，可那句话落在心里，像一件我早已知道、却一直不敢承认的事。'),
- p('娜斯坚卡','等我们结婚以后，我们还会常常见面。我们会像兄妹一样。'),
- p('旁白','远处响起脚步。我们同时停住了话。走近的人却是一个陌生人。','apart'),
- p('娜斯坚卡','你为什么松开我的手？我们可以一起等他。'),
- p('梦想家','信也许还没有送到。也许他明天才有时间来。'),
- p('独白','我替他的缺席寻找理由，也替她保留着希望。'),
- p('娜斯坚卡','为什么大家不能坦率一些，把心里想的都说出来呢？你就不一样，我知道你对我很好。'),
- p('旁白','时间已经很晚。他没有来。她说明天还会等，倘若下雨，就再等一天。'),
- p('独白','而今天，我还是冒雨去了河岸，又走到她家附近。我没有敲门，最后独自回到了住处。','alone'),
- ]},
- {id:'night-4', label:'第四夜', roman:'IV', title:'短暂得像一生', en:'A MOMENT OF HAPPINESS', subtitle:'有些话终于说出口，有些脚步终于到来。', place:'canal', image:'canal-night.png', tint:'fourth', route:[[-7,4],[-3,4],[-3,1.3],[2.5,1.3]], ending:'河水仍然向前流去。', lines:[
- p('旁白','九点钟，她已经站在那里。和第一夜一样，手臂倚着栏杆，听不见我走近的声音。','apart'),
- p('娜斯坚卡','有信吗？快告诉我。','apart'),
- p('梦想家','没有。','apart'),
- p('旁白','她转过身去，终于哭了。我想安慰她，却再也不能像从前那样替他解释。'),
- p('娜斯坚卡','为什么连一句话都没有？如果他不愿意回来，只要告诉我就好了。'),
- p('梦想家','娜斯坚卡，我有一件事一直瞒着你。我爱你。我知道这本来不该说出口。'),
- p('旁白','她看着我，没有躲开。我说，我不会用自己的感情为难她；可她的眼泪也落到了我的手上。'),
- p('娜斯坚卡','也许有一天，我也能这样爱你。你不会像他那样，把我一个人留在这里。'),
- p('旁白','我们走起来，一会儿哭，一会儿笑。谈到明天，谈到住处，谈到一个仿佛已经开始的共同生活。'),
- p('独白','我几乎相信，那些独自在房间里想象的日子，终于要结束了。'),
- p('旁白','一个年轻人经过我们，停下脚步。她的手忽然颤抖起来。','arrival'),
- p('娜斯坚卡','是他。','arrival'),
- p('旁白','她向他跑去，又突然回来，抱住我，吻了我。下一刻，她再次奔向那个人。','leaving'),
- p('独白','我站在原地，看着他们一同离开，直到两个身影消失在夜色中。','alone'),
- p('旁白','河岸安静下来。栏杆、水面、远处的窗灯，都还在原来的地方。','empty'),
- ]},
- {id:'morning', label:'清晨', roman:'V', title:'留在记忆里的光', en:'WHAT REMAINS', subtitle:'夜晚结束了。那一点光，仍然是真的。', place:'home', image:'morning-room.png', tint:'morning', route:[[2.5,1.3],[-3,1.3],[-3,4],[-7,4]], ending:'白夜 · 完', lines:[
- p('旁白','清晨下着雨。小屋昏暗，窗外也是灰色。有人送来一封信，是她写的。','empty'),
- p('娜斯坚卡的信','请原谅我。我欺骗了你，也欺骗了自己。可我仍然感激你，仍然愿意把你当作亲近的人。','empty'),
- p('旁白','她写到他们将要结婚，也希望我去看她。我读着信，房间又恢复了从前的寂静。','empty'),
- p('独白','一瞬间，我看见许多年以后，自己仍坐在这同一间屋里。','empty'),
- p('独白','但我不愿让怨恨进入她的幸福。我愿她的天空晴朗，愿她记起我时，心里没有阴影。','empty'),
- p('独白','生命里曾有过那样一个幸福的瞬间。它很短，却并没有因此变得不真实。','empty'),
- ]},
+ {id:'night-1',label:'第一夜',roman:'I',title:'从孤独走向相遇',en:'BEFORE WE MET',place:'canal',image:'canal-night.png',tint:'first',route:[[-7,4],[-3,4],[-3,1.3],[2.5,1.3]],ending:'明天。同样的地方。'},
+ {id:'night-2',label:'第二夜',roman:'II',title:'让另一个人走进来',en:'A LIFE SHARED IN WORDS',place:'canal',image:'canal-night.png',tint:'second',route:[[-7,4],[-3,4],[-3,-5.5],[3,-5.5],[3,1.3]],ending:'一封信，和两种不同的等待。'},
+ {id:'night-3',label:'第三夜',roman:'III',title:'站在同一处等待',en:'WAITING FOR DIFFERENT FUTURES',place:'canal',image:'canal-night.png',tint:'third',route:[[7,-4],[4,-4],[4,1.3],[2.5,1.3]],ending:'雨停以后，我们还会在这里。'},
+ {id:'night-4',label:'第四夜',roman:'IV',title:'差一点到来的明天',en:'THE TOMORROW WE ALMOST HAD',place:'canal',image:'canal-night.png',tint:'fourth',route:[[-7,4],[-3,4],[-3,1.3],[2.5,1.3]],ending:'河水仍然向前流去。'},
+ {id:'morning',label:'清晨',roman:'V',title:'那一刻并非虚构',en:'A MOMENT THAT WAS REAL',place:'home',image:'morning-room.png',tint:'morning',route:[[2.5,1.3],[-3,1.3],[-3,4],[-7,4]],ending:'白夜 · 完'},
 ];
-
-// Pair by chapter and paragraph so both languages always advance together.
 for(const place of locations)Object.assign(place,locationsEn[place.id]);
 for(const chapter of chapters){
-  const translation=chaptersEn[chapter.id];
-  if(translation.lines.length!==chapter.lines.length)throw new Error(`Unpaired translation: ${chapter.id}`);
-  chapter.labelEn=translation.labelEn;chapter.endingEn=translation.endingEn;
-  chapter.lines.forEach((line,index)=>{line.en=translation.lines[index];line.speakerEn=speakersEn[line.speaker]});
+ const translation=chaptersEn[chapter.id];
+ chapter.labelEn=translation.labelEn;chapter.endingEn=translation.endingEn;
+ chapter.lines=storyText[chapter.id].map(line=>({...line,speakerEn:speakersEn[line.speaker]}));
 }
