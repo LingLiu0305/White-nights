@@ -1,6 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createState, transition, readSave, writeSave } from '../src/story.js';
+import {chapters,locations} from '../src/content.js';
+
+test('every story paragraph and location has a matching English text', () => {
+  for(const chapter of chapters){
+    assert.ok(chapter.endingEn);
+    for(const line of chapter.lines)assert.ok(line.text.trim()&&line.en?.trim(),`${chapter.id}: ${line.text}`);
+  }
+  for(const place of locations)assert.ok(place.descriptionEn?.trim()&&place.noteEn?.trim());
+});
 
 test('unread future chapters stay locked', () => {
   const s = createState();
@@ -55,4 +64,22 @@ test('save round trip retains chapter, completed nights and reading cursor', () 
   assert.equal(writeSave(storage,{chapter:1,completed:0,line:2,mode:'reading'}),true);
   assert.equal(createState(readSave(storage)).line,2);
   assert.equal(createState(readSave(storage)).completed,0);
+});
+
+test('replay and reload preserve the unfinished next night cursor', () => {
+  let s=createState({completed:0,chapter:1,line:5});
+  s=transition(transition(s,{type:'START',chapter:0}),{type:'ARRIVE'});
+  s=transition(s,{type:'NEXT'});
+  s=createState(s);
+  s=transition(s,{type:'START',chapter:1});
+  assert.equal(s.line,5);
+});
+
+test('finishing a replay returns to saved main progress and enables a fresh replay', () => {
+  let s=createState({completed:0,chapter:1,line:5});
+  s=transition(transition(s,{type:'START',chapter:0}),{type:'ARRIVE'});
+  while(s.mode==='reading')s=transition(s,{type:'NEXT'});
+  s=transition(s,{type:'MAP'});
+  assert.equal(s.chapter,1);assert.equal(s.line,5);
+  assert.equal(transition(s,{type:'START',chapter:0}).line,0);
 });

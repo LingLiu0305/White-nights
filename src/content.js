@@ -1,5 +1,6 @@
 // Original Chinese abridgment after Dostoevsky, informed by Garnett's translation.
 // This is not a quotation from a published Chinese translation.
+import {chaptersEn,locationsEn,speakersEn} from './content-en.js';
 export const locations = [
   {id:'home', name:'梦想家的住处', en:'THE LITTLE ROOM', position:[-7,0,4], number:'01', description:'一间熟悉得近乎停滞的小屋。每天的散步从这里开始，梦想也从这里出发。', note:'故事里的住处 · 地图位置为示意'},
   {id:'canal', name:'河岸的栏杆', en:'THE EMBANKMENT', position:[2.5,0,1.3], number:'02', description:'水流从栏杆下经过。初次相遇、倾听与等待，让一段普通的河岸成为两个人的约定。', note:'四夜的主要会面地点'},
@@ -76,3 +77,12 @@ export const chapters = [
  p('独白','生命里曾有过那样一个幸福的瞬间。它很短，却并没有因此变得不真实。','empty'),
  ]},
 ];
+
+// Pair by chapter and paragraph so both languages always advance together.
+for(const place of locations)Object.assign(place,locationsEn[place.id]);
+for(const chapter of chapters){
+  const translation=chaptersEn[chapter.id];
+  if(translation.lines.length!==chapter.lines.length)throw new Error(`Unpaired translation: ${chapter.id}`);
+  chapter.labelEn=translation.labelEn;chapter.endingEn=translation.endingEn;
+  chapter.lines.forEach((line,index)=>{line.en=translation.lines[index];line.speakerEn=speakersEn[line.speaker]});
+}

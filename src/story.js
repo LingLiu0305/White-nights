@@ -5,22 +5,30 @@ export function createState(saved) {
   const completed=integerIn(saved?.completed,-1,chapters.length-1)?saved.completed:-1;
   const chapter=integerIn(saved?.chapter,0,Math.min(completed+1,chapters.length-1))?saved.chapter:0;
   const line=integerIn(saved?.line,0,chapters[chapter].lines.length-1)?saved.line:0;
-  return {chapter,line,completed,mode:'map'};
+  const cursors=chapters.map((c,index)=>{
+    if(index>completed+1)return 0;
+    const cursor=saved?.cursors?.[index];
+    return integerIn(cursor,0,c.lines.length-1)?cursor:index===chapter?line:0;
+  });
+  return {chapter,line:cursors[chapter],cursors,completed,mode:'map'};
 }
 export function transition(state,event) {
   switch(event.type) {
     case 'START': {
       const chapter=event.chapter;
       if(state.mode!=='map'||!integerIn(chapter,0,Math.min(state.completed+1,chapters.length-1))) return state;
-      return {...state,chapter,line:chapter===state.chapter?state.line:0,mode:'travel'};
+      return {...state,chapter,line:state.cursors[chapter],mode:'travel'};
     }
     case 'ARRIVE': return state.mode==='travel'?{...state,mode:'reading'}:state;
     case 'NEXT':
       if(state.mode!=='reading') return state;
-      if(state.line+1<chapters[state.chapter].lines.length) return {...state,line:state.line+1};
-      return {...state,mode:'end',completed:Math.max(state.completed,state.chapter)};
+      if(state.line+1<chapters[state.chapter].lines.length) return {...state,line:state.line+1,cursors:state.cursors.map((v,i)=>i===state.chapter?state.line+1:v)};
+      return {...state,mode:'end',completed:Math.max(state.completed,state.chapter),cursors:state.cursors.map((v,i)=>i===state.chapter?0:v)};
     case 'MAP':
-      if(state.mode==='end') return {...state,mode:'map',chapter:Math.min(state.completed+1,chapters.length-1),line:0};
+      if(state.mode==='end') {
+        const chapter=Math.min(state.completed+1,chapters.length-1);
+        return {...state,mode:'map',chapter,line:state.cursors[chapter]};
+      }
       return {...state,mode:'map'};
     case 'RESET': return createState();
     default:return state;

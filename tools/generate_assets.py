@@ -7,6 +7,7 @@ import argparse
 import base64
 import json
 import os
+from datetime import date
 from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
@@ -63,7 +64,7 @@ def main():
         (target / f'{name}.json').write_text(json.dumps({
             'provider': 'classroom Easel API', 'model': body['model'], 'prompt': prompt,
             'requested_size': body['size'], 'purpose': 'Original background for White Nights',
-            'generated_on': '2026-10-21'
+            'generated_on': date.today().isoformat()
         }, ensure_ascii=False, indent=2))
         print(f'Saved {output.name} ({output.stat().st_size} bytes)', flush=True)
 
