@@ -1,0 +1,8 @@
+{
+  "provider": "classroom Easel API",
+  "model": "qwen-image-2.1",
+  "prompt": "Original literary visual novel character portrait, mid 1840s Saint Petersburg. Hand drawn European graphic novel illustration, delicate imperfect dark grey pen contours, restrained cel shaded flat color planes, subtle watercolor paper texture. Muted sage, dusty blue, lavender shadows and warm ivory highlights. Natural human proportions, expressive gentle face, quiet intimate emotion. NOT photorealistic, NOT 3D, NOT a silhouette, NOT chibi. One character only, head and upper torso, entire head and shoulders comfortably within the frame. Solid warm ivory paper background, no scenery, no frame, no lettering, no watermark. Nastenka, a 17 year old young woman, dark brown hair neatly gathered under a small pale ochre yellow bonnet with ribbons. Large dark observant eyes, natural youthful face, a shy hopeful almost-smile. Wearing a simple black short cape over a modest high neck ivory dress, fully clothed in historical daywear. Three quarter view turned gently to the LEFT, listening towards someone beside the viewer. Chest-up portrait, warm and believable expression.",
+  "requested_size": "1024x1024",
+  "purpose": "Original character portrait for White Nights",
+  "generated_on": "2026-10-22"
+}

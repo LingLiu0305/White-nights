@@ -11,13 +11,14 @@
 
 - `public/assets/canal-night.png`、`morning-room.png`：2026-10-21 使用用户授权的课堂 **Easel / Qwen Image** 接口生成，模型 `qwen-image-2.1`。提示词、尺寸、日期见对应 JSON。生成工具参考课堂 `pfad/week05/request_image.py` 的接口和请求格式，重新编写为不包含凭据的标准库脚本。
 - 3D 地图：本项目用 Three.js 几何体和卡通材质构建，未下载第三方模型。
-- 人物剪影、纸张纹理和界面符号：本项目 SVG / CSS / 几何体绘制。
+- `dreamer-portrait.png`、`nastenka-portrait.png`、`summer-street.png`、`rainy-embankment.png`：2026-10-22 使用同一课堂 Easel / `qwen-image-2.1` 接口生成，分别用于梦想家、娜斯坚卡的对话肖像，以及开场街景和雨中河岸。提示词见同名 JSON；这些是原创视觉改编，不是历史人物肖像或原作插图。
+- 旧版程序剪影已移除；界面符号与地图标记由代码绘制。
 - 背景音乐：`src/music.js` 中为本项目编写的短旋律与低音伴奏，使用 Web Audio 三角波、滤波和音量包络实时合成；无外部音乐或录音。
-- 字体：[Noto Serif SC](https://fonts.google.com/noto/specimen/Noto+Serif+SC)，Google Fonts，SIL Open Font License；不可用时使用设备系统字体。仓库不包含系统字体文件。
+- 英文字体：[Manrope](https://github.com/sharanda/manrope)，通过 `@fontsource-variable/manrope` 5.3.0 在本地打包，SIL Open Font License 1.1；许可见 `public/licenses/manrope-OFL.txt`。中文使用设备系统字体，不打包系统字体文件。早期版本曾使用在线 Noto Serif SC，本轮已取消外部字体请求。
 
 作者提供的两张参考图片用于讨论构图和色彩，没有复制进项目资源。作者提出的《鼓手余命十日谭》用于说明以叙事体验为主的方向；本项目不使用其代码、美术或音乐。
 
-本轮首页布局参考 [The Monolith Project](https://themonolithproject.net/) 将主体置于中央、控件留在边缘的构图方式；没有复制其代码、模型、声音或图片。
+首页布局参考 [The Monolith Project](https://themonolithproject.net/) 将主体置于中央、控件留在边缘的构图方式，以及简洁无衬线字形。检查其页面样式得到字体名 `BRCobane`；本项目使用开源 Manrope 重新设计，没有复制其字体文件、代码、模型、声音或图片。
 
 ## 代码与工具
 

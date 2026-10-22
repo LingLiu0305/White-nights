@@ -11,6 +11,8 @@ export const storyText={
  ['独白','有一幢淡粉红色的小房子，我尤其喜欢。后来它被漆成了黄色，我竟像失去了一个老朋友，连经过那里都感到难过。','I was especially fond of one little pink house. When it was painted yellow, I felt as though I had lost an old friend; even passing it made me sad.'],
  ['旁白','夏天来了，城里的人陆续搬往郊外避暑。载着家具的马车经过街道，熟悉的面孔一天比一天少。','Summer came, and the city began moving out to its country houses. Carts laden with furniture passed through the streets; familiar faces grew fewer every day.'],
  ['独白','我没有人可以告别，却觉得所有人都在离开我。连那些从未与我说过话的人，也像悄悄把我丢下了。','I had no one to say goodbye to, yet felt everyone was leaving me. Even those who had never spoken to me seemed to be abandoning me in silence.'],
+ ],{visual:'empty',image:'summer-street.png'}),
+ ...scene('相遇之前 · 那间小屋','Before the meeting · The little room',[
  ['旁白','回到住处，绿色的旧墙、天花板上的蛛网和每一把椅子都还在原处。玛特廖娜来来去去，屋里仍然空得让人无处安放自己。','Back in my room, the old green walls, the cobwebs and every chair were exactly where they had been. Matrona came and went, but the room still felt too empty to inhabit.'],
  ['独白','我检查家具的位置，以为只要找出哪一件东西摆错了，心里的不安就能得到解释。可没有什么变了，除了我忽然受不了这种生活。','I checked the furniture, as though a misplaced chair could explain my uneasiness. Nothing had changed—except that I could suddenly no longer bear this life.'],
  ],{visual:'empty',image:'morning-room.png'}),
@@ -131,7 +133,7 @@ export const storyText={
  ['独白','所以今天，她没有来。我明知不会见到她，还是在雨里去了河岸。约定的地方空着，比别处更显得空。','And so today she did not come. Knowing I would not see her, I still went to the riverbank in the rain. The place of our promise felt emptier than anywhere else.'],
  ['旁白','我又走到她家附近，抬头看了看窗子，却没有敲门。没有回信，也没有新的消息可以带给她。','I walked near her house and looked up at the windows, but did not knock. There was no answer, no new message to bring her.'],
  ['独白','回家的路上，我终于无法再把自己的等待叫作友谊。但明天，我仍然会去。','On the way home, I could no longer call my own waiting friendship. Yet tomorrow I would go again.'],
- ],{visual:'alone'}),
+ ],{visual:'alone',image:'rainy-embankment.png'}),
  ],
  'night-4':[
  ...scene('九点 · 同一处栏杆','Nine o’clock · The same railing',[

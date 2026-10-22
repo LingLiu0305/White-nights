@@ -1,0 +1,8 @@
+{
+  "provider": "classroom Easel API",
+  "model": "qwen-image-2.1",
+  "prompt": "Original literary visual novel character portrait, mid 1840s Saint Petersburg. Hand drawn European graphic novel illustration, delicate imperfect dark grey pen contours, restrained cel shaded flat color planes, subtle watercolor paper texture. Muted sage, dusty blue, lavender shadows and warm ivory highlights. Natural human proportions, expressive gentle face, quiet intimate emotion. NOT photorealistic, NOT 3D, NOT a silhouette, NOT chibi. One character only, head and upper torso, entire head and shoulders comfortably within the frame. Solid warm ivory paper background, no scenery, no frame, no lettering, no watermark. The Dreamer, a shy 26 year old young man with slightly tousled soft brown hair, a clean shaven narrow face, thoughtful grey eyes, a slender build. Wearing a modest worn dusty blue frock coat, ivory shirt and simple dark neckcloth. Three quarter view turned gently to the RIGHT, looking towards someone beside the viewer. Reserved tender expression, lips slightly parted as if confiding a story. Chest-up portrait.",
+  "requested_size": "1024x1024",
+  "purpose": "Original character portrait for White Nights",
+  "generated_on": "2026-10-22"
+}

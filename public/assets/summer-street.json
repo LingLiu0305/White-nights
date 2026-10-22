@@ -1,0 +1,8 @@
+{
+  "provider": "classroom Easel API",
+  "model": "qwen-image-2.1",
+  "prompt": "Original literary game background, 19th century Saint Petersburg during white nights. Hand-drawn storybook illustration with elegant thin ink contour lines, cel shaded flat color planes, delicate paper grain, muted lavender shadows, sage teal rooftops, warm ivory plaster, pale apricot horizon. Quiet contemplative romantic atmosphere. Wide cinematic composition, no text, no lettering, no watermark, no people. Ground-level perspective, not a map. Keep the lower quarter simple for overlaid dialogue. A quiet residential Petersburg street in early summer, one small pale pink house among ivory facades, open tall windows, a cart with covered furniture parked in the distance. Sunlit pale apricot sky at late afternoon, a hint of green trees beyond the city. Wide view from the pavement, intimate detailed linework, no people, no modern objects.",
+  "requested_size": "1536x1024",
+  "purpose": "Original background for White Nights",
+  "generated_on": "2026-10-22"
+}

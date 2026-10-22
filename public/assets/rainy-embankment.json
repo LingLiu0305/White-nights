@@ -1,0 +1,8 @@
+{
+  "provider": "classroom Easel API",
+  "model": "qwen-image-2.1",
+  "prompt": "Original literary game background, 19th century Saint Petersburg during white nights. Hand-drawn storybook illustration with elegant thin ink contour lines, cel shaded flat color planes, delicate paper grain, muted lavender shadows, sage teal rooftops, warm ivory plaster, pale apricot horizon. Quiet contemplative romantic atmosphere. Wide cinematic composition, no text, no lettering, no watermark, no people. Ground-level perspective, not a map. Keep the lower quarter simple for overlaid dialogue. The same type of Petersburg canal embankment under gentle summer rain, wet pale cobblestones and an empty wooden bench beside delicate wrought iron railings. A low stone bridge and sage rooftops dissolve into grey lavender drizzle. Clouded luminous twilight, soft reflections, loneliness without horror. No people, no umbrellas.",
+  "requested_size": "1536x1024",
+  "purpose": "Original background for White Nights",
+  "generated_on": "2026-10-22"
+}

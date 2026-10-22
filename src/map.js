@@ -11,7 +11,7 @@ export function createMap(container,{onSelect,onFail}) {
   renderer.shadowMap.type=THREE.PCFSoftShadowMap;
   renderer.setClearColor(0x000000,0);
   container.append(renderer.domElement);
-  renderer.domElement.setAttribute('aria-label','可旋转的彼得堡故事地图；也可使用下方地点按钮');
+  renderer.domElement.setAttribute('aria-label','Rotatable Petersburg story map. Places also has keyboard-accessible location buttons.');
   const scene=new THREE.Scene();
   const camera=new THREE.OrthographicCamera(-15,15,12,-12,.1,150);
   camera.position.set(24,27,29);
@@ -137,8 +137,8 @@ export function createMap(container,{onSelect,onFail}) {
     const ring=mesh(new THREE.RingGeometry(.24,.32,32),0x776457,world,loc.position[0],.13,loc.position[2]);ring.rotation.x=-Math.PI/2;
     const target=new THREE.Mesh(new THREE.CylinderGeometry(.7,.7,1,12),new THREE.MeshBasicMaterial({visible:false}));
     target.position.set(loc.position[0],.5,loc.position[2]);target.userData.location=loc.id;world.add(target);
-    const label=document.createElement('button');label.className='map-label';label.setAttribute('aria-label',`地图上的${loc.name}`);
-    label.innerHTML=`<span>${loc.number}</span>${loc.name}`;label.addEventListener('click',()=>onSelect(loc.id));container.append(label);
+    const label=document.createElement('button');label.className='map-label';label.setAttribute('aria-label',loc.en);
+    label.innerHTML=`<span class="pin-dot" aria-hidden="true"></span><span class="pin-name">${loc.en.charAt(0)+loc.en.slice(1).toLowerCase()}</span>`;label.addEventListener('click',()=>onSelect(loc.id));container.append(label);
     pins.push({label,point:new THREE.Vector3(loc.position[0],1.1,loc.position[2])});
   }
   const marker=new THREE.Group();scene.add(marker);
@@ -162,7 +162,7 @@ export function createMap(container,{onSelect,onFail}) {
   });
   function resize(){
     const {width,height}=container.getBoundingClientRect();if(!width||!height)return;
-    const aspect=width/height,half=aspect<1?17/aspect:14;
+    const aspect=width/height,half=aspect<1?16/aspect:10.5;
     camera.left=-half*aspect;camera.right=half*aspect;camera.top=half;camera.bottom=-half;
     camera.updateProjectionMatrix();renderer.setSize(width,height);
   }
