@@ -132,7 +132,14 @@ test('central stage fits the viewport and travel removes competing home text',as
   await page.goto('/');
   const canvas=await page.locator('#map-canvas').boundingBox();
   expect(Math.abs(canvas.x+canvas.width/2-720)).toBeLessThan(3);
+  // Zooming must use the full page, not stop at the former inner map panel.
+  expect(canvas.y).toBeLessThanOrEqual(0);
+  expect(canvas.y+canvas.height).toBeGreaterThanOrEqual(1000);
   expect(await page.evaluate(()=>document.documentElement.scrollHeight<=innerHeight+2)).toBe(true);
+  await page.mouse.move(720,500);
+  for(let i=0;i<6;i++)await page.mouse.wheel(0,-200);
+  await page.screenshot({path:'test-results/map-zoomed.png'});
+  await page.getByRole('button',{name:'Reset map view'}).click();
   await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
   await expect(page.locator('.scene-heading')).toHaveCSS('visibility','hidden');
   await expect(page.locator('.journey-dock')).toHaveCSS('visibility','hidden');

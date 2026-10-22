@@ -162,8 +162,11 @@ export function createMap(container,{onSelect,onFail}) {
   });
   function resize(){
     const {width,height}=container.getBoundingClientRect();if(!width||!height)return;
-    const aspect=width/height,half=aspect<1?16/aspect:10.5;
-    camera.left=-half*aspect;camera.right=half*aspect;camera.top=half;camera.bottom=-half;
+    const aspect=width/height;
+    // Fit the city on the entire page. The renderer no longer ends at the title
+    // or chapter controls, so zooming cannot cut roofs along an invisible panel edge.
+    const half=Math.max(17.5,16/aspect),verticalOffset=aspect>=1?1.5:0;
+    camera.left=-half*aspect;camera.right=half*aspect;camera.top=half+verticalOffset;camera.bottom=-half+verticalOffset;
     camera.updateProjectionMatrix();renderer.setSize(width,height);
   }
   new ResizeObserver(resize).observe(container);resize();
