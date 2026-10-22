@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#ecece5">
+  <meta name="theme-color" content="#b9b6cc">
   <meta name="description" content="Four nights in Petersburg. An illustrated, bilingual journey through Dostoevsky’s White Nights.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%233e5753'/%3E%3Ctext x='32' y='45' font-size='44' text-anchor='middle' fill='%23f5eee0'%3EW%3C/text%3E%3C/svg%3E">
   <title>White Nights · 白夜</title>
@@ -10,12 +10,12 @@
 <body>
   <div id="map-view">
     <header class="site-header">
-      <button id="about-open">About the story ↗</button>
+      <div class="brand-group"><span class="small-brand" aria-label="White Nights">WHITE<br>NIGHTS</span><button id="about-open" aria-label="About the story ↗">About ↗</button></div>
       <button id="sound" aria-label="Play music" aria-pressed="false"><span aria-hidden="true">♫</span> <span id="sound-label">Sound off</span></button>
     </header>
     <main>
       <section class="map-composition" aria-label="Petersburg story map">
-        <div class="scene-heading"><h1>WHITE NIGHTS</h1></div>
+        <div class="scene-heading"><h1><span>WHITE</span><span>NIGHTS</span></h1></div>
         <div class="map-stage" id="map-stage">
           <div id="map-canvas"></div>
           <div id="map-fallback" hidden><h2>The city is still here.</h2><p>3D is unavailable on this device.<br>Explore Places or begin the story below.</p></div>
@@ -28,7 +28,7 @@
       <footer class="map-footer">
         <div class="map-actions"><button id="places-open" aria-label="Explore places">Places ↗</button><button id="reset-view" aria-label="Reset map view">Reset view ⟲</button></div>
         <nav class="chapter-section" aria-label="Chapters"><div id="chapter-list" class="chapter-list"></div></nav>
-        <p class="map-hint">Drag to rotate · Click to explore</p>
+        <p class="map-hint">Drag to look around · Select a light to explore</p>
       </footer>
       <p id="save-status" class="save-status" role="status" hidden></p>
     </main>

@@ -1,5 +1,7 @@
 import '@fontsource-variable/manrope';
+import '@fontsource/lilita-one/latin-400.css';
 import './style.css';
+import './home.css';
 import {chapters,locations} from './content.js';
 import {createState,transition,readSave,writeSave} from './story.js';
 import {createMap} from './map.js';
@@ -10,7 +12,7 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let storage;try{storage=window.localStorage}catch{}
 const saved=readSave(storage);
 let state=createState(saved),selected=state.chapter,typing=false,typeTimer,toastTimer,map;
-let imageToken=0;
+let imageToken=0,placeRequest=0;
 const asset=name=>`${import.meta.env.BASE_URL}assets/${name}`;
 const mapView=$('#map-view'),reader=$('#reader');
 // A missing portrait must never hide the speaker's name or interrupt the story.
@@ -20,7 +22,7 @@ document.querySelectorAll('.speaker-portrait img').forEach(img=>{
 });
 function notify(message){clearTimeout(toastTimer);$('#toast').textContent=message;$('#toast').hidden=false;toastTimer=setTimeout(()=>$('#toast').hidden=true,4200)}
 function save(){if(!writeSave(storage,state)){$('#save-status').hidden=false;$('#save-status').textContent='Progress cannot be saved on this device. You can still read. / 本机无法保存，仍可继续阅读。'}}
-function showDialog(dialog){dialog.showModal();}
+function showDialog(dialog){placeRequest++;dialog.showModal();}
 document.querySelectorAll('dialog').forEach(dialog=>{
   dialog.querySelectorAll('.close-dialog,.close-dialog-inline').forEach(button=>button.onclick=()=>dialog.close());
   dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
@@ -28,6 +30,7 @@ document.querySelectorAll('dialog').forEach(dialog=>{
 function labelFor(index){return `${state.cursors[index]>0?'Continue':index<=state.completed?'Reread':'Begin'} ${chapters[index].labelEn}`;}
 const sentenceCase=text=>text.charAt(0)+text.slice(1).toLowerCase();
 function renderMap(){
+  placeRequest++;
   mapView.hidden=false;mapView.inert=false;reader.hidden=true;$('#travel-overlay').hidden=true;
   document.body.classList.remove('is-reading','is-travelling');map?.pause(false);map?.setChapter(selected);
   const chapter=chapters[selected];
@@ -47,13 +50,15 @@ function renderMap(){
 function selectPlace(id){
   if(state.mode!=='map')return;
   const place=locations.find(l=>l.id===id);if(!place)return;
+  const request=++placeRequest;
   $('#places-dialog').close();
   $('#place-en').textContent=sentenceCase(place.en);$('#place-name').textContent=place.name;
   $('#place-description').textContent=place.description;$('#place-note').textContent=place.note;
   $('#place-description-en').textContent=place.descriptionEn;$('#place-note-en').textContent=place.noteEn;
   const button=$('#place-start');button.hidden=chapters[selected].place!==id;
   button.textContent=`${labelFor(selected)} ↗`;button.onclick=()=>{$('#location-dialog').close();startChapter(selected)};
-  showDialog($('#location-dialog'));
+  const open=()=>{if(request===placeRequest&&state.mode==='map'&&!document.querySelector('dialog[open]'))showDialog($('#location-dialog'))};
+  if(map)map.focusPlace(id,open);else open();
 }
 for(const location of locations){
   const button=document.createElement('button');button.className='place-link';button.setAttribute('aria-label',`Place: ${sentenceCase(location.en)}`);
@@ -61,12 +66,13 @@ for(const location of locations){
   button.onclick=()=>selectPlace(location.id);$('#place-buttons').append(button);
 }
 function fallback(){
-  map?.pause(true);map=null;
+  map?.pause(true);map=null;mapView.classList.remove('scene-entering');mapView.classList.add('intro-complete','has-fallback');
   $('#map-fallback').hidden=false;$('#map-canvas').hidden=true;$('#reset-view').hidden=true;
   document.querySelector('.map-hint').textContent='Open Places to explore';
 }
 map=createMap($('#map-canvas'),{onSelect:selectPlace,onFail:fallback});
 function startChapter(index){
+  placeRequest++;
   const next=transition(state,{type:'START',chapter:index});if(next===state)return;
   state=next;selected=index;save();
   $('#travel-roman').textContent=chapters[index].label;
@@ -141,7 +147,7 @@ function previousLine(){
 }
 $('#start-story').onclick=()=>startChapter(selected);
 $('#skip-travel').onclick=()=>{if(map)map.finishTravel();else arrive()};
-$('#reset-view').onclick=()=>map?.reset();
+$('#reset-view').onclick=()=>{placeRequest++;map?.reset()};
 $('#next-line').onclick=nextLine;
 $('#previous-line').onclick=previousLine;
 // Keep prose selectable: a double-click must never turn the page on its first click.
@@ -188,4 +194,5 @@ $('#music-volume').oninput=e=>music.setVolume(Number(e.target.value)/100);
 window.addEventListener('pagehide',()=>music.dispose().catch(()=>{}));
 document.addEventListener('visibilitychange',()=>{map?.pause(document.hidden||state.mode==='reading'||state.mode==='end')});
 renderMap();
+if(map){mapView.classList.add('scene-entering');map.introduce(()=>{mapView.classList.remove('scene-entering');mapView.classList.add('intro-complete')})}
 if(saved?.editionUpdated)notify('Expanded story: your unlocked chapters are kept. / 故事已扩写，已解锁章节已保留。');

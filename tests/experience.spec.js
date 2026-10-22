@@ -254,3 +254,61 @@ test('missing character image retains the speaker name and reading controls',asy
   await page.locator('#next-line').click();
   await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[firstSpeech+1].en);
 });
+
+test('immersive map hides place names until focus and supports keyboard exploration',async({page})=>{
+  await page.goto('/');
+  await expect(page.locator('#map-view')).toHaveClass(/intro-complete/);
+  const pin=page.locator('.map-label').filter({hasText:'The embankment'});
+  await expect(pin.locator('.pin-name')).toHaveCSS('opacity','0');
+  await pin.focus();
+  await expect(pin.locator('.pin-name')).toHaveCSS('opacity','1');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog',{name:'Place introduction'})).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button',{name:'Begin First Night',exact:true})).toBeEnabled();
+});
+
+test('opening title clears the exploration area after the camera introduction',async({page})=>{
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.goto('/');
+  await expect(page.locator('#map-view')).toHaveClass(/scene-entering/);
+  await page.screenshot({path:'test-results/immersive-opening.png'});
+  await expect(page.locator('#map-view')).toHaveClass(/intro-complete/,{timeout:10000});
+  await expect(page.locator('.scene-heading')).toHaveCSS('opacity','0');
+  await page.screenshot({path:'test-results/immersive-desktop.png'});
+  await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
+  await page.getByRole('button',{name:'Skip transition'}).click();
+  await expect(page.locator('#reader')).toBeVisible();
+});
+
+test('a location transition never interrupts a subsequently opened menu',async({page})=>{
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.goto('/');
+  await page.getByRole('button',{name:'Explore places'}).click();
+  await page.getByRole('button',{name:'Place: The embankment',exact:true}).click();
+  await page.getByRole('button',{name:'About the story ↗'}).click();
+  await expect(page.locator('#about-dialog')).toBeVisible();
+  // Let the original focus transition finish before checking for a stolen modal.
+  await page.waitForTimeout(1300);
+  await expect(page.locator('#location-dialog')).toBeHidden();
+  await expect(page.locator('dialog[open]')).toHaveCount(1);
+});
+
+test('touch reveals a place before opening it and narrow landscape keeps the start usable',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true,reducedMotion:'reduce'});
+  const page=await context.newPage();
+  await page.goto('http://127.0.0.1:5173/');
+  const pin=page.locator('.map-label').filter({hasText:'The embankment'});
+  await pin.tap();
+  await expect(pin.locator('.pin-name')).toHaveCSS('opacity','1');
+  await expect(page.locator('#location-dialog')).toBeHidden();
+  await pin.tap();
+  await expect(page.locator('#location-dialog')).toBeVisible();
+  await page.getByRole('button',{name:'Close introduction'}).tap();
+  await page.setViewportSize({width:568,height:320});
+  const start=page.getByRole('button',{name:'Begin First Night',exact:true});
+  await expect(start).toBeInViewport();
+  await start.tap();
+  await expect(page.locator('#reader')).toBeVisible();
+  await context.close();
+});

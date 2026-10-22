@@ -1,10 +1,10 @@
 # 白夜 · White Nights
 
-一部以英文为主、保留中文对照的网页交互叙事，改编自陀思妥耶夫斯基《白夜》。探索微缩彼得堡，跟随梦想家的标记走入四个夜晚，在场景插画、角色肖像和文字之间经历相遇、等待与告别。
+一部以英文为主、保留中文对照的网页交互叙事，改编自陀思妥耶夫斯基《白夜》。走入雾紫色的彼得堡河岸，跟随梦想家的标记走入四个夜晚，在场景插画、角色肖像和文字之间经历相遇、等待与告别。
 
-A bilingual narrative website after Dostoevsky’s *White Nights*. Explore a miniature Petersburg, follow the dreamer to each meeting, and read the story in paired Chinese and English. The ending follows the novel; the reader controls exploration and pacing.
+A bilingual narrative website after Dostoevsky’s *White Nights*. Explore an illustrated, full-screen Petersburg canal, follow the dreamer to each meeting, and read the story in paired Chinese and English. The ending follows the novel; the reader controls exploration and pacing.
 
-![可旋转的故事地图](docs/screenshots/map-desktop.png)
+![全屏白夜河岸](docs/screenshots/map-desktop.png)
 ![中英对照阅读](docs/screenshots/reading-desktop.png)
 ![左侧梦想家与独立对白](docs/screenshots/dreamer-dialogue.png)
 ![右侧姑娘与独立对白](docs/screenshots/nastenka-dialogue.png)
@@ -13,11 +13,11 @@ A bilingual narrative website after Dostoevsky’s *White Nights*. Explore a min
 
 面向喜欢文学、视觉小说和短篇故事的读者，无需预先读过小说。现在从第一夜相遇之前的城市与独居生活开始，补足倾诉、送信和等待的因果关系。当前版本为 **152 段扩写改编**，包含四夜及清晨尾声；约 25–35 分钟，双语细读时间会更长。它不是小说全文，也不是任何已出版中译本的逐字引用。
 
-1. **探索地图：**拖动旋转、滚动缩放；点击建筑标签、相关建筑或 `Places` 中的按钮，查看双语介绍。`Reset view` 恢复视角。
+1. **探索城市：**拖动调整视角、滚动缩放（有角度与距离限制）；地点名在悬停或键盘聚焦时出现，触屏先点亮标记、再次点击进入。选择地点后镜头靠近，再展开双语介绍。`Places` 始终提供完整地点目录，`Reset view` 恢复当前章节视角。
 2. **走进一夜：**点击 `Begin First Night`，金色标记沿示意路线移动；`Skip transition` 可跳过过场。到达后进入二维阅读画面。
 3. **控制阅读：**点击 `Next`，或在阅读区域按空格 / 右方向键。逐字显示时，第一次操作补全两种语言，下一次推进故事。`Back` 或左方向键可以返回。英文主文在上，中文对照在下；正文可选择和复制，双击不会翻页。
 4. **回来继续：**`History` 保留本章已读文字；`Map` 返回地图。刷新或关页后可从本机保存位置继续。已读章节可以重读，各章进度独立保存。
-5. **重新开始：**地图页 `About the story` → `Start again` → 确认。音乐默认关闭，可在地图页或阅读页播放 / 暂停；阅读页右上角可以调节音量。
+5. **重新开始：**地图页 `About` → `Start again` → 确认。音乐默认关闭，可在地图页或阅读页播放 / 暂停；阅读页右上角可以调节音量。
 
 ## 在 VS Code 运行
 
@@ -32,7 +32,7 @@ npm run dev
 
 打开终端显示的地址，默认是 **http://127.0.0.1:5173/**。按 `Ctrl+C` 停止。不要直接双击 `index.html`，本项目需要开发服务器处理模块导入。
 
-第一次安装依赖需要网络。**读故事不需要 API key、付费账号、Python 或在线 AI 服务**；四张场景插画和两张人物肖像已包含在仓库中。英文 Manrope 字体随应用打包，不依赖在线字体服务；中文使用系统宋体类字体。
+第一次安装依赖需要网络。**读故事不需要 API key、付费账号、Python 或在线 AI 服务**；四张场景插画和两张人物肖像已包含在仓库中。英文 Manrope 与开场标题 Lilita One 字体随应用打包，不依赖在线字体服务；中文使用系统宋体类字体。
 
 生产版本：
 
@@ -61,8 +61,8 @@ npm run test:e2e
 | --- | --- |
 | `src/story-text.js`、`src/content.js`、`src/content-en.js` | 按场景配对的中英正文、说话人、场景插画与章节地点 |
 | `src/story.js`、`src/main.js` | 状态转换、各章进度，以及按钮与画面的连接 |
-| `src/map.js` | Three.js 建筑、卡通材质、拾取、视角和标记移动 |
-| `src/style.css`、`index.html` | 地图页面、双语阅读与手机布局 |
+| `src/map.js`、`src/scene-art.js` | Three.js 城市、纸纹材质、不规则轮廓、拾取、镜头和标记移动 |
+| `src/home.css`、`src/style.css`、`index.html` | 沉浸式首页、双语阅读与手机布局 |
 | `public/assets/`、`tools/generate_assets.py` | 已生成插画、提示词记录及可选生成工具 |
 
 两种语言按章节及段落一一对应；修改正文时，在 `src/story-text.js` 同时编辑同一行的中英文，再运行 `npm test`。背景音乐的旋律与伴奏位于 `src/music.js`。可用于课堂解释的交互链：`start-story` 点击 → `START` 转换状态 → `map.travel()` 移动标记 → `ARRIVE` → 显示本章中英文字。
@@ -85,11 +85,11 @@ uv run --no-project --python 3.12 tools/generate_assets.py --env /absolute/path/
 
 初版的段落编号已不适用于新文本。首次打开扩写版时，已解锁章节会保留，阅读位置回到新的开头，并显示更新提示；之后按新版段落正常保存。
 
-首页采用大幅英文标题、放大的中央模型和边缘操作，删去坐标、标语等装饰性信息。过场时收起首页文字。阅读页采用同一套无衬线英文与纸色色调；梦想家说话时肖像和姓名在左侧，姑娘 / 娜斯坚卡在右侧，旁白和内心独白收起肖像。首次得知姓名前仍称为 “The young woman”。
+首页使用连续河岸与透视镜头，建筑延伸至视口之外。开场呈现双行标题，随后镜头缓慢靠近、标题退出；若系统设置减少动态效果，则直接显示可操作的最终状态，同时关闭水面、粒子和镜头漂移。纸张纹理和轻微笔触用于模型材质，细轮廓、卡通色块与雾共同塑造画面。过场时收起首页文字。阅读页采用同一套无衬线英文与纸色色调；梦想家说话时肖像和姓名在左侧，姑娘 / 娜斯坚卡在右侧，旁白和内心独白收起肖像。首次得知姓名前仍称为 “The young woman”。
 
 ## 当前边界
 
-- 地图是文学空间示意，不复原真实路线；多个夜晚在同一河岸会面。标记移动后淡入插画，当前不做电影式镜头跟随。
+- 地图是文学空间示意，不复原真实路线；多个夜晚在同一河岸会面。章节切换和地点探索包含预设镜头移动，标记到达后进入插画阅读。它不是自由漫游或历史地理复原。
 - 两张人物肖像是固定表情的插画，不是动画立绘；雨景、街景、河岸和房间随段落切换，部分场景仍共用插画。
 - 固定结局和精简对白属于设计选择；中英文均为项目改编，仍欢迎对照原著进一步审校。
 - 进度只保存在当前浏览器，不跨设备同步。无存储权限时会显示提示，仍可完成当前阅读。
