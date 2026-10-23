@@ -1,207 +1,1077 @@
-// Original bilingual adaptation after the public-domain Garnett text.
-// A scene is a reading beat; paired strings cannot drift into different paragraphs.
-const scene=(section,sectionEn,rows,{visual='together',image='canal-night.png'}={})=>rows.map(([speaker,text,en,pose])=>({speaker,text,en,visual:pose||visual,section,sectionEn,image}));
+// Original English adaptation informed by the public-domain Garnett text.
 export const storyText={
- 'night-1':[
- ...scene('相遇之前 · 一座熟悉的城','Before the meeting · A familiar city',[
- ['独白','在彼得堡住了快八年，我仍然说不出一个可以随意登门拜访的朋友。可若有人问我是否认识这座城，我又会毫不犹豫地说：认识，十分认识。','After almost eight years in Petersburg, I still had no friend whose door I could freely knock upon. Yet if someone asked whether I knew the city, I would answer without hesitation: intimately.'],
- ['独白','每天在同一个钟点，我走过同样的街角。我认得迎面而来的老人、匆匆赶路的人，也知道哪一扇窗子会在黄昏亮起来。','At the same hour each day I passed the same street corners. I recognised the old man approaching, the people hurrying past, and the windows that would light up at dusk.'],
- ['独白','他们并不认识我。我却会因为他们的好心情而高兴，又因为一张忧愁的脸，替一个陌生人担心一整天。','They did not know me. But their good spirits could brighten my day, and a troubled face could leave me worrying about a stranger for hours.'],
- ['独白','房屋也是我的熟人。我想象它们用窗子向我打招呼，向我抱怨修缮，又骄傲地展示新添的一层楼。','The houses were acquaintances too. I imagined them greeting me through their windows, complaining about repairs, or proudly displaying a newly added storey.'],
- ['独白','有一幢淡粉红色的小房子，我尤其喜欢。后来它被漆成了黄色，我竟像失去了一个老朋友，连经过那里都感到难过。','I was especially fond of one little pink house. When it was painted yellow, I felt as though I had lost an old friend; even passing it made me sad.'],
- ['旁白','夏天来了，城里的人陆续搬往郊外避暑。载着家具的马车经过街道，熟悉的面孔一天比一天少。','Summer came, and the city began moving out to its country houses. Carts laden with furniture passed through the streets; familiar faces grew fewer every day.'],
- ['独白','我没有人可以告别，却觉得所有人都在离开我。连那些从未与我说过话的人，也像悄悄把我丢下了。','I had no one to say goodbye to, yet felt everyone was leaving me. Even those who had never spoken to me seemed to be abandoning me in silence.'],
- ],{visual:'empty',image:'summer-street.png'}),
- ...scene('相遇之前 · 那间小屋','Before the meeting · The little room',[
- ['旁白','回到住处，绿色的旧墙、天花板上的蛛网和每一把椅子都还在原处。玛特廖娜来来去去，屋里仍然空得让人无处安放自己。','Back in my room, the old green walls, the cobwebs and every chair were exactly where they had been. Matrona came and went, but the room still felt too empty to inhabit.'],
- ['独白','我检查家具的位置，以为只要找出哪一件东西摆错了，心里的不安就能得到解释。可没有什么变了，除了我忽然受不了这种生活。','I checked the furniture, as though a misplaced chair could explain my uneasiness. Nothing had changed—except that I could suddenly no longer bear this life.'],
- ],{visual:'empty',image:'morning-room.png'}),
- ...scene('城外归来 · 白夜','Returning to the city · The white night',[
- ['旁白','那一天，我漫无目的地走了很远。不知不觉，街道变成了城外的路，眼前展开田野，空气也不像屋里那样沉闷了。','That day I wandered farther than I intended. Before I knew it, the streets had become country roads. Fields opened before me, and the air was no longer heavy like the air in my room.'],
- ['独白','我看着树木和天空，心情竟渐渐轻快起来。没有发生任何值得记下的大事，可我像被允许暂时离开自己，重新看看世界。','Among the trees and the open sky, my spirits slowly lifted. Nothing remarkable had happened, yet I felt permitted to step outside myself and see the world again.'],
- ['旁白','回城时已近十点。夏日的光还留在天边，夜晚明亮得不肯完全降临。这就是我后来始终记得的那一个白夜。','It was nearly ten when I returned. Summer light still lingered on the horizon; the night seemed unwilling to become fully dark. This was the white night I would always remember.'],
- ['独白','我沿着运河走，轻轻哼着歌。一个没有同伴分享快乐的人，也只好自己唱给自己听。我并不知道，平常的散步将从这里改变。','I walked along the canal, humming softly. With no companion to share my happiness, I could only sing to myself. I did not know that an ordinary walk was about to change.'],
- ],{visual:'alone'}),
- ...scene('栏杆旁 · 一个陌生人','At the railing · A stranger',[
- ['旁白','一个姑娘倚在运河的栏杆旁。她戴着黄色的小帽子，披着黑色短斗篷，低头望着水面，似乎没有听见我的脚步。','A young woman leaned against the canal railing. She wore a small yellow hat and a short black cloak. Looking down at the water, she seemed not to hear my steps.','apart'],
- ['独白','我已经走过去了，却听见一声压低的抽泣。我停住，想说点什么。可一个从来不善于与女人交谈的人，连第一句话也找不到。','I had passed her when I heard a stifled sob. I stopped, wanting to speak. But a man unused to talking with women could not even find his first words.','apart'],
- ['旁白','她察觉到有人，抬头看了一眼，便匆匆离开栏杆，走到街道另一边。我没有勇气继续跟上去。','She noticed me, glanced up, and hurried away from the railing to the other side of the street. I lacked the courage to follow.','apart'],
- ['旁白','这时，一个踉跄的醉汉追在她身后。她加快脚步，他也跟着跑起来。听见她惊叫，我握紧手杖，立刻穿过街道。','Then a drunken man began following her. She quickened her steps; he broke into a run. At her cry, I gripped my stick and crossed the street at once.','apart'],
- ['梦想家','把手给我。挽住我的胳膊，他就不敢再来打扰你了。','Give me your hand. Take my arm, and he will not dare trouble you again.'],
- ['旁白','那人退开了。她挽着我的手臂，仍在发抖。我们一起向前走了一段，直到身后的声音听不见了。','The man backed away. She took my arm, still trembling. We walked on together until his voice could no longer be heard.'],
- ['姑娘','你也在发抖。难道你比我还害怕？','You are trembling too. Can you be more frightened than I am?'],
- ['梦想家','是的，不过和你刚才的害怕不一样。我几乎从来没有这样与一个姑娘说过话。眼前的一切，让我觉得像在做梦。','Yes, but not for the same reason. I have hardly ever talked to a young woman like this. Everything happening now feels like a dream.'],
- ['姑娘','原来如此。那就坦率地说吧。我不会因为你害羞，就在到家之前把你赶走。','I see. Then speak frankly. I shall not send you away before we reach my house simply because you are shy.'],
- ['梦想家','我二十六岁了，却仍然这样笨拙。我想象过许多次相遇，真有人愿意听的时候，反而不知道该怎么说。','I am twenty-six, and still so awkward. I have imagined meetings like this so many times; now that someone is willing to listen, I hardly know what to say.'],
- ['姑娘','你是在想象里爱上了谁吗？','Have you been in love with someone in your imagination?'],
- ['梦想家','没有真实的人。我替自己编出故事，想象一个肯说几句亲切话的人。有时我觉得，只要有那么两句话，就已经足够了。','With no real person. I invent stories, imagining someone who will speak a few kind words to me. Sometimes I think even two such words would be enough.'],
- ['旁白','她笑了，但笑声并没有把我推远。我第一次可以把自己的可笑说出来，而不必立刻退回沉默里。','She laughed, but her laughter did not shut me out. For once I could admit how absurd I was without retreating immediately into silence.'],
- ['姑娘','可你刚才为什么想向我走过来？我是说，在那个人追我以前。','But why did you want to speak to me before? I mean before that man followed me.'],
- ['梦想家','因为你在哭。今天我难得这样快乐，却听见你难过，我没有办法就这么走开。希望你不要觉得冒犯。','Because you were crying. I had been so unusually happy today, and hearing your sadness, I could not simply walk away. I hope you do not think it an intrusion.'],
- ['姑娘','不要再解释了。我很高兴，没有看错你。不过，我的家就在前面的小巷里。我们该分别了。','You need not explain any more. I am glad I was not mistaken about you. But my house is just down that turning. We must say goodbye.'],
- ]),
- ...scene('约定 · 明天十点','A promise · Tomorrow at ten',[
- ['梦想家','难道这一切就到这里了吗？我明天还会来这里。不是要强求你什么，只是今晚已经成了一段我舍不得放下的回忆。','Must it end here? I shall come back tomorrow. I do not mean to demand anything of you. Tonight has already become a memory I cannot bear to put away.'],
- ['姑娘','我明晚十点也得来这里，不过是为了自己的事。你可以来，但不要把它当成一个随便许下的约会。','I must be here tomorrow at ten, for a reason of my own. You may come, but do not think I make appointments lightly.'],
- ['梦想家','你可以提出任何条件。我会听的。','You may set any condition you wish. I shall listen.'],
- ['姑娘','那就先做朋友。你绝不能爱上我。我有一个秘密，也许明天会告诉你；现在，你只要答应这一件事。','Then let us be friends. You must not fall in love with me. I have a secret I may tell you tomorrow. For now, promise me only that.'],
- ['梦想家','我答应。只要你愿意信任我。','I promise. If only you will trust me.'],
- ['姑娘','我也没有什么人可以商量心事。虽然在街上找一个朋友很奇怪，可我觉得，仿佛已经认识你很久了。','I have hardly anyone to confide in either. It is strange to find a friend in the street, yet I feel as though I have known you a long time.'],
- ['旁白','她向我道了晚安，消失在小巷里。我没有回家，而是在街上继续走，反复想起她说过的每句话。','She wished me goodnight and disappeared down the lane. I did not go home. I kept walking, returning to every word she had said.','alone'],
- ['独白','我甚至忘了问她的名字。可是，“明天”已经与从前所有的明天不同了。我终于有一件事情，可以真正等待。','I had even forgotten to ask her name. Yet tomorrow was different from every tomorrow before it. At last, there was something real to wait for.','alone'],
- ]),
- ],
- 'night-2':[
- ...scene('第二次相见 · 名字','Meeting again · A name',[
- ['旁白','第二天，约定的钟点还远没有到，我已经在河岸等着。白天像被拉长了；昨夜的相遇，时而真实，时而又像我的另一个幻想。','The next day I was at the riverbank long before the appointed hour. The day seemed stretched beyond measure. Last night’s encounter felt alternately real and like another of my inventions.','alone'],
- ['姑娘','你果然来了。今天我们得认真一点，不能只凭昨晚的好心情，就以为已经彼此了解。','So you came. Today we must be sensible. We cannot assume we know each other simply because last night made us happy.'],
- ['梦想家','只要你愿意听，我什么都告诉你。','If you will listen, I shall tell you everything.'],
- ['姑娘','那就告诉我你的故事。你是怎样生活的？','Then tell me your history. How have you lived?'],
- ['梦想家','我的故事？可是，我好像没有什么故事。我一直独自生活，许多事情只在心里发生。','My history? I scarcely seem to have one. I have lived alone; so much has happened only inside my own mind.'],
- ['姑娘','我也懂得那种生活。我跟祖母住在一起，她看不见，总怕我跑掉。我们有时整天都得坐在一起。','I know something of that life too. I live with my grandmother. She is blind, and always fears I will run away. Sometimes we must sit together all day.'],
- ['旁白','我们在长椅上坐下来。她催我继续，我却突然想起一件昨夜竟完全忘记的事。','We sat down on a bench. She urged me to go on, but I suddenly remembered something I had entirely forgotten last night.'],
- ['梦想家','我还不知道你的名字。','I still do not know your name.'],
- ['娜斯坚卡','娜斯坚卡。现在总算可以好好说话了吧？','Nastenka. Now can we begin properly?'],
- ]),
- ...scene('梦想家 · 没有发生的生活','The dreamer · An unlived life',[
- ['梦想家','我是一个梦想家。彼得堡有些不起眼的角落，仿佛过着另一种生活。我就把自己藏在这样的角落里。','I am a dreamer. There are unnoticed corners of Petersburg that seem to live another kind of life. In one of those corners, I have hidden myself.'],
- ['梦想家','每天回到小屋以后，我能让一切按照自己的愿望发生。我可以勇敢、被爱、遇见故人，甚至经历从未开始过的离别。','When I return to my room, everything can happen as I wish. I can be brave, be loved, meet old friends, even suffer partings from relationships that never began.'],
- ['娜斯坚卡','我也做梦。有时坐在祖母身边，心里已经走到了很远的地方。所以，你不必觉得只有你一个人如此。','I dream too. Sometimes, sitting beside my grandmother, I have already travelled far away in my thoughts. You need not think you are the only one.'],
- ['梦想家','可怕的是，梦醒以后，屋里仍然只有我。别人度过了一天，认识了谁，失去了谁；我却连可以怀念的真实往事都很少。','The frightening part is waking to find only myself in the room. Other people have lived a day, met someone, lost someone. I have so few real memories to look back upon.'],
- ['梦想家','有时我会到某个街角，纪念去年在那里想象过的幸福。你听懂了吗？我纪念的甚至不是一件发生过的事。','Sometimes I return to a street corner to remember the happiness I imagined there a year before. Do you understand? I am commemorating something that never happened.'],
- ['独白','我越说越快，仿佛只要停下来，她就会发现这一切多么空洞。可是她没有笑，反而认真地望着我。','I spoke faster, as though if I paused she would discover how empty it all was. But she did not laugh. She watched me attentively.'],
- ['梦想家','等到许多年过去，我会不会仍然这样坐着，发现最好的日子都已经过去，而我从来没有真正生活过？','When many years have passed, will I still be sitting like this, discovering that my best days are gone and I have never really lived?'],
- ['娜斯坚卡','别再这样责备自己了。至少现在，我们已经是两个人。你告诉了我这些，我也应该把自己的事情告诉你。','Do not reproach yourself like that. At least now there are two of us. You have told me these things; I ought to tell you what has happened to me.'],
- ['娜斯坚卡','我需要你的建议。但不是冷冰冰的道理，要像一个一直关心我的人那样，听我说完。','I need your advice. But not cold reasoning. Listen as someone who has cared about me for a long time.'],
- ]),
- ...scene('她的往事 · 祖母与房客','Her story · Grandmother and the lodger',[
- ['娜斯坚卡','我很小就失去了父母，由祖母抚养长大。我们住在一幢有三扇窗的小木屋里，楼上还有一间可以租出去的房间。','I lost my parents when I was little, and my grandmother brought me up. We live in a small wooden house with three windows and a room upstairs that we can rent out.'],
- ['娜斯坚卡','她用别针把我的衣服和她的连在一起。读书、做针线，都得挨着她。我知道她担心我，可也会忍不住想看看外面的世界。','She pins my dress to hers. Reading or sewing, I must stay beside her. I know she worries about me, but I cannot help wanting to see the world outside.'],
- ['娜斯坚卡','有一次，我让女佣替我坐着，自己偷偷出门。祖母醒来问话，女佣听不见，慌忙解开别针跑了。我的办法当然就被发现了。','Once I persuaded our maid to sit in my place and slipped outside. When Grandmother woke and spoke, the maid could not hear her; she panicked, undid the pin and fled. My plan was discovered, of course.'],
- ['旁白','她讲到这里，自己先笑起来，又立刻叮嘱我不要笑话祖母。那些让她难过的生活细节，也带着她不愿割舍的亲情。','She laughed at the memory, then immediately asked me not to laugh at her grandmother. Even the details that made her unhappy were bound to an affection she would not surrender.'],
- ['娜斯坚卡','后来，楼上来了一个年轻房客。他看见那枚别针，我难为情得不知道怎么办。可他没有嘲笑我。','Then a young lodger moved upstairs. He noticed the pin, and I was mortified. But he did not make fun of me.'],
- ['娜斯坚卡','他借书给我们。祖母担心小说把人教坏，还让我检查书里有没有夹着信。后来我们真的读起书来，日子终于有了变化。','He lent us books. Grandmother worried that novels might corrupt us, and made me check for hidden letters. But we began to read, and at last the days changed.'],
- ['娜斯坚卡','他还带祖母和我去看《塞维利亚的理发师》。我第一次觉得，书里的那种生活，也许有一天会落到自己身上。','He took Grandmother and me to The Barber of Seville. For the first time, I felt that the kind of life I read about might one day happen to me.'],
- ['娜斯坚卡','可后来他减少了来往。我越想见他，越不知道该怎么办。直到有一天，他说自己要去莫斯科，要离开一年。','Later he began seeing less of us. The more I wanted to see him, the less I knew what to do. Then he told us he was going to Moscow for a year.'],
- ['娜斯坚卡','那天晚上，我把衣服收进一个小包，悄悄走到他房里。我不是去向他索要承诺；我只是再也不愿回到原来的生活里。','That evening I packed my clothes into a little bundle and went quietly to his room. I was not asking him for a promise. I simply could not bear to return to my old life.'],
- ['娜斯坚卡','我站在那里，哭得说不出话。他扶我坐下，告诉我他很穷，眼下还不能结婚，也不能带我一起走。','I stood there crying, unable to speak. He helped me sit down and explained that he was poor: he could not marry yet, and could not take me with him.'],
- ['娜斯坚卡','但他说，如果一年以后回来，我仍然愿意，那么我们就可以在一起。他不强迫我等，也不会用这个约定束缚我。','But he said that if he returned after a year and I still wished it, we could be together. He would not force me to wait or bind me with the promise.'],
- ['旁白','他们约定，他回来时，会通过相识的人送信；不能写信，就在晚上十点到河岸来。她记住了每一个字。','They agreed that when he returned, he would leave a letter with mutual acquaintances—or, if he could not write, come to the riverbank at ten. She remembered every word.'],
- ['娜斯坚卡','这一年已经过去了。我知道他回到城里已经三天，可他没有写信，也没有来这里。第一夜你看见我时，我就在等他。','The year is over now. I know he has been back in the city for three days. But he has not written or come here. When you saw me on the first night, I was waiting for him.'],
- ['独白','现在，我终于明白了昨夜的眼泪，也明白她为什么要我答应不要爱上她。她的故事，在我出现以前就已经开始。','Now I understood last night’s tears, and why she had asked me not to fall in love. Her story had begun long before I entered it.'],
- ]),
- ...scene('一封已经写好的信','A letter already written',[
- ['梦想家','也许有什么事情耽搁了他。你可以写信告诉他，你还记得约定。这样，你就不必只靠猜测来折磨自己。','Perhaps something has delayed him. You could write to say you still remember the promise. Then you would not have to torment yourself with guesses alone.'],
- ['娜斯坚卡','可是，由我先写，会不会像在逼他回来？如果他的心意变了呢？','But if I write first, will it seem I am forcing him to return? What if his feelings have changed?'],
- ['梦想家','那就在信里说清楚：你没有责怪他，只希望知道真实的情况。诚实地说出心意，不应该让你感到羞耻。','Then make that clear: you do not blame him; you only wish to know the truth. You should not be ashamed to speak honestly about your feelings.'],
- ['旁白','我替她设想信的开头。她越听越高兴，仿佛终于有人替她把犹豫和委屈整理成了可以说出口的话。','I suggested how the letter might begin. Her face brightened as she listened, as though someone had finally put her hesitation and hurt into words she could speak.'],
- ['娜斯坚卡','如果你明天能替我送去……我不能随便离开祖母。信要交给认识我们的人，他们会转交给他。','If you could take it tomorrow… I cannot leave my grandmother whenever I wish. Give it to the people who know us; they will pass it on to him.'],
- ['梦想家','当然。不过，信不是还没有写吗？','Of course. But have you not still to write it?'],
- ['旁白','她忽然转开脸，红着脸把一封早已封好的信放进我的手心。原来在向我征求意见以前，她已经等了太久。','She turned away, blushing, and put an already sealed letter into my hand. Long before asking my advice, she had been waiting far too long.'],
- ['娜斯坚卡','那么，明晚十点。你带来他的回信，我们就在这里见。','Then tomorrow at ten. Bring his answer, and we shall meet here.'],
- ['独白','我望着她走远，握住那封信。我第一次成了某个人生活里不可缺少的一部分——却是为了把她带向另一个人。','I watched her go, holding the letter. For the first time, I had become necessary to someone’s life—yet my task was to bring her closer to another man.','alone'],
- ]),
- ],
- 'night-3':[
- ...scene('雨天 · 回想昨夜','A rainy day · Remembering yesterday',[
- ['独白','今天下雨，屋里一整天都没有明亮起来。她说过，如果下雨就不来了。我坐在窗边，反复想起昨天——我们的第三次相见。','It is raining today, and my room has not brightened all day. She said she would not come if it rained. By the window, I keep returning to yesterday: our third meeting.'],
- ['旁白','信已经按照她的嘱托送出。那晚我走向河岸时，心里藏着许多想说的话；她等待的，却是一封回信，或者一个人的脚步。','The letter had been delivered as she asked. That evening I approached the riverbank with so much I wanted to say. She was waiting for an answer—or for a particular person’s footsteps.'],
- ['独白','这里讲的是昨夜。今天的雨暂时留在窗外；我想先把那个等待的晚上，再从头想一遍。','What follows happened last night. For a moment I leave today’s rain outside the window and return to that evening of waiting.'],
- ],{visual:'empty',image:'morning-room.png'}),
- ...scene('昨夜十点以前 · 她的快乐','Yesterday, before ten · Her happiness',[
- ['旁白','她比约定的时间更早来到河岸，眼睛里满是喜悦。她相信他一定会来，也愿意把这种快乐分给身边的每一个人。','She arrived before the appointed time, her eyes full of joy. She believed he would surely come, and wanted to share her happiness with everyone around her.'],
- ['娜斯坚卡','你知道我今天为什么这样喜欢你吗？因为你没有爱上我。换了别人，也许就不会这样真诚地帮助我了。','Do you know why I am so fond of you today? Because you have not fallen in love with me. Someone else might not have helped me so sincerely.'],
- ['独白','我陪她笑，心却一点点沉下去。她信任我的理由，恰好是我已经无法做到的那件事。','I laughed with her, while my heart slowly sank. The very reason she trusted me was the one promise I could no longer keep.'],
- ['娜斯坚卡','等我们结婚以后，你还要常常来看我们。我们会像兄妹一样，我一定会一直记得你的好。','When we are married, you must visit us often. We shall be like brother and sister. I shall always remember your kindness.'],
- ['梦想家','我今天睡得很少。醒来的时候，昨晚的一切像还没有结束，有一种说不清的感觉，一直留在心里。','I slept very little today. When I woke, it felt as though last night had not ended. Something I could not explain remained with me.'],
- ['旁白','我想靠近真正要说的话，可她的注意力不断转向路口。只要远处有人出现，我们的谈话便会短暂地停住。','I tried to approach what I really meant to say. But her attention kept returning to the street. Whenever someone appeared in the distance, our conversation paused.'],
- ['旁白','终于传来一阵脚步。她抓住我的手，我也屏住呼吸。那个人走到灯下，却只是一个不相干的过路人。','At last we heard footsteps. She seized my hand; I held my breath. But the man who stepped into the lamplight was only a passing stranger.','apart'],
- ['娜斯坚卡','你为什么松开我的手？我们一起等他就好。等他来了，我还想让他知道你是怎样的朋友。','Why did you let go of my hand? We can wait for him together. When he comes, I want him to know what a friend you have been.'],
- ['独白','她说得毫无防备。我不能责怪她没有看见我藏起来的感情；毕竟，是我答应了做她可以放心依靠的人。','She spoke without suspicion. I could not blame her for failing to see feelings I had hidden. After all, I had promised to be someone she could safely trust.'],
- ]),
- ...scene('钟声以后 · 没有到来的人','After the hour · The absent man',[
- ['旁白','钟声响了，约定的时刻过去。她的笑容渐渐消失，再次开口时，声音已经和刚才不同。','The clock struck, and the appointed hour passed. Her smile slowly disappeared. When she spoke again, her voice had changed.'],
- ['娜斯坚卡','他是不是不会来了？连回信也没有。是不是我太相信自己愿意相信的事了？','Is he not coming? There is not even an answer. Have I believed only what I wanted to believe?'],
- ['梦想家','还不能这样判断。信也许送得迟了，他也许没有来得及读到。明天我再去问一次。','We cannot know that yet. Perhaps the letter arrived late; perhaps he has not had time to read it. I shall ask again tomorrow.'],
- ['独白','我一个理由接着一个理由地说下去。我知道自己也在猜，却宁愿给她一点希望，不愿看她就这样哭起来。','I offered one explanation after another. I knew I was guessing too, but preferred to give her some hope rather than watch her break into tears.'],
- ['娜斯坚卡','你总能替别人想得这么好。为什么他不能像你这样呢？为什么大家不能把心里的话直接说出来？','You always think so kindly of others. Why can he not be like you? Why can people not simply say what is in their hearts?'],
- ['梦想家','你现在只是太难过了。也许明天，一切就能解释清楚。','You are very unhappy now. Perhaps tomorrow everything will become clear.'],
- ['娜斯坚卡','我把你们放在一起比较，是不对的。我知道你对我好，可我仍然爱他。连我自己也说不清为什么。','It is wrong of me to compare you. I know how kind you are to me, but I still love him. I cannot explain why, even to myself.'],
- ['旁白','我们分别时，云已经聚起来。她说，明天还在这里；如果下雨，就后天再来。每个新的约定，都像替失望留出一点余地。','Clouds were gathering when we parted. She said we would meet here tomorrow, or the day after if it rained. Each new arrangement seemed to make a little room around disappointment.'],
- ]),
- ...scene('回到今天 · 雨中的河岸','Back to today · The riverbank in rain',[
- ['独白','所以今天，她没有来。我明知不会见到她，还是在雨里去了河岸。约定的地方空着，比别处更显得空。','And so today she did not come. Knowing I would not see her, I still went to the riverbank in the rain. The place of our promise felt emptier than anywhere else.'],
- ['旁白','我又走到她家附近，抬头看了看窗子，却没有敲门。没有回信，也没有新的消息可以带给她。','I walked near her house and looked up at the windows, but did not knock. There was no answer, no new message to bring her.'],
- ['独白','回家的路上，我终于无法再把自己的等待叫作友谊。但明天，我仍然会去。','On the way home, I could no longer call my own waiting friendship. Yet tomorrow I would go again.'],
- ],{visual:'alone',image:'rainy-embankment.png'}),
- ],
- 'night-4':[
- ...scene('九点 · 同一处栏杆','Nine o’clock · The same railing',[
- ['旁白','第四次见面时，才九点钟，她已经在那里了。她和第一夜一样倚着栏杆，背对着街道，没有听见我走近。','At our fourth meeting, it was only nine, but she was already there. As on the first night, she leaned against the railing with her back to the street and did not hear me approach.','apart'],
- ['梦想家','娜斯坚卡。','Nastenka.','apart'],
- ['娜斯坚卡','有信吗？快告诉我。','Is there a letter? Tell me quickly.','apart'],
- ['梦想家','没有。我没有带来他的信。','No. I have no letter from him.','apart'],
- ['旁白','她脸上的期待一下子消失了。起初她没有说话，接着转过身去，伏在栏杆上哭起来。','Expectation vanished from her face. At first she said nothing. Then she turned away and began crying against the railing.'],
- ['娜斯坚卡','哪怕只有一句话也好。如果他不愿意回来，为什么不告诉我？我并没有要求他一定要爱我。','Even one word would have been enough. If he did not want to return, why could he not tell me? I never demanded that he love me.'],
- ['娜斯坚卡','我已经先走向他，告诉他自己的一切。他怎么能让我一个人这样等待，连一个回答也不给？','I went to him first and told him everything. How could he leave me waiting alone like this, without even an answer?'],
- ['梦想家','让我再去找他一次。我可以替你说明白，问清楚他到底怎么想。','Let me try to find him once more. I can explain for you, and ask what he really intends.'],
- ['娜斯坚卡','不要。我不想再写信，也不想再求他。总不能一直只有我一个人记得那个约定。','No. I do not want another letter, or another plea. I cannot be the only person who remembers the promise forever.'],
- ]),
- ...scene('终于说出口 · 爱','At last spoken · Love',[
- ['独白','她的痛苦就在眼前。我想安慰她，却发现自己再也不能只替那个人解释，也不能像一个旁观者那样站在这里。','Her pain was before me. I wanted to comfort her, but could no longer merely explain away his absence, or stand beside her as an observer.'],
- ['梦想家','娜斯坚卡，我得告诉你一件事。我本来不应该在这个时候说，可我已经藏不住了。','Nastenka, I must tell you something. I should not say it at a time like this, but I can no longer conceal it.'],
- ['梦想家','我爱你。起初我以为自己能够只做朋友，后来却越来越做不到。我知道你已经把心给了别人。','I love you. At first I thought I could be only your friend, but it became harder and harder. I know your heart belongs to someone else.'],
- ['娜斯坚卡','你……原来是这样。我曾猜想过，却一直以为你只是那样喜欢我。','You… so that is what it was. I wondered once, but thought you cared for me only in that other way.'],
- ['梦想家','你没有什么对不起我的。我不愿用这句话向你索取什么，也不愿让你因为我的感情更难过。我可以走。','You have done me no wrong. I ask nothing of you by saying this, and do not want my feelings to make you more unhappy. I can leave.'],
- ['旁白','我说着要走，却站着没有动。她握住我的手，不让我把这场谈话就这样结束。','I spoke of leaving, yet did not move. She held my hand, unwilling to let the conversation end like that.'],
- ['娜斯坚卡','不要走。我想说的不是这个。我还爱着他，但我也在想，也许那种感情已经可以过去。','Do not go. That is not what I mean. I still love him, but I have begun to wonder whether that feeling might pass.'],
- ['娜斯坚卡','你不会在我先向你走来的时候，笑话我，也不会把我独自留下。如果有一天，我也能这样爱你呢？','You would not laugh at me for coming to you first, or leave me alone. What if one day I could love you in the same way?'],
- ['梦想家','如果你愿意，我会等。我只希望在你身边，不必再把所有的生活都想象出来。','If you wished it, I would wait. I only want to be beside you, instead of having to imagine my whole life.'],
- ['独白','她没有抹去那个名字，也没有突然忘记从前。可她向我说起的“也许”，在我听来，已经足够像一个新的开始。','She had not erased his name or suddenly forgotten the past. But her perhaps sounded to me enough like a new beginning.'],
- ]),
- ...scene('还没有到来的明天','A tomorrow not yet here',[
- ['旁白','我们离开栏杆，开始沿街散步。方才还让人说不出话的眼泪，此刻竟和笑声交替出现。我们忽然有了那么多要商量的事。','We left the railing and began walking. Tears that had silenced us moments before now alternated with laughter. Suddenly there seemed so much to arrange.'],
- ['娜斯坚卡','你可以搬到我们楼上。那里现在空着。祖母会喜欢你的，我可以照顾她，你也不用总是一个人。','You could move into our upstairs room. It is empty now. Grandmother would like you. I could care for her, and you would not always have to be alone.'],
- ['梦想家','我住得不远，房租还有一点没有付，不过薪水就快到了。对了，玛特廖娜也一直照顾我的住处。','I do not live far away. There is a little rent still unpaid, but my salary is due soon. And Matrona has always looked after my room.'],
- ['娜斯坚卡','这些都可以慢慢安排。我也可以学一点东西，去教别人。我们不必有很多钱，才能开始生活。','We can arrange all that in time. I could learn something and give lessons. We need not have much money before we begin to live.'],
- ['旁白','我们谈到搬家，谈到薪水，甚至谈到以后去看什么戏。这些琐碎的事情，比我所有宏大的幻想都更让人幸福。','We discussed moving, salaries, even what play we might see. These little matters made me happier than all my grand imaginings.'],
- ['梦想家','我们再去看《塞维利亚的理发师》吧。','We could go to The Barber of Seville again.'],
- ['娜斯坚卡','还是换一出吧。别的也很好。','Let us choose something else. Another play would be good too.'],
- ['独白','我这才想起，那出戏属于她和另一个人的回忆。原来过去并没有消失，只是我们暂时都不愿去碰它。','Only then did I remember that the opera belonged to her memories with another man. The past had not disappeared; for a moment we were both avoiding it.'],
- ['旁白','她几次说该回家了，我们却一边说一边走，又绕回原来的长椅附近。明天近得仿佛伸手就能碰到。','Several times she said she must go home. Yet as we talked and walked, we circled back towards the bench. Tomorrow seemed close enough to touch.'],
- ['梦想家','这次真的送你回去。看那朵云，刚才遮住了月亮，现在又飘过去了。明天一定会是个好天气。','This time I really shall take you home. Look at that cloud: it covered the moon, and now it has passed. Tomorrow will surely be a fine day.'],
- ]),
- ...scene('脚步声 · 他来了','Footsteps · His return',[
- ['旁白','她没有抬头看天空。一个年轻人从旁边走过，忽然停下来，仔细地望着我们。她的手在我手里颤抖起来。','She did not look at the sky. A young man passed us, then stopped and looked closely. Her hand began trembling in mine.','arrival'],
- ['梦想家','娜斯坚卡，那是谁？','Nastenka, who is that?','arrival'],
- ['娜斯坚卡','是他。','It is him.','arrival'],
- ['旁白','身后传来呼唤她名字的声音。她猛地松开我的手，向那个人跑去。刚才还连在一起的明天，就在这一刻分开了。','From behind us came a voice calling her name. She suddenly released my hand and ran towards him. In that instant, the tomorrow we had shared divided.','leaving'],
- ['旁白','可她又折回来，抱住我，吻了我，没有说出一句解释。随后，她再一次转身，奔向等待她的那个人。','Then she came back, threw her arms around me, and kissed me without a word of explanation. She turned once more and ran to the man waiting for her.','leaving'],
- ['独白','我没有追上去，也没有叫住她。我站在原地，看着他们一起离开，直到两个身影都看不见了。','I did not follow or call after her. I stood where I was and watched them leave together, until neither figure could be seen.','alone'],
- ['旁白','河岸重新安静下来。栏杆、水面和窗灯仍在原处。刚才谈过的每一件小事，却再也找不到可以安放的明天。','The riverbank grew quiet again. The railing, the water and the lit windows remained. But all the small things we had planned no longer had a tomorrow to belong to.','empty'],
- ]),
- ],
- morning:[
- ...scene('一封信 · 请求原谅','A letter · Asking forgiveness',[
- ['旁白','清晨下着雨。屋子昏暗，窗外灰蒙蒙的。昨夜的光仿佛已经离开了这座城，玛特廖娜却像往常一样走进来。','Morning brought rain. The room was dim, the world beyond the window grey. Last night’s light seemed to have left the city, but Matrona came in as she always did.'],
- ['旁白','她带来一封信。我认出是谁写的，拆开信封，独自读下去。','She brought a letter. I recognised who had written it, opened the envelope, and read alone.'],
- ['娜斯坚卡的信','请原谅我。昨天的一切像一个梦，我欺骗了你，也欺骗了自己。想到使你难过，我心里十分痛苦。','Please forgive me. Yesterday feels like a dream. I deceived you, and myself. It pains me deeply to think that I have hurt you.'],
- ['娜斯坚卡的信','可我仍然感激你，仍然爱你这个朋友。我愿意把最好的祝福都给你，愿你知道，你曾经怎样帮助过我。','But I am still grateful to you, and love you as a friend. I wish you every happiness, and want you to know how much you have helped me.'],
- ['独白','她的亲切并不能使告别变轻。那些我昨晚愿意相信的话，如今变成了另一种温柔；我必须承认，它们不再指向共同的生活。','Her kindness did not make the farewell lighter. The words I had wanted to believe last night had become another kind of tenderness. I had to admit they no longer pointed towards a shared life.'],
- ['娜斯坚卡的信','我们很快就要结婚了。他回来以后的事情，我还想慢慢告诉你。我希望你来看我们，希望你仍然是我们的朋友。','We are to marry soon. I still want to tell you about what happened after his return. I hope you will visit us, and remain our friend.'],
- ['旁白','我读了很久，又读了一遍。纸上每一个字都清楚，可把信放下以后，我仍不知道应该做些什么。','I read for a long time, then read again. Every word on the page was clear, yet when I put the letter down, I still did not know what to do.'],
- ],{visual:'empty',image:'morning-room.png'}),
- ...scene('同一间屋子 · 十五年以后','The same room · Fifteen years later',[
- ['旁白','玛特廖娜说，她已经清理了天花板上的蛛网，现在屋子可以重新招待客人了。我抬起头，看见的却还是熟悉的旧房间。','Matrona said she had cleared away the cobwebs: the room was ready for visitors again. I looked up, but saw only the familiar old room.'],
- ['独白','有那么一瞬间，墙壁、家具，甚至窗外的房屋，都仿佛一下子老了。我看见十五年以后，自己仍坐在这里，仍然独自一人。','For a moment, the walls, the furniture, even the houses outside seemed suddenly aged. I saw myself fifteen years later, still sitting here, still alone.'],
- ['独白','那是我害怕的未来，不是已经发生的命运。可昨夜刚刚打开的生活，此刻又像一扇慢慢合上的门。','It was a future I feared, not a fate already fulfilled. Yet the life that had opened last night now felt like a door slowly closing again.'],
- ['独白','我可以因此怨恨她吗？可以要求她为了我的幸福，舍弃她等待了一年的那个人吗？我知道自己不愿这样。','Could I hate her for it? Could I demand that she give up the man she had waited a year for, simply for my happiness? I knew I did not wish to do that.'],
- ],{visual:'empty',image:'morning-room.png'}),
- ...scene('留下的光','The light that remains',[
- ['独白','我愿她的天空一直晴朗。我不愿自己的悲伤变成她心里的阴影，也不愿她回想起我时，只记得愧疚。','May her sky remain clear. I would not make my sadness a shadow over her life, or let guilt be all she remembered of me.'],
- ['独白','那几个夜晚并没有因为结束，就变成假的。有人曾听我说话，曾握住我的手；我也曾真正走进另一个人的生活。','Those nights did not become false because they ended. Someone had listened to me and held my hand. I had truly entered another person’s life.'],
- ['独白','也许我仍然是那个梦想家。但现在，当我回到河岸，至少有一段回忆，不必再靠自己虚构出来。','Perhaps I was still the same dreamer. But now, when I returned to the riverbank, there would be one memory I did not have to invent.'],
- ['独白','一生之中，曾经有过那样一个完整的幸福瞬间。它那么短，却又那么真实。难道这还不能成为我珍惜它的理由吗？','In a whole lifetime, there had been one complete moment of happiness. So brief, and yet so real. Was that not reason enough to cherish it?'],
- ],{visual:'empty',image:'morning-room.png'}),
- ],
+  "night-1": [
+    {
+      "speakerEn": "Inner voice",
+      "en": "After almost eight years in Petersburg, I still had no friend whose door I could freely knock upon. Yet if someone asked whether I knew the city, I would answer without hesitation: intimately.",
+      "sectionEn": "Before the meeting · A familiar city",
+      "image": "summer-street.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "At the same hour each day I passed the same street corners. I recognised the old man approaching, the people hurrying past, and the windows that would light up at dusk.",
+      "sectionEn": "Before the meeting · A familiar city",
+      "image": "summer-street.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "They did not know me. But their good spirits could brighten my day, and a troubled face could leave me worrying about a stranger for hours.",
+      "sectionEn": "Before the meeting · A familiar city",
+      "image": "summer-street.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "The houses were acquaintances too. I imagined them greeting me through their windows, complaining about repairs, or proudly displaying a newly added storey.",
+      "sectionEn": "Before the meeting · A familiar city",
+      "image": "summer-street.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "I was especially fond of one little pink house. When it was painted yellow, I felt as though I had lost an old friend; even passing it made me sad.",
+      "sectionEn": "Before the meeting · A familiar city",
+      "image": "summer-street.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "Summer came, and the city began moving out to its country houses. Carts laden with furniture passed through the streets; familiar faces grew fewer every day.",
+      "sectionEn": "Before the meeting · A familiar city",
+      "image": "summer-street.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "I had no one to say goodbye to, yet felt everyone was leaving me. Even those who had never spoken to me seemed to be abandoning me in silence.",
+      "sectionEn": "Before the meeting · A familiar city",
+      "image": "summer-street.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "Back in my room, the old green walls, the cobwebs and every chair were exactly where they had been. Matrona came and went, but the room still felt too empty to inhabit.",
+      "sectionEn": "Before the meeting · The little room",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "I checked the furniture, as though a misplaced chair could explain my uneasiness. Nothing had changed—except that I could suddenly no longer bear this life.",
+      "sectionEn": "Before the meeting · The little room",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "That day I wandered farther than I intended. Before I knew it, the streets had become country roads. Fields opened before me, and the air was no longer heavy like the air in my room.",
+      "sectionEn": "Returning to the city · The white night",
+      "image": "canal-night.png",
+      "visual": "alone"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "Among the trees and the open sky, my spirits slowly lifted. Nothing remarkable had happened, yet I felt permitted to step outside myself and see the world again.",
+      "sectionEn": "Returning to the city · The white night",
+      "image": "canal-night.png",
+      "visual": "alone"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "It was nearly ten when I returned. Summer light still lingered on the horizon; the night seemed unwilling to become fully dark. This was the white night I would always remember.",
+      "sectionEn": "Returning to the city · The white night",
+      "image": "canal-night.png",
+      "visual": "alone"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "I walked along the canal, humming softly. With no companion to share my happiness, I could only sing to myself. I did not know that an ordinary walk was about to change.",
+      "sectionEn": "Returning to the city · The white night",
+      "image": "canal-night.png",
+      "visual": "alone"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "A young woman leaned against the canal railing. She wore a small yellow hat and a short black cloak. Looking down at the water, she seemed not to hear my steps.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "apart"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "I had passed her when I heard a stifled sob. I stopped, wanting to speak. But a man unused to talking with women could not even find his first words.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "apart"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "She noticed me, glanced up, and hurried away from the railing to the other side of the street. I lacked the courage to follow.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "apart"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "Then a drunken man began following her. She quickened her steps; he broke into a run. At her cry, I gripped my stick and crossed the street at once.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "apart"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "Give me your hand. Take my arm, and he will not dare trouble you again.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "The man backed away. She took my arm, still trembling. We walked on together until his voice could no longer be heard.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The young woman",
+      "en": "You are trembling too. Can you be more frightened than I am?",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "Yes, but not for the same reason. I have hardly ever talked to a young woman like this. Everything happening now feels like a dream.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The young woman",
+      "en": "I see. Then speak frankly. I shall not send you away before we reach my house simply because you are shy.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "I am twenty-six, and still so awkward. I have imagined meetings like this so many times; now that someone is willing to listen, I hardly know what to say.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The young woman",
+      "en": "Have you been in love with someone in your imagination?",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "With no real person. I invent stories, imagining someone who will speak a few kind words to me. Sometimes I think even two such words would be enough.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "She laughed, but her laughter did not shut me out. For once I could admit how absurd I was without retreating immediately into silence.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The young woman",
+      "en": "But why did you want to speak to me before? I mean before that man followed me.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "Because you were crying. I had been so unusually happy today, and hearing your sadness, I could not simply walk away. I hope you do not think it an intrusion.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The young woman",
+      "en": "You need not explain any more. I am glad I was not mistaken about you. But my house is just down that turning. We must say goodbye.",
+      "sectionEn": "At the railing · A stranger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "Must it end here? I shall come back tomorrow. I do not mean to demand anything of you. Tonight has already become a memory I cannot bear to put away.",
+      "sectionEn": "A promise · Tomorrow at ten",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The young woman",
+      "en": "I must be here tomorrow at ten, for a reason of my own. You may come, but do not think I make appointments lightly.",
+      "sectionEn": "A promise · Tomorrow at ten",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "You may set any condition you wish. I shall listen.",
+      "sectionEn": "A promise · Tomorrow at ten",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The young woman",
+      "en": "Then let us be friends. You must not fall in love with me. I have a secret I may tell you tomorrow. For now, promise me only that.",
+      "sectionEn": "A promise · Tomorrow at ten",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "I promise. If only you will trust me.",
+      "sectionEn": "A promise · Tomorrow at ten",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The young woman",
+      "en": "I have hardly anyone to confide in either. It is strange to find a friend in the street, yet I feel as though I have known you a long time.",
+      "sectionEn": "A promise · Tomorrow at ten",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "She wished me goodnight and disappeared down the lane. I did not go home. I kept walking, returning to every word she had said.",
+      "sectionEn": "A promise · Tomorrow at ten",
+      "image": "canal-night.png",
+      "visual": "alone"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "I had even forgotten to ask her name. Yet tomorrow was different from every tomorrow before it. At last, there was something real to wait for.",
+      "sectionEn": "A promise · Tomorrow at ten",
+      "image": "canal-night.png",
+      "visual": "alone"
+    }
+  ],
+  "night-2": [
+    {
+      "speakerEn": "Narration",
+      "en": "The next day I was at the riverbank long before the appointed hour. The day seemed stretched beyond measure. Last night’s encounter felt alternately real and like another of my inventions.",
+      "sectionEn": "Meeting again · A name",
+      "image": "canal-night.png",
+      "visual": "alone"
+    },
+    {
+      "speakerEn": "The young woman",
+      "en": "So you came. Today we must be sensible. We cannot assume we know each other simply because last night made us happy.",
+      "sectionEn": "Meeting again · A name",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "If you will listen, I shall tell you everything.",
+      "sectionEn": "Meeting again · A name",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The young woman",
+      "en": "Then tell me your history. How have you lived?",
+      "sectionEn": "Meeting again · A name",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "My history? I scarcely seem to have one. I have lived alone; so much has happened only inside my own mind.",
+      "sectionEn": "Meeting again · A name",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The young woman",
+      "en": "I know something of that life too. I live with my grandmother. She is blind, and always fears I will run away. Sometimes we must sit together all day.",
+      "sectionEn": "Meeting again · A name",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "We sat down on a bench. She urged me to go on, but I suddenly remembered something I had entirely forgotten last night.",
+      "sectionEn": "Meeting again · A name",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "I still do not know your name.",
+      "sectionEn": "Meeting again · A name",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "Nastenka. Now can we begin properly?",
+      "sectionEn": "Meeting again · A name",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "I am a dreamer. There are unnoticed corners of Petersburg that seem to live another kind of life. In one of those corners, I have hidden myself.",
+      "sectionEn": "The dreamer · An unlived life",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "When I return to my room, everything can happen as I wish. I can be brave, be loved, meet old friends, even suffer partings from relationships that never began.",
+      "sectionEn": "The dreamer · An unlived life",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "I dream too. Sometimes, sitting beside my grandmother, I have already travelled far away in my thoughts. You need not think you are the only one.",
+      "sectionEn": "The dreamer · An unlived life",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "The frightening part is waking to find only myself in the room. Other people have lived a day, met someone, lost someone. I have so few real memories to look back upon.",
+      "sectionEn": "The dreamer · An unlived life",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "Sometimes I return to a street corner to remember the happiness I imagined there a year before. Do you understand? I am commemorating something that never happened.",
+      "sectionEn": "The dreamer · An unlived life",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "I spoke faster, as though if I paused she would discover how empty it all was. But she did not laugh. She watched me attentively.",
+      "sectionEn": "The dreamer · An unlived life",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "When many years have passed, will I still be sitting like this, discovering that my best days are gone and I have never really lived?",
+      "sectionEn": "The dreamer · An unlived life",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "Do not reproach yourself like that. At least now there are two of us. You have told me these things; I ought to tell you what has happened to me.",
+      "sectionEn": "The dreamer · An unlived life",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "I need your advice. But not cold reasoning. Listen as someone who has cared about me for a long time.",
+      "sectionEn": "The dreamer · An unlived life",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "I lost my parents when I was little, and my grandmother brought me up. We live in a small wooden house with three windows and a room upstairs that we can rent out.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "She pins my dress to hers. Reading or sewing, I must stay beside her. I know she worries about me, but I cannot help wanting to see the world outside.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "Once I persuaded our maid to sit in my place and slipped outside. When Grandmother woke and spoke, the maid could not hear her; she panicked, undid the pin and fled. My plan was discovered, of course.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "She laughed at the memory, then immediately asked me not to laugh at her grandmother. Even the details that made her unhappy were bound to an affection she would not surrender.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "Then a young lodger moved upstairs. He noticed the pin, and I was mortified. But he did not make fun of me.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "He lent us books. Grandmother worried that novels might corrupt us, and made me check for hidden letters. But we began to read, and at last the days changed.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "He took Grandmother and me to The Barber of Seville. For the first time, I felt that the kind of life I read about might one day happen to me.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "Later he began seeing less of us. The more I wanted to see him, the less I knew what to do. Then he told us he was going to Moscow for a year.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "That evening I packed my clothes into a little bundle and went quietly to his room. I was not asking him for a promise. I simply could not bear to return to my old life.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "I stood there crying, unable to speak. He helped me sit down and explained that he was poor: he could not marry yet, and could not take me with him.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "But he said that if he returned after a year and I still wished it, we could be together. He would not force me to wait or bind me with the promise.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "They agreed that when he returned, he would leave a letter with mutual acquaintances—or, if he could not write, come to the riverbank at ten. She remembered every word.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "The year is over now. I know he has been back in the city for three days. But he has not written or come here. When you saw me on the first night, I was waiting for him.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "Now I understood last night’s tears, and why she had asked me not to fall in love. Her story had begun long before I entered it.",
+      "sectionEn": "Her story · Grandmother and the lodger",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "Perhaps something has delayed him. You could write to say you still remember the promise. Then you would not have to torment yourself with guesses alone.",
+      "sectionEn": "A letter already written",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "But if I write first, will it seem I am forcing him to return? What if his feelings have changed?",
+      "sectionEn": "A letter already written",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "Then make that clear: you do not blame him; you only wish to know the truth. You should not be ashamed to speak honestly about your feelings.",
+      "sectionEn": "A letter already written",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "I suggested how the letter might begin. Her face brightened as she listened, as though someone had finally put her hesitation and hurt into words she could speak.",
+      "sectionEn": "A letter already written",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "If you could take it tomorrow… I cannot leave my grandmother whenever I wish. Give it to the people who know us; they will pass it on to him.",
+      "sectionEn": "A letter already written",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "Of course. But have you not still to write it?",
+      "sectionEn": "A letter already written",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "She turned away, blushing, and put an already sealed letter into my hand. Long before asking my advice, she had been waiting far too long.",
+      "sectionEn": "A letter already written",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "Then tomorrow at ten. Bring his answer, and we shall meet here.",
+      "sectionEn": "A letter already written",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "I watched her go, holding the letter. For the first time, I had become necessary to someone’s life—yet my task was to bring her closer to another man.",
+      "sectionEn": "A letter already written",
+      "image": "canal-night.png",
+      "visual": "alone"
+    }
+  ],
+  "night-3": [
+    {
+      "speakerEn": "Inner voice",
+      "en": "It is raining today, and my room has not brightened all day. She said she would not come if it rained. By the window, I keep returning to yesterday: our third meeting.",
+      "sectionEn": "A rainy day · Remembering yesterday",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "The letter had been delivered as she asked. That evening I approached the riverbank with so much I wanted to say. She was waiting for an answer—or for a particular person’s footsteps.",
+      "sectionEn": "A rainy day · Remembering yesterday",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "What follows happened last night. For a moment I leave today’s rain outside the window and return to that evening of waiting.",
+      "sectionEn": "A rainy day · Remembering yesterday",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "She arrived before the appointed time, her eyes full of joy. She believed he would surely come, and wanted to share her happiness with everyone around her.",
+      "sectionEn": "Yesterday, before ten · Her happiness",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "Do you know why I am so fond of you today? Because you have not fallen in love with me. Someone else might not have helped me so sincerely.",
+      "sectionEn": "Yesterday, before ten · Her happiness",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "I laughed with her, while my heart slowly sank. The very reason she trusted me was the one promise I could no longer keep.",
+      "sectionEn": "Yesterday, before ten · Her happiness",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "When we are married, you must visit us often. We shall be like brother and sister. I shall always remember your kindness.",
+      "sectionEn": "Yesterday, before ten · Her happiness",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "I slept very little today. When I woke, it felt as though last night had not ended. Something I could not explain remained with me.",
+      "sectionEn": "Yesterday, before ten · Her happiness",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "I tried to approach what I really meant to say. But her attention kept returning to the street. Whenever someone appeared in the distance, our conversation paused.",
+      "sectionEn": "Yesterday, before ten · Her happiness",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "At last we heard footsteps. She seized my hand; I held my breath. But the man who stepped into the lamplight was only a passing stranger.",
+      "sectionEn": "Yesterday, before ten · Her happiness",
+      "image": "canal-night.png",
+      "visual": "apart"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "Why did you let go of my hand? We can wait for him together. When he comes, I want him to know what a friend you have been.",
+      "sectionEn": "Yesterday, before ten · Her happiness",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "She spoke without suspicion. I could not blame her for failing to see feelings I had hidden. After all, I had promised to be someone she could safely trust.",
+      "sectionEn": "Yesterday, before ten · Her happiness",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "The clock struck, and the appointed hour passed. Her smile slowly disappeared. When she spoke again, her voice had changed.",
+      "sectionEn": "After the hour · The absent man",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "Is he not coming? There is not even an answer. Have I believed only what I wanted to believe?",
+      "sectionEn": "After the hour · The absent man",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "We cannot know that yet. Perhaps the letter arrived late; perhaps he has not had time to read it. I shall ask again tomorrow.",
+      "sectionEn": "After the hour · The absent man",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "I offered one explanation after another. I knew I was guessing too, but preferred to give her some hope rather than watch her break into tears.",
+      "sectionEn": "After the hour · The absent man",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "You always think so kindly of others. Why can he not be like you? Why can people not simply say what is in their hearts?",
+      "sectionEn": "After the hour · The absent man",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "You are very unhappy now. Perhaps tomorrow everything will become clear.",
+      "sectionEn": "After the hour · The absent man",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "It is wrong of me to compare you. I know how kind you are to me, but I still love him. I cannot explain why, even to myself.",
+      "sectionEn": "After the hour · The absent man",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "Clouds were gathering when we parted. She said we would meet here tomorrow, or the day after if it rained. Each new arrangement seemed to make a little room around disappointment.",
+      "sectionEn": "After the hour · The absent man",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "And so today she did not come. Knowing I would not see her, I still went to the riverbank in the rain. The place of our promise felt emptier than anywhere else.",
+      "sectionEn": "Back to today · The riverbank in rain",
+      "image": "rainy-embankment.png",
+      "visual": "alone"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "I walked near her house and looked up at the windows, but did not knock. There was no answer, no new message to bring her.",
+      "sectionEn": "Back to today · The riverbank in rain",
+      "image": "rainy-embankment.png",
+      "visual": "alone"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "On the way home, I could no longer call my own waiting friendship. Yet tomorrow I would go again.",
+      "sectionEn": "Back to today · The riverbank in rain",
+      "image": "rainy-embankment.png",
+      "visual": "alone"
+    }
+  ],
+  "night-4": [
+    {
+      "speakerEn": "Narration",
+      "en": "At our fourth meeting, it was only nine, but she was already there. As on the first night, she leaned against the railing with her back to the street and did not hear me approach.",
+      "sectionEn": "Nine o’clock · The same railing",
+      "image": "canal-night.png",
+      "visual": "apart"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "Nastenka.",
+      "sectionEn": "Nine o’clock · The same railing",
+      "image": "canal-night.png",
+      "visual": "apart"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "Is there a letter? Tell me quickly.",
+      "sectionEn": "Nine o’clock · The same railing",
+      "image": "canal-night.png",
+      "visual": "apart"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "No. I have no letter from him.",
+      "sectionEn": "Nine o’clock · The same railing",
+      "image": "canal-night.png",
+      "visual": "apart"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "Expectation vanished from her face. At first she said nothing. Then she turned away and began crying against the railing.",
+      "sectionEn": "Nine o’clock · The same railing",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "Even one word would have been enough. If he did not want to return, why could he not tell me? I never demanded that he love me.",
+      "sectionEn": "Nine o’clock · The same railing",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "I went to him first and told him everything. How could he leave me waiting alone like this, without even an answer?",
+      "sectionEn": "Nine o’clock · The same railing",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "Let me try to find him once more. I can explain for you, and ask what he really intends.",
+      "sectionEn": "Nine o’clock · The same railing",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "No. I do not want another letter, or another plea. I cannot be the only person who remembers the promise forever.",
+      "sectionEn": "Nine o’clock · The same railing",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "Her pain was before me. I wanted to comfort her, but could no longer merely explain away his absence, or stand beside her as an observer.",
+      "sectionEn": "At last spoken · Love",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "Nastenka, I must tell you something. I should not say it at a time like this, but I can no longer conceal it.",
+      "sectionEn": "At last spoken · Love",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "I love you. At first I thought I could be only your friend, but it became harder and harder. I know your heart belongs to someone else.",
+      "sectionEn": "At last spoken · Love",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "You… so that is what it was. I wondered once, but thought you cared for me only in that other way.",
+      "sectionEn": "At last spoken · Love",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "You have done me no wrong. I ask nothing of you by saying this, and do not want my feelings to make you more unhappy. I can leave.",
+      "sectionEn": "At last spoken · Love",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "I spoke of leaving, yet did not move. She held my hand, unwilling to let the conversation end like that.",
+      "sectionEn": "At last spoken · Love",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "Do not go. That is not what I mean. I still love him, but I have begun to wonder whether that feeling might pass.",
+      "sectionEn": "At last spoken · Love",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "You would not laugh at me for coming to you first, or leave me alone. What if one day I could love you in the same way?",
+      "sectionEn": "At last spoken · Love",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "If you wished it, I would wait. I only want to be beside you, instead of having to imagine my whole life.",
+      "sectionEn": "At last spoken · Love",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "She had not erased his name or suddenly forgotten the past. But her perhaps sounded to me enough like a new beginning.",
+      "sectionEn": "At last spoken · Love",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "We left the railing and began walking. Tears that had silenced us moments before now alternated with laughter. Suddenly there seemed so much to arrange.",
+      "sectionEn": "A tomorrow not yet here",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "You could move into our upstairs room. It is empty now. Grandmother would like you. I could care for her, and you would not always have to be alone.",
+      "sectionEn": "A tomorrow not yet here",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "I do not live far away. There is a little rent still unpaid, but my salary is due soon. And Matrona has always looked after my room.",
+      "sectionEn": "A tomorrow not yet here",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "We can arrange all that in time. I could learn something and give lessons. We need not have much money before we begin to live.",
+      "sectionEn": "A tomorrow not yet here",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "We discussed moving, salaries, even what play we might see. These little matters made me happier than all my grand imaginings.",
+      "sectionEn": "A tomorrow not yet here",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "We could go to The Barber of Seville again.",
+      "sectionEn": "A tomorrow not yet here",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "Let us choose something else. Another play would be good too.",
+      "sectionEn": "A tomorrow not yet here",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "Only then did I remember that the opera belonged to her memories with another man. The past had not disappeared; for a moment we were both avoiding it.",
+      "sectionEn": "A tomorrow not yet here",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "Several times she said she must go home. Yet as we talked and walked, we circled back towards the bench. Tomorrow seemed close enough to touch.",
+      "sectionEn": "A tomorrow not yet here",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "This time I really shall take you home. Look at that cloud: it covered the moon, and now it has passed. Tomorrow will surely be a fine day.",
+      "sectionEn": "A tomorrow not yet here",
+      "image": "canal-night.png",
+      "visual": "together"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "She did not look at the sky. A young man passed us, then stopped and looked closely. Her hand began trembling in mine.",
+      "sectionEn": "Footsteps · His return",
+      "image": "canal-night.png",
+      "visual": "arrival"
+    },
+    {
+      "speakerEn": "The Dreamer",
+      "en": "Nastenka, who is that?",
+      "sectionEn": "Footsteps · His return",
+      "image": "canal-night.png",
+      "visual": "arrival"
+    },
+    {
+      "speakerEn": "Nastenka",
+      "en": "It is him.",
+      "sectionEn": "Footsteps · His return",
+      "image": "canal-night.png",
+      "visual": "arrival"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "From behind us came a voice calling her name. She suddenly released my hand and ran towards him. In that instant, the tomorrow we had shared divided.",
+      "sectionEn": "Footsteps · His return",
+      "image": "canal-night.png",
+      "visual": "leaving"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "Then she came back, threw her arms around me, and kissed me without a word of explanation. She turned once more and ran to the man waiting for her.",
+      "sectionEn": "Footsteps · His return",
+      "image": "canal-night.png",
+      "visual": "leaving"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "I did not follow or call after her. I stood where I was and watched them leave together, until neither figure could be seen.",
+      "sectionEn": "Footsteps · His return",
+      "image": "canal-night.png",
+      "visual": "alone"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "The riverbank grew quiet again. The railing, the water and the lit windows remained. But all the small things we had planned no longer had a tomorrow to belong to.",
+      "sectionEn": "Footsteps · His return",
+      "image": "canal-night.png",
+      "visual": "empty"
+    }
+  ],
+  "morning": [
+    {
+      "speakerEn": "Narration",
+      "en": "Morning brought rain. The room was dim, the world beyond the window grey. Last night’s light seemed to have left the city, but Matrona came in as she always did.",
+      "sectionEn": "A letter · Asking forgiveness",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "She brought a letter. I recognised who had written it, opened the envelope, and read alone.",
+      "sectionEn": "A letter · Asking forgiveness",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Nastenka’s letter",
+      "en": "Please forgive me. Yesterday feels like a dream. I deceived you, and myself. It pains me deeply to think that I have hurt you.",
+      "sectionEn": "A letter · Asking forgiveness",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Nastenka’s letter",
+      "en": "But I am still grateful to you, and love you as a friend. I wish you every happiness, and want you to know how much you have helped me.",
+      "sectionEn": "A letter · Asking forgiveness",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "Her kindness did not make the farewell lighter. The words I had wanted to believe last night had become another kind of tenderness. I had to admit they no longer pointed towards a shared life.",
+      "sectionEn": "A letter · Asking forgiveness",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Nastenka’s letter",
+      "en": "We are to marry soon. I still want to tell you about what happened after his return. I hope you will visit us, and remain our friend.",
+      "sectionEn": "A letter · Asking forgiveness",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "I read for a long time, then read again. Every word on the page was clear, yet when I put the letter down, I still did not know what to do.",
+      "sectionEn": "A letter · Asking forgiveness",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Narration",
+      "en": "Matrona said she had cleared away the cobwebs: the room was ready for visitors again. I looked up, but saw only the familiar old room.",
+      "sectionEn": "The same room · Fifteen years later",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "For a moment, the walls, the furniture, even the houses outside seemed suddenly aged. I saw myself fifteen years later, still sitting here, still alone.",
+      "sectionEn": "The same room · Fifteen years later",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "It was a future I feared, not a fate already fulfilled. Yet the life that had opened last night now felt like a door slowly closing again.",
+      "sectionEn": "The same room · Fifteen years later",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "Could I hate her for it? Could I demand that she give up the man she had waited a year for, simply for my happiness? I knew I did not wish to do that.",
+      "sectionEn": "The same room · Fifteen years later",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "May her sky remain clear. I would not make my sadness a shadow over her life, or let guilt be all she remembered of me.",
+      "sectionEn": "The light that remains",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "Those nights did not become false because they ended. Someone had listened to me and held my hand. I had truly entered another person’s life.",
+      "sectionEn": "The light that remains",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "Perhaps I was still the same dreamer. But now, when I returned to the riverbank, there would be one memory I did not have to invent.",
+      "sectionEn": "The light that remains",
+      "image": "morning-room.png",
+      "visual": "empty"
+    },
+    {
+      "speakerEn": "Inner voice",
+      "en": "In a whole lifetime, there had been one complete moment of happiness. So brief, and yet so real. Was that not reason enough to cherish it?",
+      "sectionEn": "The light that remains",
+      "image": "morning-room.png",
+      "visual": "empty"
+    }
+  ]
 };

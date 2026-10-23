@@ -21,7 +21,7 @@ document.querySelectorAll('.speaker-portrait img').forEach(img=>{
   if(img.complete&&!img.naturalWidth)img.parentElement.classList.add('portrait-missing');
 });
 function notify(message){clearTimeout(toastTimer);$('#toast').textContent=message;$('#toast').hidden=false;toastTimer=setTimeout(()=>$('#toast').hidden=true,4200)}
-function save(){if(!writeSave(storage,state)){$('#save-status').hidden=false;$('#save-status').textContent='Progress cannot be saved on this device. You can still read. / 本机无法保存，仍可继续阅读。'}}
+function save(){if(!writeSave(storage,state)){$('#save-status').hidden=false;$('#save-status').textContent='Progress cannot be saved on this device. You can still read.'}}
 function showDialog(dialog){placeRequest++;dialog.showModal();}
 document.querySelectorAll('dialog').forEach(dialog=>{
   dialog.querySelectorAll('.close-dialog,.close-dialog-inline').forEach(button=>button.onclick=()=>dialog.close());
@@ -52,8 +52,7 @@ function selectPlace(id){
   const place=locations.find(l=>l.id===id);if(!place)return;
   const request=++placeRequest;
   $('#places-dialog').close();
-  $('#place-en').textContent=sentenceCase(place.en);$('#place-name').textContent=place.name;
-  $('#place-description').textContent=place.description;$('#place-note').textContent=place.note;
+  $('#place-en').textContent=sentenceCase(place.en);
   $('#place-description-en').textContent=place.descriptionEn;$('#place-note-en').textContent=place.noteEn;
   const button=$('#place-start');button.hidden=chapters[selected].place!==id;
   button.textContent=`${labelFor(selected)} ↗`;button.onclick=()=>{$('#location-dialog').close();startChapter(selected)};
@@ -75,7 +74,7 @@ function startChapter(index){
   placeRequest++;
   const next=transition(state,{type:'START',chapter:index});if(next===state)return;
   state=next;selected=index;save();
-  $('#travel-roman').textContent=chapters[index].label;
+  $('#travel-roman').textContent=chapters[index].roman;
   $('#travel-title').textContent=chapters[index].labelEn;
   $('#travel-subtitle').textContent=sentenceCase(chapters[index].en);
   $('#travel-overlay').hidden=false;mapView.inert=true;document.body.classList.add('is-travelling');
@@ -97,11 +96,10 @@ function setBackground(name){
   const token=++imageToken,background=$('#scene-backdrop'),img=new Image();
   background.style.backgroundImage='none';
   img.onload=()=>{if(token===imageToken)background.style.backgroundImage=`url("${img.src}")`};
-  img.onerror=()=>{if(token===imageToken)notify('The illustration could not load. You can keep reading. / 背景未载入，仍可阅读。')};
+  img.onerror=()=>{if(token===imageToken)notify('The illustration could not load. You can keep reading.')};
   img.src=asset(name);
 }
 function showText(line,fraction=1){
-  $('#dialogue-zh').textContent=line.text.slice(0,Math.ceil(line.text.length*fraction));
   $('#dialogue-en').textContent=line.en.slice(0,Math.ceil(line.en.length*fraction));
 }
 function finishTyping(){clearInterval(typeTimer);typing=false;showText(chapters[state.chapter].lines[state.line]);$('#dialogue').setAttribute('aria-busy','false');}
@@ -111,18 +109,18 @@ function renderLine(){
   $('#reading-scene').textContent=line.sectionEn;
   $('#previous-line').disabled=state.line===0;
   $('#chapter-end').hidden=true;$('#reading-deck').hidden=false;
-  const voice=line.speaker==='梦想家'?'left':['姑娘','娜斯坚卡'].includes(line.speaker)?'right':'narration';
+  const voice=line.speakerEn==='The Dreamer'?'left':['The young woman','Nastenka'].includes(line.speakerEn)?'right':'narration';
   $('#reading-deck').dataset.voice=voice;
   $('#portrait-left').hidden=voice!=='left';$('#portrait-right').hidden=voice!=='right';
-  $('#right-speaker-name').textContent=line.speakerEn;$('#right-speaker-zh').textContent=line.speaker;
+  $('#right-speaker-name').textContent=line.speakerEn;
   $('#speaker').textContent=line.speakerEn;$('#speaker').hidden=voice!=='narration';
   $('#line-count').textContent=`${String(state.line+1).padStart(2,'0')} / ${String(chapter.lines.length).padStart(2,'0')}`;
   $('#reading-progress').style.width=`${(state.line+1)/chapter.lines.length*100}%`;
-  $('#dialogue').classList.toggle('inner-voice',line.speaker==='独白');
+  $('#dialogue').classList.toggle('inner-voice',line.speakerEn==='Inner voice');
   $('#dialogue').scrollTop=0;
   if(reduced){finishTyping();return;}
   let count=0;typing=true;showText(line,0);$('#dialogue').setAttribute('aria-busy','true');
-  typeTimer=setInterval(()=>{count+=2;showText(line,Math.min(count/line.text.length,1));if(count>=line.text.length)finishTyping()},28);
+  typeTimer=setInterval(()=>{count+=4;showText(line,Math.min(count/line.en.length,1));if(count>=line.en.length)finishTyping()},28);
 }
 function nextLine(){
   if(state.mode!=='reading')return;
@@ -131,7 +129,6 @@ function nextLine(){
   if(state.mode==='end'){
     $('#reading-deck').hidden=true;$('#chapter-end').hidden=false;
     $('#end-label').textContent=`End of ${chapters[state.chapter].labelEn}`;
-    $('#end-title').textContent=chapters[state.chapter].ending;
     $('#end-title-en').textContent=chapters[state.chapter].endingEn;
     $('#end-map').focus({preventScroll:true});
   }else renderLine();
@@ -157,17 +154,17 @@ $('#back-map').onclick=returnToMap;$('#end-map').onclick=returnToMap;
 $('#history-open').onclick=()=>{
   const content=$('#history-content');content.replaceChildren();
   chapters[state.chapter].lines.slice(0,state.line+1).forEach(line=>{
-    const section=document.createElement('section'),name=document.createElement('small'),text=document.createElement('p'),english=document.createElement('p');
-    name.textContent=`${line.speakerEn} · ${line.speaker}`;text.textContent=line.text;text.lang='zh-CN';text.className='translation';
+    const section=document.createElement('section'),name=document.createElement('small'),english=document.createElement('p');
+    name.textContent=line.speakerEn;
     english.textContent=line.en;english.lang='en';
-    section.append(name,english,text);content.append(section);
+    section.append(name,english);content.append(section);
   });
   showDialog($('#history-dialog'));content.scrollTop=content.scrollHeight;
 };
 $('#about-open').onclick=()=>showDialog($('#about-dialog'));
 $('#places-open').onclick=()=>showDialog($('#places-dialog'));
 $('#reset-progress').onclick=()=>{$('#about-dialog').close();showDialog($('#reset-dialog'))};
-$('#confirm-reset').onclick=()=>{$('#reset-dialog').close();state=transition(state,{type:'RESET'});selected=0;renderMap();notify('A new beginning. / 新的夜晚，从这里开始。');$('#start-story').focus()};
+$('#confirm-reset').onclick=()=>{$('#reset-dialog').close();state=transition(state,{type:'RESET'});selected=0;renderMap();notify('A new beginning.');$('#start-story').focus()};
 document.addEventListener('keydown',e=>{
   if(e.repeat||document.querySelector('dialog[open]'))return;
   if((e.code==='Space'||e.code==='ArrowRight'||e.code==='ArrowLeft')&&state.mode==='reading'){
@@ -185,8 +182,8 @@ function updateMusicControls(){
 async function toggleMusic(){
   musicButtons.forEach(button=>button.disabled=true);
   try{
-    if(music.playing)await music.stop();else{await music.start();notify(music.volume===0?'Music is on at zero volume. Adjust it in the reader.':'Music is on. / 音乐已开启。')}
-  }catch{notify('Music could not start. Please try again. / 音乐未能启动，请重试。')}
+    if(music.playing)await music.stop();else{await music.start();notify(music.volume===0?'Music is on at zero volume. Adjust it in the reader.':'Music is on.')}
+  }catch{notify('Music could not start. Please try again.')}
   finally{updateMusicControls();musicButtons.forEach(button=>button.disabled=false);}
 }
 musicButtons.forEach(button=>button.onclick=toggleMusic);
@@ -195,4 +192,4 @@ window.addEventListener('pagehide',()=>music.dispose().catch(()=>{}));
 document.addEventListener('visibilitychange',()=>{map?.pause(document.hidden||state.mode==='reading'||state.mode==='end')});
 renderMap();
 if(map){mapView.classList.add('scene-entering');map.introduce(()=>{mapView.classList.remove('scene-entering');mapView.classList.add('intro-complete')})}
-if(saved?.editionUpdated)notify('Expanded story: your unlocked chapters are kept. / 故事已扩写，已解锁章节已保留。');
+if(saved?.editionUpdated)notify('Expanded story: your unlocked chapters are kept.');

@@ -158,15 +158,41 @@ export function createMap(container,{onSelect,onFail}) {
     label.innerHTML=`<span class="pin-dot" aria-hidden="true"></span><span class="pin-name">${loc.en.charAt(0)+loc.en.slice(1).toLowerCase()}</span>`;label.addEventListener('click',e=>{if(e.pointerType==='touch'&&selectedPlace!==loc.id){selectedPlace=loc.id;highlight(loc.id);return;}selectedPlace=loc.id;onSelect(loc.id)});
     label.addEventListener('mouseenter',()=>highlight(loc.id));label.addEventListener('mouseleave',()=>highlight(selectedPlace));
     label.addEventListener('focus',()=>highlight(loc.id));label.addEventListener('blur',()=>highlight(selectedPlace));container.append(label);
-    pins.push({id:loc.id,label,point:new THREE.Vector3(loc.position[0],1.1,loc.position[2])});
+    pins.push({id:loc.id,label,point:new THREE.Vector3(loc.position[0],1.65,loc.position[2])});
   }
-  const marker=new THREE.Group();scene.add(marker);
-  const halo=new THREE.Mesh(new THREE.RingGeometry(.35,.45,36),new THREE.MeshBasicMaterial({color:0xce9254,side:THREE.DoubleSide}));
-  halo.rotation.x=-Math.PI/2;halo.position.y=.17;marker.add(halo);
-  mesh(new THREE.SphereGeometry(.25,16,12),0xc68d45,marker,0,.62,0,true);
-  mesh(new THREE.ConeGeometry(.14,.3,12),0xc68d45,marker,0,.33,0);
-  // Wayfinding symbols remain visible when a building is between them and the camera.
-  marker.traverse(object=>{if(object.material){object.material=object.material.clone();object.material.depthTest=false;object.material.depthWrite=false;object.renderOrder=10}});
+  // A small, clothed dreamer replaces the abstract pawn. Draw it in a separate
+  // depth layer: buildings cannot hide the wayfinding figure, but its own limbs
+  // and clothing still occlude correctly.
+  const markerScene=new THREE.Scene(),marker=new THREE.Group();markerScene.add(marker);
+  markerScene.add(new THREE.HemisphereLight(0xffeed5,0x79728f,2.4));
+  const markerLight=new THREE.DirectionalLight(0xffe4bd,2);markerLight.position.set(-3,6,5);markerScene.add(markerLight);
+  const halo=new THREE.Mesh(new THREE.RingGeometry(.32,.35,48),new THREE.MeshBasicMaterial({color:0xe5bc78,side:THREE.DoubleSide,transparent:true,opacity:.8}));
+  halo.rotation.x=-Math.PI/2;halo.position.y=.035;marker.add(halo);
+  const person=new THREE.Group();person.rotation.y=.32;marker.add(person);
+  // Boots, trouser legs, a flared wool coat and contrasting lapels.
+  for(const side of [-1,1]){
+    box(.115,.10,.22,0x514859,person,side*.10,.085,.045,true);
+    mesh(new THREE.CylinderGeometry(.065,.055,.30,8),0x655f76,person,side*.10,.25,0,true);
+  }
+  const coatProfile=[[.22,.33],[.20,.43],[.16,.65],[.21,.83],[.14,.91]].map(([x,y])=>new THREE.Vector2(x,y));
+  mesh(new THREE.LatheGeometry(coatProfile,14),0x67718c,person,0,0,0,true);
+  box(.025,.47,.025,0x41495e,person,0,.58,.185);
+  for(const side of [-1,1]){
+    const sleeve=mesh(new THREE.CapsuleGeometry(.065,.30,4,8),0x67718c,person,side*.235,.66,0,true);sleeve.rotation.z=side*.15;
+    mesh(new THREE.SphereGeometry(.063,10,8),0xdfb794,person,side*.26,.44,.02);
+    const lapel=box(.075,.20,.035,0xa9a5b4,person,side*.07,.79,.165,true);lapel.rotation.z=side*-.26;
+  }
+  for(const y of [.49,.60,.71])mesh(new THREE.SphereGeometry(.018,6,6),0xdfc395,person,.045,y,.19);
+  mesh(new THREE.CylinderGeometry(.055,.065,.09,10),0xdfb794,person,0,.94,0);
+  const head=mesh(new THREE.SphereGeometry(.145,16,12),0xe3bfa0,person,0,1.08,0,true);head.scale.set(.86,1.1,.9);
+  mesh(new THREE.SphereGeometry(.15,16,10,0,Math.PI*2,0,Math.PI*.54),0x625262,person,0,1.105,-.012,true);
+  const fringe=mesh(new THREE.SphereGeometry(.08,10,8),0x625262,person,-.068,1.17,.055);fringe.scale.set(1,.65,.7);
+  for(const side of [-1,1]){
+    mesh(new THREE.SphereGeometry(.025,8,6),0xdfb794,person,side*.126,1.065,0);
+    mesh(new THREE.SphereGeometry(.011,6,6),0x514958,person,side*.047,1.09,.119);
+  }
+  mesh(new THREE.SphereGeometry(.022,8,6),0xd6a889,person,0,1.055,.133);
+  box(.07,.035,.075,0xebe0cd,person,0,.915,.06);
   let routeLine,journey=null,paused=false,selectedPlace=null;
   batchArchitecture(world,mergeGeometries);
   const interactive=[];
@@ -207,7 +233,7 @@ export function createMap(container,{onSelect,onFail}) {
   new ResizeObserver(resize).observe(container);resize();
   function finishTravel(){if(!journey)return;const j=journey;journey=null;marker.position.copy(j.points.at(-1));controls.enabled=true;j.onArrive();}
   function setChapter(index){
-    chapterIndex=index;finishIntro();moveCamera(pose(),1300);
+    chapterIndex=index;person.rotation.y=.32;finishIntro();moveCamera(pose(),1300);
     const start=chapters[index].route[0];marker.position.set(start[0],0,start[1]);
     fogTarget.set(index===2?0xb0aec8:index===4?0xc6c2cf:0xb9b6cc);
     lightTarget.set(index===2?0xd8ceee:index===4?0xffecd2:0xffdfb8);
@@ -234,6 +260,7 @@ export function createMap(container,{onSelect,onFail}) {
       let seg=1;while(seg<j.distances.length-1&&distance>j.distances[seg])seg++;
       const fraction=(distance-j.distances[seg-1])/(j.distances[seg]-j.distances[seg-1]||1);
       marker.position.lerpVectors(j.points[seg-1],j.points[seg],fraction);
+      const direction=new THREE.Vector3().subVectors(j.points[seg],j.points[seg-1]);person.rotation.y=Math.atan2(direction.x,direction.z);
       if(t>=1)finishTravel();
     }
     if(cameraMove){
@@ -249,6 +276,7 @@ export function createMap(container,{onSelect,onFail}) {
     controls.update();
     for(const {label,point} of pins){projected.copy(point).project(camera);label.style.left=`${(projected.x*.5+.5)*100}%`;label.style.top=`${(-projected.y*.5+.5)*100}%`;label.hidden=projected.z>1||projected.z< -1||Math.abs(projected.x)>.94||Math.abs(projected.y)>.8;}
     renderer.render(scene,camera);
+    renderer.clearDepth();renderer.autoClear=false;renderer.render(markerScene,camera);renderer.autoClear=true;
   }
   requestAnimationFrame(frame);setChapter(0);
   renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();paused=true;cameraMove=null;finishIntro();finishTravel();onFail();});

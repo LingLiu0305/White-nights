@@ -3,11 +3,12 @@ import assert from 'node:assert/strict';
 import { createState, transition, readSave, writeSave } from '../src/story.js';
 import {chapters,locations} from '../src/content.js';
 
-test('every story paragraph and location has a matching English text', () => {
+test('story content is complete and English only', () => {
   for(const chapter of chapters){
     assert.ok(chapter.endingEn);
-    for(const line of chapter.lines)assert.ok(line.text.trim()&&line.en?.trim(),`${chapter.id}: ${line.text}`);
+    for(const line of chapter.lines)assert.ok(line.en?.trim()&&line.speakerEn&&line.sectionEn,chapter.id);
   }
+  assert.doesNotMatch(JSON.stringify({chapters,locations}),/[\u3400-\u9fff]/);
   for(const place of locations)assert.ok(place.descriptionEn?.trim()&&place.noteEn?.trim());
 });
 
@@ -87,8 +88,8 @@ test('finishing a replay returns to saved main progress and enables a fresh repl
 test('expanded story establishes the city before the encounter and separates narrative scenes',()=>{
   assert.ok(chapters[0].lines.length>=30);
   assert.ok(chapters.reduce((sum,c)=>sum+c.lines.length,0)>=140);
-  assert.match(chapters[0].lines[0].text,/彼得堡/);
-  assert.ok(chapters.every(c=>new Set(c.lines.map(l=>l.section)).size>=2));
+  assert.match(chapters[0].lines[0].en,/Petersburg/);
+  assert.ok(chapters.every(c=>new Set(c.lines.map(l=>l.sectionEn)).size>=2));
 });
 test('previous paragraph stops at the beginning and persists the corrected cursor',()=>{
   let s=transition(transition(createState(),{type:'START',chapter:0}),{type:'ARRIVE'});

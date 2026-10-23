@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#b9b6cc">
-  <meta name="description" content="Four nights in Petersburg. An illustrated, bilingual journey through Dostoevsky’s White Nights.">
+  <meta name="description" content="Four nights in Petersburg. An illustrated journey through Dostoevsky’s White Nights.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%233e5753'/%3E%3Ctext x='32' y='45' font-size='44' text-anchor='middle' fill='%23f5eee0'%3EW%3C/text%3E%3C/svg%3E">
-  <title>White Nights · 白夜</title>
+  <title>White Nights</title>
 </head>
 <body>
   <div id="map-view">
@@ -44,22 +44,22 @@
     </header>
     <div class="reading-deck" id="reading-deck">
       <div class="dialogue-wrap" id="dialogue-wrap">
-        <figure class="speaker-portrait" id="portrait-left" hidden><img src="/assets/dreamer-portrait.png" alt="" width="1024" height="1024"><figcaption><strong>The Dreamer</strong><span lang="zh-CN">梦想家</span></figcaption></figure>
+        <figure class="speaker-portrait" id="portrait-left" hidden><img src="/assets/dreamer-portrait.png" alt="" width="1024" height="1024"><figcaption><strong>The Dreamer</strong></figcaption></figure>
         <div class="dialogue-column">
           <div class="dialogue-meta"><div><span class="reading-scene" id="reading-scene"></span><span id="speaker"></span></div><span id="line-count"></span></div>
-          <div id="dialogue" aria-live="polite"><p id="dialogue-en" lang="en"></p><p id="dialogue-zh" lang="zh-CN"></p></div>
+          <div id="dialogue" aria-live="polite"><p id="dialogue-en" lang="en"></p></div>
         </div>
-        <figure class="speaker-portrait" id="portrait-right" hidden><img src="/assets/nastenka-portrait.png" alt="" width="1024" height="1024"><figcaption><strong id="right-speaker-name">The young woman</strong><span id="right-speaker-zh" lang="zh-CN">姑娘</span></figcaption></figure>
+        <figure class="speaker-portrait" id="portrait-right" hidden><img src="/assets/nastenka-portrait.png" alt="" width="1024" height="1024"><figcaption><strong id="right-speaker-name">The young woman</strong></figcaption></figure>
         <div class="dialogue-bottom"><button id="previous-line" aria-label="Previous paragraph">← <span>Back</span></button><span class="reading-hint">Space to continue</span><button id="next-line" aria-label="Continue reading">Next <span class="next-arrow" aria-hidden="true">→</span></button></div>
         <div class="reading-progress"><span id="reading-progress"></span></div>
       </div>
     </div>
-    <section id="chapter-end" hidden><p id="end-label"></p><h2 id="end-title-en" lang="en"></h2><p id="end-title" lang="zh-CN"></p><button class="primary-button" id="end-map" aria-label="Return to map and continue">Return to the city <span aria-hidden="true">↗</span></button></section>
+    <section id="chapter-end" hidden><p id="end-label"></p><h2 id="end-title-en" lang="en"></h2><button class="primary-button" id="end-map" aria-label="Return to map and continue">Return to the city <span aria-hidden="true">↗</span></button></section>
   </section>
-  <dialog id="location-dialog" aria-label="Place introduction"><button class="close-dialog" aria-label="Close introduction">×</button><h2 id="place-en" lang="en"></h2><span id="place-name" lang="zh-CN"></span><p id="place-description-en" lang="en"></p><p id="place-description" class="translation" lang="zh-CN"></p><small id="place-note-en" lang="en"></small><small id="place-note" lang="zh-CN"></small><button id="place-start" class="primary-button"></button></dialog>
+  <dialog id="location-dialog" aria-label="Place introduction"><button class="close-dialog" aria-label="Close introduction">×</button><h2 id="place-en" lang="en"></h2><p id="place-description-en" lang="en"></p><small id="place-note-en" lang="en"></small><button id="place-start" class="primary-button"></button></dialog>
   <dialog id="history-dialog" aria-label="Reading history"><button class="close-dialog" aria-label="Close history">×</button><h2>The words we keep.</h2><div id="history-content"></div></dialog>
-  <dialog id="about-dialog" aria-label="About White Nights"><button class="close-dialog" aria-label="Close about">×</button><h2>Four nights.<br>A lifetime of remembering.</h2><p>An interactive adaptation of Fyodor Dostoevsky’s <em>White Nights</em>. Explore Petersburg, follow a dreamer’s footsteps, and read at your own pace. Your progress is saved on this device.</p><p class="translation" lang="zh-CN">一部改编自陀思妥耶夫斯基《白夜》的中英对照交互叙事。跟随梦想家的脚步，经历四个夜晚与清晨。阅读进度自动保存在本机。</p><p>The city is a literary map, not a historical reconstruction. Both languages are an original abridged adaptation informed by Constance Garnett’s translation, with the original ending preserved.</p><small>Illustrations: classroom Qwen Image API. City: procedural 3D.<br>Process, prompts and credits are documented in the repository.</small><button id="reset-progress" class="text-button" aria-label="Restart story">Start again ↗</button></dialog>
-  <dialog id="reset-dialog" aria-label="Confirm restart"><h2>Walk these nights again?</h2><p>This clears your reading progress on this browser.</p><p class="translation" lang="zh-CN">这会清除当前浏览器里的阅读进度。</p><div class="dialog-actions"><button class="close-dialog-inline">Keep my place</button><button id="confirm-reset" class="primary-button" aria-label="Confirm restart">Start again ↗</button></div></dialog>
+  <dialog id="about-dialog" aria-label="About White Nights"><button class="close-dialog" aria-label="Close about">×</button><h2>Four nights.<br>A lifetime of remembering.</h2><p>An interactive adaptation of Fyodor Dostoevsky’s <em>White Nights</em>. Explore Petersburg, follow a dreamer’s footsteps, and read at your own pace. Your progress is saved on this device.</p><p>The city is a literary map, not a historical reconstruction. The English text is an original abridged adaptation informed by Constance Garnett’s translation, with the original ending preserved.</p><small>Illustrations: classroom Qwen Image API. City: procedural 3D.<br>Process, prompts and credits are documented in the repository.</small><button id="reset-progress" class="text-button" aria-label="Restart story">Start again ↗</button></dialog>
+  <dialog id="reset-dialog" aria-label="Confirm restart"><h2>Walk these nights again?</h2><p>This clears your reading progress on this browser.</p><div class="dialog-actions"><button class="close-dialog-inline">Keep my place</button><button id="confirm-reset" class="primary-button" aria-label="Confirm restart">Start again ↗</button></div></dialog>
   <div class="toast" id="toast" role="status" hidden></div>
   <script type="module" src="/src/main.js"></script>
 </body></html>

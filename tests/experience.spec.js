@@ -18,19 +18,19 @@ test('map to first night, history, reload and completion',async({page})=>{
   await page.getByRole('button',{name:'Close introduction'}).click();
   await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
   await expect(page.locator('#reader')).toBeVisible();
-  await expect(page.locator('#dialogue')).toContainText(chapters[0].lines[0].text);
+  await expect(page.locator('#dialogue')).toContainText(chapters[0].lines[0].en);
   await page.getByRole('button',{name:'Continue reading',exact:true}).click();
-  await expect(page.locator('#dialogue')).toContainText('街角');
+  await expect(page.locator('#dialogue')).toContainText('street corners');
   await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[1].en);
   await expect(page.locator('#scene-backdrop')).not.toHaveCSS('background-image','none');
   await page.screenshot({path:'test-results/reading-desktop.png'});
   await page.getByRole('button',{name:'Reading history'}).click();
-  await expect(page.getByRole('dialog',{name:'Reading history'})).toContainText(chapters[0].lines[0].text);
+  await expect(page.getByRole('dialog',{name:'Reading history'})).toContainText(chapters[0].lines[0].en);
   await expect(page.getByRole('dialog',{name:'Reading history'})).toContainText(chapters[0].lines[0].en);
   await page.keyboard.press('Escape');
   await page.reload();
   await page.getByRole('button',{name:'Continue First Night',exact:true}).click();
-  await expect(page.locator('#dialogue')).toContainText('街角');
+  await expect(page.locator('#dialogue')).toContainText('street corners');
   for(let i=1;i<chapters[0].lines.length;i++) await page.getByRole('button',{name:'Continue reading',exact:true}).click();
   await expect(page.locator('#chapter-end')).toBeVisible();
   await page.getByRole('button',{name:'Return to map and continue'}).click();
@@ -44,7 +44,7 @@ test('fallback map works without WebGL and failed background still shows text',a
   await page.goto('/');
   await expect(page.locator('#map-fallback')).toBeVisible();
   await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
-  await expect(page.locator('#dialogue')).toContainText(chapters[0].lines[0].text);
+  await expect(page.locator('#dialogue')).toContainText(chapters[0].lines[0].en);
 });
 
 test('mobile layout, keyboard reading and reset',async({page})=>{
@@ -55,7 +55,7 @@ test('mobile layout, keyboard reading and reset',async({page})=>{
   await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
   await page.locator('#reader').focus();
   await page.keyboard.press('Space');
-  await expect(page.locator('#dialogue')).toContainText('街角');
+  await expect(page.locator('#dialogue')).toContainText('street corners');
   await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[1].en);
   await expect(page.locator('#scene-backdrop')).not.toHaveCSS('background-image','none');
   await page.screenshot({path:'test-results/reading-mobile.png'});
@@ -68,13 +68,13 @@ test('mobile layout, keyboard reading and reset',async({page})=>{
   await expect(page.getByRole('button',{name:'Begin First Night',exact:true})).toBeVisible();
 });
 
-test('all five chapters reach the fixed ending with paired languages',async({page})=>{
+test('all five chapters reach the fixed ending in English',async({page})=>{
   test.setTimeout(120000);
   await page.goto('/');
   for(const chapter of chapters){
     await page.getByRole('button',{name:`Begin ${chapter.labelEn}`,exact:true}).click();
     for(let index=0;index<chapter.lines.length;index++){
-      await expect(page.locator('#dialogue-zh')).toHaveText(chapter.lines[index].text);
+      await expect(page.locator('#reader')).not.toContainText(/[\u3400-\u9fff]/);
       await expect(page.locator('#dialogue-en')).toHaveText(chapter.lines[index].en);
       if(chapter.id==='night-4'&&chapter.lines[index].visual==='leaving'&&chapter.lines[index-1]?.visual!=='leaving')await page.screenshot({path:'test-results/fourth-night.png'});
       await page.getByRole('button',{name:'Continue reading',exact:true}).click();
@@ -102,7 +102,7 @@ test('ordinary motion, duplicate start, skip and reveal text before advancing',a
 test('storage denied shows feedback and keeps reading available',async({page})=>{
   await page.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw new Error('storage denied')}}));
   await page.goto('/');
-  await expect(page.locator('#save-status')).toContainText('无法保存');
+  await expect(page.locator('#save-status')).toContainText('cannot be saved');
   await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
   await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[0].en);
 });
@@ -114,7 +114,7 @@ test('context loss on the map still allows immediate reading',async({page})=>{
   await expect(page.locator('#map-fallback')).toBeVisible();
   await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
   await expect(page.locator('#reader')).toBeVisible();
-  await expect(page.locator('#dialogue')).toContainText(chapters[0].lines[0].text);
+  await expect(page.locator('#dialogue')).toContainText(chapters[0].lines[0].en);
 });
 
 test('chapter travel reaches reading without using skip',async({page})=>{
@@ -182,13 +182,13 @@ test('music failure gives feedback without claiming playback',async({page})=>{
   await page.goto('/');
   await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
   await page.getByRole('button',{name:'Play reading music',exact:true}).click();
-  await expect(page.locator('#toast')).toContainText('音乐未能启动');
+  await expect(page.locator('#toast')).toContainText('Music could not start');
   await expect(page.locator('#reader-sound')).toHaveAttribute('aria-pressed','false');
   await page.getByRole('button',{name:'Continue reading',exact:true}).click();
-  await expect(page.locator('#dialogue-zh')).toHaveText(chapters[0].lines[1].text);
+  await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[1].en);
 });
 
-test('short viewport keeps the paired text and reading controls accessible',async({page})=>{
+test('short viewport keeps the English text and reading controls accessible',async({page})=>{
   await page.setViewportSize({width:844,height:390});
   await page.goto('/');
   await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
@@ -199,12 +199,12 @@ test('short viewport keeps the paired text and reading controls accessible',asyn
   await page.screenshot({path:'test-results/reading-landscape.png'});
 });
 
-test('speaker portraits alternate sides without covering bilingual dialogue',async({page})=>{
+test('speaker portraits alternate sides without covering dialogue',async({page})=>{
   await page.goto('/');
   await page.locator('#start-story').click();
   await expect(page.locator('#portrait-left')).toBeHidden();
   await expect(page.locator('#portrait-right')).toBeHidden();
-  const firstSpeech=chapters[0].lines.findIndex(line=>line.speaker==='梦想家');
+  const firstSpeech=chapters[0].lines.findIndex(line=>line.speakerEn==='The Dreamer');
   for(let i=0;i<firstSpeech;i++)await page.locator('#next-line').click();
   await expect(page.locator('#portrait-left')).toBeVisible();
   await expect(page.locator('#portrait-left')).toContainText('The Dreamer');
@@ -213,7 +213,7 @@ test('speaker portraits alternate sides without covering bilingual dialogue',asy
   const left=await page.locator('#portrait-left').boundingBox(),words=await page.locator('#dialogue').boundingBox();
   expect(left.x+left.width).toBeLessThanOrEqual(words.x);
   await page.screenshot({path:'test-results/dreamer-dialogue.png'});
-  const nextSpeech=chapters[0].lines.findIndex((line,i)=>i>firstSpeech&&line.speaker==='姑娘');
+  const nextSpeech=chapters[0].lines.findIndex((line,i)=>i>firstSpeech&&line.speakerEn==='The young woman');
   for(let i=firstSpeech;i<nextSpeech;i++)await page.locator('#next-line').click();
   await expect(page.locator('#portrait-left')).toBeHidden();
   await expect(page.locator('#portrait-right')).toBeVisible();
@@ -235,7 +235,7 @@ test('small phone landscape preserves a scrollable reading area',async({page})=>
   await page.goto('/');
   await page.locator('#start-story').click();
   const words=await page.locator('#dialogue').boundingBox();
-  expect(words.height).toBeGreaterThan(100);
+  expect(words.height).toBeGreaterThan(40);
   expect(words.y).toBeGreaterThan(55);
   const next=await page.locator('#next-line').boundingBox();
   expect(next.y+next.height).toBeLessThan(320);
@@ -246,7 +246,7 @@ test('missing character image retains the speaker name and reading controls',asy
   await page.route('**/assets/dreamer-portrait.png',route=>route.abort());
   await page.goto('/');
   await page.locator('#start-story').click();
-  const firstSpeech=chapters[0].lines.findIndex(line=>line.speaker==='梦想家');
+  const firstSpeech=chapters[0].lines.findIndex(line=>line.speakerEn==='The Dreamer');
   for(let i=0;i<firstSpeech;i++)await page.locator('#next-line').click();
   await expect(page.locator('#portrait-left figcaption')).toBeVisible();
   await expect(page.locator('#portrait-left')).toContainText('The Dreamer');
@@ -311,4 +311,21 @@ test('touch reveals a place before opening it and narrow landscape keeps the sta
   await start.tap();
   await expect(page.locator('#reader')).toBeVisible();
   await context.close();
+});
+
+test('English narration uses the empty portrait columns and leaves most of the scene exposed',async({page})=>{
+  await page.goto('/');
+  await page.getByRole('button',{name:'About the story ↗'}).click();
+  await expect(page.locator('#about-dialog')).not.toContainText(/[\u3400-\u9fff]/);
+  await page.keyboard.press('Escape');
+  await page.locator('#start-story').click();
+  const prose=await page.locator('#dialogue').boundingBox(),deck=await page.locator('#reading-deck').boundingBox();
+  expect(prose.width).toBeGreaterThan(1000);
+  expect(deck.y).toBeGreaterThan(600);
+  await expect(page.locator('[lang="zh-CN"]')).toHaveCount(0);
+  await expect(page.locator('#reader')).not.toContainText(/[\u3400-\u9fff]/);
+  await page.screenshot({path:'test-results/english-narration.png'});
+  await page.locator('#history-open').click();
+  await expect(page.locator('#history-dialog')).toContainText(chapters[0].lines[0].en);
+  await expect(page.locator('#history-dialog')).not.toContainText(/[\u3400-\u9fff]/);
 });

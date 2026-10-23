@@ -116,3 +116,15 @@
 5. **保留与拒绝。** 保留 AI 提出的复用现有建筑、程序生成材质和按材质合并的方案；改变此前完整展示底座的相机，拒绝沿用白色留白、立体细线字和永久标签。没有为了这轮 3D 材质调整调用图像生成 API，也不新增服务依赖。作者反馈、AI 审查和自动检查仍不是作业要求的独立真人试读。
 
 第四轮最终验证：14 项单元测试与 19 项浏览器测试全部通过，生产构建成功。浏览器检查包括完整 152 段正文、真实音频输出、普通 / 减少动态效果、触屏两次点击地点的交互、键盘访问、手机横竖屏、WebGL 失效与镜头转场中断。保存开场、桌面探索和手机截图。Three.js 构建分块仍有约 553 kB 的体积提示；本轮没有扩充运行时外部服务依赖。真实手机性能和独立真人试读尚未验证。只保存本地版本，未推送或发布。
+
+## English reading edition and refined map character (2026-10-23)
+
+The author requested an English-only submission, noting that narration retained empty portrait columns and the opaque reading band obscured the illustration. The abstract sphere-and-cone map character also needed more detail.
+
+- Removed Chinese prose and metadata from runtime content, as well as Chinese elements in dialogue, history, location descriptions, endings, About, confirmations and feedback. Retained the exact order and English text of all 152 paragraphs. The save format and content revision are unchanged, so this visual/language edit does not reset progress.
+- Narration and inner voice now span the available reading width. Reduced the main text size and removed the fixed minimum paragraph height; lowered the reading band and gave it a translucent gradient. Dialogue retains separate portrait positions, with smaller portraits. Mobile and short landscape layouts keep scrolling and navigation available.
+- Replaced the pawn with a procedural miniature wearing a grey-blue wool coat, lapels, buttons, sleeves, trousers and boots, with hair and a simple face. A separate depth pass keeps the wayfinding character visible over buildings while correctly occluding its own body parts. It turns toward its route while moving. No image API was needed for this geometry change.
+- Kept the AI suggestion to span the narration columns rather than merely hiding portraits. Rejected the old opaque paper band and universal three-column layout. Moved location pins above the figure so the symbol does not cover its face.
+- Independent AI review checked preservation of paragraph order, English-only runtime data, DOM references and character rendering. It found no actionable defects. This review is not the assignment’s required independent human trial.
+
+Verification: 14 unit tests and 20 browser tests passed; production build succeeded. Updated desktop, phone, portrait and narration screenshots. Existing Three.js size warning remains. Changes saved locally, not pushed or published.
