@@ -128,3 +128,9 @@ The author requested an English-only submission, noting that narration retained 
 - Independent AI review checked preservation of paragraph order, English-only runtime data, DOM references and character rendering. It found no actionable defects. This review is not the assignment’s required independent human trial.
 
 Verification: 14 unit tests and 20 browser tests passed; production build succeeded. Updated desktop, phone, portrait and narration screenshots. Existing Three.js size warning remains. Changes saved locally, not pushed or published.
+
+## Dialogue stage — first visual study (2026-10-23)
+
+Following the UI audit and the author's request to see a first version, added an isolated `reader-stage.css` study: a shallow translucent violet frame, cream serif prose, attached speaker nameplates, and larger portraits extending into the scene. Narration uses a quieter nameplate and a constrained reading measure without empty portrait columns. Phone layouts lift the portrait above the frame; short landscape keeps it beside the text. Existing portraits are softly masked for this study; they are not newly generated transparent waist-up assets. No image API requests or credits were used.
+
+Targeted browser checks passed for narration, alternating speakers, missing portraits, reading/history/save flow, ordinary motion, text selection, actual audio, phone layout and short landscape. The side-switch test now measures the current paragraph bounds because text padding deliberately changes with speaker side. Stored text and progress remain unchanged. This version is a reviewable design study; the proposed new illustrations, letter treatment and mobile sound popover are not part of it.

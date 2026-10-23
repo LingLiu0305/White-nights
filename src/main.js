@@ -2,6 +2,7 @@ import '@fontsource-variable/manrope';
 import '@fontsource/lilita-one/latin-400.css';
 import './style.css';
 import './home.css';
+import './reader-stage.css';
 import {chapters,locations} from './content.js';
 import {createState,transition,readSave,writeSave} from './story.js';
 import {createMap} from './map.js';
@@ -113,7 +114,7 @@ function renderLine(){
   $('#reading-deck').dataset.voice=voice;
   $('#portrait-left').hidden=voice!=='left';$('#portrait-right').hidden=voice!=='right';
   $('#right-speaker-name').textContent=line.speakerEn;
-  $('#speaker').textContent=line.speakerEn;$('#speaker').hidden=voice!=='narration';
+  $('#speaker').textContent=line.speakerEn;$('#speaker').hidden=false;
   $('#line-count').textContent=`${String(state.line+1).padStart(2,'0')} / ${String(chapter.lines.length).padStart(2,'0')}`;
   $('#reading-progress').style.width=`${(state.line+1)/chapter.lines.length*100}%`;
   $('#dialogue').classList.toggle('inner-voice',line.speakerEn==='Inner voice');

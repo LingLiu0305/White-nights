@@ -221,7 +221,10 @@ test('speaker portraits alternate sides without covering dialogue',async({page})
   await expect(page.locator('#portrait-right')).not.toContainText('Nastenka');
   await expect.poll(()=>page.locator('#portrait-right img').evaluate(img=>img.naturalWidth)).toBeGreaterThan(0);
   const right=await page.locator('#portrait-right').boundingBox();
-  expect(right.x).toBeGreaterThanOrEqual(words.x+words.width);
+  const rightWords=await page.locator('#dialogue').boundingBox();
+  expect(right.x).toBeGreaterThanOrEqual(rightWords.x+rightWords.width);
+  await expect(page.locator('#speaker')).toBeVisible();
+  await expect(page.locator('#speaker')).toHaveText('The young woman');
   await page.screenshot({path:'test-results/nastenka-dialogue.png'});
   await page.setViewportSize({width:390,height:844});
   const mobilePortrait=await page.locator('#portrait-right').boundingBox(),mobileWords=await page.locator('#dialogue').boundingBox();
@@ -320,7 +323,8 @@ test('English narration uses the empty portrait columns and leaves most of the s
   await page.keyboard.press('Escape');
   await page.locator('#start-story').click();
   const prose=await page.locator('#dialogue').boundingBox(),deck=await page.locator('#reading-deck').boundingBox();
-  expect(prose.width).toBeGreaterThan(1000);
+  expect(prose.width).toBeGreaterThan(800);
+  expect(prose.width).toBeLessThan(1100);
   expect(deck.y).toBeGreaterThan(600);
   await expect(page.locator('[lang="zh-CN"]')).toHaveCount(0);
   await expect(page.locator('#reader')).not.toContainText(/[\u3400-\u9fff]/);
