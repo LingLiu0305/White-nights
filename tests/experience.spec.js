@@ -38,6 +38,68 @@ test('map to first night, history, reload and completion',async({page})=>{
   expect(errors).toEqual([]);
 });
 
+test('arrow keys walk the dreamer; nearby places respond to Enter',async({page})=>{
+  await page.goto('/');
+  await expect(page.locator('#walk-status')).toContainText('The little room');
+  await page.locator('#map-canvas canvas').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog',{name:'Place introduction'})).toContainText('The little room');
+  await page.keyboard.press('Escape');
+  await page.locator('#map-canvas canvas').focus();
+  await page.keyboard.down('w');
+  await page.waitForTimeout(650);
+  await page.keyboard.up('w');
+  await expect(page.locator('#walk-status')).toContainText('The little room');
+  await page.keyboard.down('ArrowUp');
+  await page.waitForTimeout(1100);
+  await page.keyboard.up('ArrowUp');
+  await expect(page.locator('#walk-status')).toBeHidden();
+  await page.keyboard.down('ArrowDown');
+  await page.waitForTimeout(1100);
+  await page.keyboard.up('ArrowDown');
+  await expect(page.locator('#walk-status')).toContainText('The little room');
+  await page.screenshot({path:'test-results/map-walking.png'});
+});
+
+test('homepage restart asks first, then clears the story',async({page})=>{
+  await page.goto('/');
+  await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
+  await page.getByRole('button',{name:'Continue reading',exact:true}).click();
+  await page.getByRole('button',{name:'Back to map',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Continue First Night',exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Restart the whole story'}).click();
+  await page.getByRole('button',{name:'Keep my place'}).click();
+  await expect(page.getByRole('button',{name:'Continue First Night',exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Restart the whole story'}).click();
+  await page.getByRole('button',{name:'Confirm restart'}).click();
+  await expect(page.getByRole('button',{name:'Begin First Night',exact:true})).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole('button',{name:'Begin First Night',exact:true})).toBeVisible();
+});
+
+test('returning to a chapter from its destination does not stall travel',async({page})=>{
+  const errors=[]; page.on('pageerror',e=>errors.push(e.message));
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.goto('/');
+  await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
+  await expect(page.locator('#reader')).toBeVisible({timeout:10000});
+  await page.getByRole('button',{name:'Back to map',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Begin First Night',exact:true})).toBeVisible();
+  // The reading cursor is still at paragraph one, so the label remains Begin.
+  // The character, however, is already standing at the chapter destination.
+  await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
+  await expect(page.locator('#reader')).toBeVisible({timeout:5000});
+  expect(errors).toEqual([]);
+});
+
+test('tablet map keeps the walking prompt clear of the chapter title',async({page})=>{
+  await page.setViewportSize({width:768,height:1024});
+  await page.goto('/');
+  const prompt=await page.locator('#walk-status').boundingBox();
+  const title=await page.locator('#chapter-title-en').boundingBox();
+  expect(prompt.y+prompt.height).toBeLessThan(title.y);
+});
+
 test('fallback map works without WebGL and failed background still shows text',async({page})=>{
   await page.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return type.includes('webgl')?null:original.call(this,type,...args)}});
   await page.route(`**/assets/${chapters[0].lines[0].image}`,r=>r.abort());
@@ -229,6 +291,8 @@ test('speaker portraits alternate sides without covering dialogue',async({page})
   await page.setViewportSize({width:390,height:844});
   const mobilePortrait=await page.locator('#portrait-right').boundingBox(),mobileWords=await page.locator('#dialogue').boundingBox();
   expect(mobilePortrait.y+mobilePortrait.height).toBeLessThan(mobileWords.y);
+  const mobileName=await page.locator('#speaker').boundingBox();
+  expect(mobilePortrait.y+mobilePortrait.height).toBeLessThan(mobileName.y);
   expect((await page.locator('#next-line').boundingBox()).y).toBeGreaterThan(mobileWords.y+mobileWords.height);
   await page.screenshot({path:'test-results/portrait-mobile.png'});
 });
@@ -303,6 +367,8 @@ test('touch reveals a place before opening it and narrow landscape keeps the sta
   await page.goto('http://127.0.0.1:5173/');
   const pin=page.locator('.map-label').filter({hasText:'The embankment'});
   await pin.tap();
+  await expect(pin.locator('.pin-name')).toHaveCSS('opacity','1');
+  await page.evaluate(()=>document.activeElement?.blur());
   await expect(pin.locator('.pin-name')).toHaveCSS('opacity','1');
   await expect(page.locator('#location-dialog')).toBeHidden();
   await pin.tap();

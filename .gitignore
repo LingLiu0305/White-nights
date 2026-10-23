@@ -8,4 +8,5 @@ dist/
 .playwright-cli/
 test-results/
 playwright-report/
+.taste-skill/
 

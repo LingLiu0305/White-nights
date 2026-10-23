@@ -3,6 +3,7 @@
 An English interactive narrative after Fyodor Dostoevsky’s *White Nights*. Explore an illustrated Petersburg canal, follow the dreamer through four nights and a morning, and read at your own pace. The ending follows the novel; exploration and reading pace belong to the reader.
 
 ![The city](docs/screenshots/map-desktop.png)
+![The dreamer walking near an interactive place](docs/screenshots/map-walking.png)
 ![English narration](docs/screenshots/reading-desktop.png)
 ![Dialogue and character portrait](docs/screenshots/dreamer-dialogue.png)
 
@@ -12,11 +13,11 @@ Readers who enjoy literature and visual novels, including people unfamiliar with
 
 ## Main interaction
 
-1. **Explore the city:** drag to look around within a limited angle; scroll to zoom. Hover or focus a location to reveal its name. On a touch screen, tap once to reveal and again to enter. The camera approaches before opening an introduction. `Places` provides a keyboard-accessible directory; `Reset view` restores the chapter view.
-2. **Begin a chapter:** select `Begin First Night`. The miniature dreamer follows a route before the reader opens. `Skip transition` skips this journey. Reduced-motion preferences bypass camera transitions and disable continuous ambient animation.
+1. **Explore the city:** hold the arrow keys (↑ ↓ ← →) to walk the dreamer along the embankment and over either bridge. A nearby place lights up; press Enter to explore it. Drag to turn the view within a limited angle; scroll to zoom. Hover or focus a location to reveal its name. On a touch screen, tap once to reveal and again to enter. `Places` offers a location directory; `Reset view` restores the camera.
+2. **Begin a chapter:** select `Begin First Night`. The dreamer walks from the current map position to the chapter’s place before the reader opens. `Skip transition` skips this journey. Reduced-motion preferences bypass camera transitions and disable continuous ambient animation.
 3. **Read:** use `Next`, Space or Right Arrow. While text is appearing, the first action reveals the rest; the next advances. `Back` or Left Arrow returns to the previous paragraph. Text is selectable. Narration uses a wide reading area; dialogue places the speaker’s portrait at the appropriate side.
 4. **Resume:** `History` shows the current chapter’s read paragraphs. `Map` returns to the city. Progress is saved in this browser, with independent reading positions for unlocked chapters.
-5. **Sound and reset:** sound is off initially. Use the music button on either screen; the reader includes volume control. `About` → `Start again` asks before clearing progress.
+5. **Sound and reset:** sound is off initially. Use the music button on either screen; the reader includes volume control. `Restart story` is on the homepage and asks before clearing all reading progress. The same action is in `About`.
 
 ## Run in VS Code
 
@@ -48,7 +49,7 @@ npm run build
 npm run test:e2e
 ```
 
-Browser tests use installed Google Chrome and start or reuse the local development server. They cover all five chapters, English-only content, save restoration, keyboard and touch use, portraits, small-screen layouts, actual audio output, failure feedback, camera transitions and interrupted dialogs. Screenshots are written to ignored `test-results/`.
+Browser tests use installed Google Chrome and start or reuse the local development server. They cover all five chapters, English-only content, walking and place proximity, restart confirmation, save restoration, touch use, portraits, small-screen layouts, actual audio output, failure feedback, camera transitions and interrupted dialogs. Screenshots are written to ignored `test-results/`.
 
 Automated checks and AI reviews do not replace the assignment’s independent human trial. That trial remains to be completed in [PROCESS.md](PROCESS.md).
 
@@ -58,12 +59,12 @@ Automated checks and AI reviews do not replace the assignment’s independent hu
 | --- | --- |
 | `src/story-text.js`, `src/content.js` | English prose, speaker names, chapter metadata and locations |
 | `src/story.js`, `src/main.js` | Progress state and interface behavior |
-| `src/map.js`, `src/scene-art.js` | City geometry, miniature character, materials, camera and picking |
+| `src/map.js`, `src/walking.js`, `src/scene-art.js` | City geometry, walkable route, miniature character, materials, camera and picking |
 | `src/style.css`, `src/home.css`, `index.html` | Reading and city layouts |
 | `src/music.js` | Original melody and bass synthesized with Web Audio |
 | `public/assets/`, `tools/generate_assets.py` | Bundled illustrations, prompt records and optional generation tool |
 
-An interaction to explain in class: clicking the chapter button dispatches `START`; `map.travel()` moves the character; `ARRIVE` opens the saved paragraph. English-only presentation keeps all 152 paragraph indices, so existing saves remain valid.
+An interaction to explain in class: arrow keys move the dreamer along the bank or bridge; entering a place’s proximity highlights it, and Enter opens its description. Starting a chapter dispatches `START`; `map.travel()` follows the paved route; `ARRIVE` opens the saved paragraph. English-only presentation keeps all 152 paragraph indices, so existing saves remain valid.
 
 ## Optional illustration generation
 
@@ -77,7 +78,7 @@ The classroom Easel / Qwen Image API may consume classroom credits. Add `--only 
 
 ## Limitations
 
-- The city and routes are literary interpretations, not historical reconstructions or free-roaming gameplay.
+- The city and routes are literary interpretations, not historical reconstructions. Walking stays on the canal pavements and two bridges; other streets are scenery.
 - Portraits have fixed expressions; some scenes share illustrations.
 - Saves are local to the current browser. Storage failures show feedback without blocking reading.
 - Real phone performance, other browsers and an independent human trial remain unverified.

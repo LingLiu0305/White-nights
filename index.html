@@ -11,11 +11,11 @@
   <div id="map-view">
     <header class="site-header">
       <div class="brand-group"><span class="small-brand" aria-label="White Nights">WHITE<br>NIGHTS</span><button id="about-open" aria-label="About the story ↗">About ↗</button></div>
-      <button id="sound" aria-label="Play music" aria-pressed="false"><span aria-hidden="true">♫</span> <span id="sound-label">Sound off</span></button>
+      <button id="sound" aria-label="Play music" aria-pressed="false"><span id="sound-label">Sound off</span></button>
     </header>
     <main>
       <section class="map-composition" aria-label="Petersburg story map">
-        <div class="scene-heading"><h1><span>WHITE</span><span>NIGHTS</span></h1></div>
+        <div class="scene-heading"><h1><span>WHITE</span><span>NIGHTS</span></h1><p>A story to walk through.</p></div>
         <div class="map-stage" id="map-stage">
           <div id="map-canvas"></div>
           <div id="map-fallback" hidden><h2>The city is still here.</h2><p>3D is unavailable on this device.<br>Explore Places or begin the story below.</p></div>
@@ -24,11 +24,12 @@
           <div class="current-chapter"><span id="chapter-label">First Night</span><h2 id="chapter-title-en">Before we met</h2></div>
           <button id="start-story" class="primary-button">Begin the story <span aria-hidden="true">↗</span></button>
         </div>
+        <p id="walk-status" class="walk-status" role="status" aria-live="polite" hidden></p>
       </section>
       <footer class="map-footer">
-        <div class="map-actions"><button id="places-open" aria-label="Explore places">Places ↗</button><button id="reset-view" aria-label="Reset map view">Reset view ⟲</button></div>
+        <div class="map-actions"><button id="places-open" aria-label="Explore places">Places ↗</button><button id="reset-view" aria-label="Reset map view">Reset view ⟲</button><button id="restart-story-home" aria-label="Restart the whole story">Restart story</button></div>
         <nav class="chapter-section" aria-label="Chapters"><div id="chapter-list" class="chapter-list"></div></nav>
-        <p class="map-hint">Drag to look around · Select a light to explore</p>
+        <p class="map-hint">Arrow keys to walk · Enter to explore · Drag to look around</p>
       </footer>
       <p id="save-status" class="save-status" role="status" hidden></p>
     </main>
@@ -40,7 +41,7 @@
     <header class="reader-header">
       <button id="back-map" class="reader-control" aria-label="Back to map">← <span>Map</span></button>
       <div><span id="reader-chapter"></span><small id="reader-subtitle"></small></div>
-      <div class="reader-tools"><button id="reader-sound" class="reader-control" aria-label="Play reading music" aria-pressed="false">♫</button><input id="music-volume" type="range" min="0" max="100" value="45" aria-label="Music volume"><button id="history-open" class="reader-control" aria-label="Reading history"><span>History</span> ☷</button></div>
+      <div class="reader-tools"><button id="reader-sound" class="reader-control" aria-label="Play reading music" aria-pressed="false">Sound</button><input id="music-volume" type="range" min="0" max="100" value="45" aria-label="Music volume"><button id="history-open" class="reader-control" aria-label="Reading history">History</button></div>
     </header>
     <div class="reading-deck" id="reading-deck">
       <div class="dialogue-wrap" id="dialogue-wrap">

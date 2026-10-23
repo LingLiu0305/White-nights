@@ -23,7 +23,7 @@ document.querySelectorAll('.speaker-portrait img').forEach(img=>{
 });
 function notify(message){clearTimeout(toastTimer);$('#toast').textContent=message;$('#toast').hidden=false;toastTimer=setTimeout(()=>$('#toast').hidden=true,4200)}
 function save(){if(!writeSave(storage,state)){$('#save-status').hidden=false;$('#save-status').textContent='Progress cannot be saved on this device. You can still read.'}}
-function showDialog(dialog){placeRequest++;dialog.showModal();}
+function showDialog(dialog){placeRequest++;map?.clearWalkKeys();dialog.showModal();}
 document.querySelectorAll('dialog').forEach(dialog=>{
   dialog.querySelectorAll('.close-dialog,.close-dialog-inline').forEach(button=>button.onclick=()=>dialog.close());
   dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
@@ -67,10 +67,13 @@ for(const location of locations){
 }
 function fallback(){
   map?.pause(true);map=null;mapView.classList.remove('scene-entering');mapView.classList.add('intro-complete','has-fallback');
-  $('#map-fallback').hidden=false;$('#map-canvas').hidden=true;$('#reset-view').hidden=true;
+  $('#map-fallback').hidden=false;$('#map-canvas').hidden=true;$('#reset-view').hidden=true;$('#walk-status').hidden=true;
   document.querySelector('.map-hint').textContent='Open Places to explore';
 }
-map=createMap($('#map-canvas'),{onSelect:selectPlace,onFail:fallback});
+map=createMap($('#map-canvas'),{onSelect:selectPlace,onFail:fallback,onNearby:id=>{
+  const status=$('#walk-status');status.hidden=!id;
+  if(id)status.textContent=`${sentenceCase(locations.find(place=>place.id===id).en)} · Press Enter to explore`;
+}});
 function startChapter(index){
   placeRequest++;
   const next=transition(state,{type:'START',chapter:index});if(next===state)return;
@@ -165,20 +168,32 @@ $('#history-open').onclick=()=>{
 $('#about-open').onclick=()=>showDialog($('#about-dialog'));
 $('#places-open').onclick=()=>showDialog($('#places-dialog'));
 $('#reset-progress').onclick=()=>{$('#about-dialog').close();showDialog($('#reset-dialog'))};
-$('#confirm-reset').onclick=()=>{$('#reset-dialog').close();state=transition(state,{type:'RESET'});selected=0;renderMap();notify('A new beginning.');$('#start-story').focus()};
+$('#restart-story-home').onclick=()=>showDialog($('#reset-dialog'));
+$('#confirm-reset').onclick=()=>{$('#reset-dialog').close();state=transition(state,{type:'RESET'});selected=0;map?.resetStory();renderMap();notify('A new beginning.');$('#start-story').focus()};
 document.addEventListener('keydown',e=>{
-  if(e.repeat||document.querySelector('dialog[open]'))return;
+  if(document.querySelector('dialog[open]'))return;
+  if(state.mode==='map'&&map&&!e.target.closest('input,select,textarea,[contenteditable]')){
+    if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)){
+      e.preventDefault();map.setWalkKey(e.code,true);return;
+    }
+    if(e.code==='Enter'&&!e.repeat&&!e.target.closest('button,a')){
+      if(map.exploreNearby())e.preventDefault();return;
+    }
+  }
+  if(e.repeat)return;
   if((e.code==='Space'||e.code==='ArrowRight'||e.code==='ArrowLeft')&&state.mode==='reading'){
     if(e.target.closest('button,a,input,select,textarea'))return;
     e.preventDefault();if(e.code==='ArrowLeft')previousLine();else nextLine();
   }
 });
+document.addEventListener('keyup',e=>{if(e.code.startsWith('Arrow'))map?.setWalkKey(e.code,false)});
+window.addEventListener('blur',()=>map?.clearWalkKeys());
 const music=new Soundtrack();
 const musicButtons=[$('#sound'),$('#reader-sound')];
 function updateMusicControls(){
   musicButtons.forEach((button,index)=>{button.setAttribute('aria-pressed',String(music.playing));button.setAttribute('aria-label',`${music.playing?'Pause':'Play'} ${index?'reading music':'music'}`)});
   $('#sound-label').textContent=music.playing?'Sound on':'Sound off';
-  $('#reader-sound').textContent=music.playing?'Ⅱ':'♫';
+  $('#reader-sound').textContent=music.playing?'Pause':'Sound';
 }
 async function toggleMusic(){
   musicButtons.forEach(button=>button.disabled=true);
