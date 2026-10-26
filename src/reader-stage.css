@@ -15,7 +15,7 @@
 .reading-deck[data-voice=left] #speaker{left:233px}.reading-deck[data-voice=right] #speaker{left:auto;right:233px}
 .reading-scene{color:#d4c7b6;font-size:11px;letter-spacing:.025em}#line-count{font-size:10px;color:#d4c7b6}
 #dialogue{min-height:66px;max-height:min(27dvh,220px);margin:16px 0 14px;padding-right:8px;scrollbar-color:#bcaa88 #ffffff0a}
-#dialogue-en{max-width:76ch;margin:0;font:400 clamp(18px,1.5vw,22px)/1.6 var(--font-body);letter-spacing:.005em;color:var(--stage-paper);text-shadow:none}
+:is(#dialogue-en,#dialogue-measure){max-width:76ch;margin:0;font:400 clamp(18px,1.5vw,22px)/1.6 var(--font-body);letter-spacing:.005em;color:var(--stage-paper);text-shadow:none}
 .speaker-portrait{position:absolute;bottom:53px;width:255px;max-width:255px;margin:0;z-index:3;pointer-events:none;display:block}
 #portrait-left{left:-30px}#portrait-right{right:-30px}
 .speaker-portrait{filter:drop-shadow(1px 3px 1px #29243377)}
@@ -32,7 +32,7 @@
 #reader button:focus-visible,#reader input:focus-visible{outline:2px solid #ffe2a5;outline-offset:4px}
 .reading-deck[data-voice=narration]{left:10%;right:10%}
 .reading-deck[data-voice=narration] .dialogue-wrap{max-width:1080px;background:#302d3fc0;border-color:#cab78b70}
-.reading-deck[data-voice=narration] #dialogue-en{max-width:76ch;margin:auto}
+.reading-deck[data-voice=narration] :is(#dialogue-en,#dialogue-measure){max-width:76ch;margin:auto}
 .reading-deck[data-voice=narration] #speaker{background:#393543;color:#e7d5b1;border-color:#bda78088;font-size:15px;top:-16px;padding:7px 20px;min-height:32px;box-shadow:none}
 .reading-deck[data-voice=narration] .dialogue-column{padding:28px 40px 4px}
 .reading-deck[data-voice=narration] .dialogue-bottom{margin:0 40px}.reading-deck[data-voice=narration] .reading-progress{margin-left:40px;margin-right:40px}
@@ -40,7 +40,7 @@
  .speaker-portrait{width:210px;max-width:210px}#portrait-left{left:-22px}#portrait-right{right:-22px}
  .reading-deck[data-voice=left] .dialogue-column{padding-left:190px}.reading-deck[data-voice=right] .dialogue-column{padding-right:190px}
  .reading-deck[data-voice=left] #speaker{left:188px}.reading-deck[data-voice=right] #speaker{right:188px}
- .dialogue-column{padding-right:32px;padding-left:32px}#dialogue-en{font-size:19px}
+ .dialogue-column{padding-right:32px;padding-left:32px}:is(#dialogue-en,#dialogue-measure){font-size:19px}
 }
 @media(max-width:760px){
  .reader-header{padding:10px 4%;gap:6px}.reader-control{font-size:12px}.reader-header>div:not(.reader-tools){font-size:12px}.reader-tools{gap:3px}#music-volume{display:block;width:36px;height:44px}#reader-sound{min-width:40px}#history-open{gap:5px}
@@ -53,7 +53,7 @@
  .reading-deck[data-voice=right] #speaker{left:auto;right:20px}
  .reading-deck[data-voice=narration] #speaker{font-size:14px;left:20px}
  .reading-scene{font-size:10px;max-width:235px;display:block}#line-count{font-size:9px}
- #dialogue{min-height:0;max-height:27dvh;margin:14px 0 12px}#dialogue-en{font-size:18px;line-height:1.55}
+ #dialogue{min-height:0;max-height:27dvh;margin:14px 0 12px}:is(#dialogue-en,#dialogue-measure){font-size:18px;line-height:1.55}
  .dialogue-bottom,.reading-deck[data-voice=narration] .dialogue-bottom{margin:0 20px;padding-bottom:2px;font-size:12px}
  .reading-hint{display:none}.reading-progress,.reading-deck[data-voice=narration] .reading-progress{margin:0 20px 9px}
  .dialogue-wrap:before,.dialogue-wrap:after{width:10px;height:10px}.dialogue-wrap:before{left:-6px}.dialogue-wrap:after{right:-6px}
@@ -65,26 +65,37 @@
  .reading-deck[data-voice=left] .dialogue-column{padding-left:135px}.reading-deck[data-voice=right] .dialogue-column{padding-right:135px}
  .speaker-portrait{bottom:49px;width:150px;max-width:150px}.speaker-portrait img{width:150px;height:150px}#portrait-left{left:-17px}#portrait-right{right:-17px}
  #speaker,.reading-deck[data-voice=left] #speaker{font-size:16px;left:133px;top:-17px;padding:7px 16px;min-height:32px}.reading-deck[data-voice=right] #speaker{right:133px}.reading-deck[data-voice=narration] #speaker{left:24px;top:-15px}
- #dialogue{min-height:0;max-height:calc(100dvh - 185px);margin:9px 0}#dialogue-en{font-size:16px;line-height:1.45}.reading-scene,#line-count{font-size:9px}
+ #dialogue{min-height:0;max-height:calc(100dvh - 185px);margin:9px 0}:is(#dialogue-en,#dialogue-measure){font-size:16px;line-height:1.45}.reading-scene,#line-count{font-size:9px}
  .dialogue-bottom,.reading-deck[data-voice=narration] .dialogue-bottom{margin:0 24px;padding:0}.dialogue-bottom button{min-height:36px}
  .reading-progress,.reading-deck[data-voice=narration] .reading-progress{margin:0 24px 8px}
 }
 
-/* A stable stage: only the text changes during the typewriter and page turns. */
+/* The invisible complete paragraph reserves its final space before typing. */
+.reader-header{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center}
+#back-map{justify-self:start}.reader-tools{justify-self:end}
+.reader-header>div:not(.reader-tools){grid-column:2;grid-row:1}
 .reading-deck,.reading-deck[data-voice=narration]{left:5.5%;right:5.5%}
-.dialogue-wrap,.reading-deck[data-voice=narration] .dialogue-wrap{display:flex;flex-direction:column;align-items:stretch;max-width:1320px;height:clamp(240px,28dvh,300px)}
-.dialogue-column,.reading-deck[data-voice=narration] .dialogue-column{flex:1;min-height:0;display:flex;flex-direction:column;width:100%}
+.dialogue-wrap,.reading-deck[data-voice=narration] .dialogue-wrap{display:flex;flex-direction:column;align-items:stretch;max-width:1320px;height:auto}
+.dialogue-column,.reading-deck[data-voice=narration] .dialogue-column{flex:0 1 auto;min-height:0;display:flex;flex-direction:column;width:100%}
 .reading-deck[data-voice=narration] .dialogue-column{max-width:1080px;margin:0 auto}
 .dialogue-meta{flex:0 0 auto;min-height:18px}
-#dialogue{flex:1;min-height:0;max-height:none;overflow:auto;scrollbar-gutter:stable}
+#dialogue{display:grid;flex:0 1 auto;min-height:3.2em;max-height:min(30dvh,260px);overflow:auto;scrollbar-gutter:stable}
+:is(#dialogue-en,#dialogue-measure){grid-area:1/1;align-self:start;width:100%;margin:0 auto}
+.reading-deck[data-voice=narration] :is(#dialogue-en,#dialogue-measure){margin:0 auto}
+#dialogue-measure{visibility:hidden;pointer-events:none;user-select:none}
 .dialogue-bottom,.reading-deck[data-voice=narration] .dialogue-bottom{flex:0 0 auto;margin-left:48px;margin-right:48px}
 .reading-progress,.reading-deck[data-voice=narration] .reading-progress{flex:0 0 1px;margin-left:48px;margin-right:48px}
 @media(max-width:760px){
  .reading-deck,.reading-deck[data-voice=narration]{left:5%;right:5%}
- .dialogue-wrap,.reading-deck[data-voice=narration] .dialogue-wrap{height:min(320px,38dvh)}
+ #dialogue{max-height:30dvh}
  .dialogue-bottom,.reading-deck[data-voice=narration] .dialogue-bottom,.reading-progress,.reading-deck[data-voice=narration] .reading-progress{margin-left:20px;margin-right:20px}
 }
+@media(max-width:500px){
+ .reader-header{grid-template-columns:1fr 1fr;gap:0 8px}
+ .reader-header>div:not(.reader-tools){grid-column:1/-1;grid-row:1;justify-self:center}
+ #back-map{grid-column:1;grid-row:2}.reader-tools{grid-column:2;grid-row:2}
+}
 @media(max-height:550px){
- .dialogue-wrap,.reading-deck[data-voice=narration] .dialogue-wrap{height:clamp(180px,calc(100dvh - 120px),250px)}
+ #dialogue{min-height:0;max-height:calc(100dvh - 220px)}
  .dialogue-bottom,.reading-deck[data-voice=narration] .dialogue-bottom,.reading-progress,.reading-deck[data-voice=narration] .reading-progress{margin-left:24px;margin-right:24px}
 }

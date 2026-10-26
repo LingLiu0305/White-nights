@@ -5,7 +5,7 @@ An English interactive narrative after Fyodor Dostoevsky’s *White Nights*. Exp
 ![The expanded city](docs/screenshots/type-home.png)
 ![City viewed from the side](docs/screenshots/city-wide.png)
 ![The dreamer walking near an interactive place](docs/screenshots/map-walking.png)
-![English narration](docs/screenshots/fixed-dialogue-narration.png)
+![English narration](docs/screenshots/adaptive-narration.png)
 ![Dialogue and character portrait](docs/screenshots/fixed-dialogue-speaker.png)
 
 ## Who it is for
@@ -16,7 +16,7 @@ Readers who enjoy literature and visual novels, including people unfamiliar with
 
 1. **Explore the city:** hold the arrow keys (↑ ↓ ← →) to walk the dreamer along the embankment and over either bridge. A nearby place lights up; press Enter to explore it. Drag to turn the view within a limited angle; scroll to zoom. Hover or focus a location to reveal its name. On a touch screen, tap once to reveal and again to enter. `Places` offers a location directory; `Reset view` restores the camera.
 2. **Begin a chapter:** select `Begin First Night`. The dreamer walks from the current map position to the chapter’s place before the reader opens. `Skip transition` skips this journey. Reduced-motion preferences bypass camera transitions and disable continuous ambient animation.
-3. **Read:** use `Next`, Space or Right Arrow. While text is appearing, the first action reveals the rest; the next advances. `Back` or Left Arrow returns to the previous paragraph. The dialogue frame stays fixed while text appears; longer passages scroll inside it. Text is selectable. Narration uses a wide reading area; dialogue places the speaker’s portrait at the appropriate side.
+3. **Read:** use `Next`, Space or Right Arrow. While text is appearing, the first action reveals the rest; the next advances. `Back` or Left Arrow returns to the previous paragraph. The dialogue frame sizes to the complete paragraph before typing begins, then stays stable during the reveal. Short passages use less space; very long passages scroll inside the frame. Text is selectable. Narration uses a wide reading area; dialogue places the speaker’s portrait at the appropriate side.
 4. **Resume:** `History` shows the current chapter’s read paragraphs. `Map` returns to the city. Progress is saved in this browser, with independent reading positions for unlocked chapters.
 5. **Sound and reset:** sound is off initially. Use the music button on either screen; the reader includes volume control. `Restart story` is on the homepage and asks before clearing all reading progress. The same action is in `About`.
 

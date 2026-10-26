@@ -400,7 +400,7 @@ test('English narration uses the empty portrait columns and leaves most of the s
   await expect(page.locator('#history-dialog')).not.toContainText(/[\u3400-\u9fff]/);
 });
 
-test('dialogue frame stays fixed while typing and between speakers',async({page})=>{
+test('dialogue frame reserves the complete paragraph while typing',async({page})=>{
   await page.emulateMedia({reducedMotion:'no-preference'});
   await page.goto('/');
   await page.locator('#start-story').click();
@@ -423,7 +423,30 @@ test('dialogue frame stays fixed while typing and between speakers',async({page}
     await page.locator('#next-line').dispatchEvent('click');
   }
   await expect(page.locator('#reading-deck')).toHaveAttribute('data-voice','left');
-  expect(await bounds()).toEqual(initial);
+  const spokenBounds=await bounds();
+  await page.waitForTimeout(200);
+  expect(await bounds()).toEqual(spokenBounds);
   await page.locator('#history-open').click();
   await expect(page.locator('#history-dialog')).not.toContainText('Inner voice');
+});
+
+
+test('reader title is centered and complete paragraphs choose compact heights',async({page})=>{
+  await page.goto('/');
+  await page.locator('#start-story').click();
+  const title=await page.locator('#reader-chapter').boundingBox();
+  expect(Math.abs(title.x+title.width/2-720)).toBeLessThan(2);
+  expect((await page.locator('.dialogue-wrap').boundingBox()).height).toBeLessThan(250);
+  await page.setViewportSize({width:390,height:844});
+  const mobileTitle=await page.locator('#reader-chapter').boundingBox();
+  expect(Math.abs(mobileTitle.x+mobileTitle.width/2-195)).toBeLessThan(2);
+  const heights=new Set();
+  for(let i=0;i<20;i++){
+    heights.add(Math.round((await page.locator('.dialogue-wrap').boundingBox()).height));
+    if(chapters[0].lines[i].speakerEn==='Narration')await expect(page.locator('#speaker')).toBeHidden();
+    if(i<19)await page.locator('#next-line').click();
+  }
+  expect(heights.size).toBeGreaterThan(1);
+  await page.locator('#history-open').click();
+  expect(await page.locator('#history-content small').allTextContents()).not.toContain('Narration');
 });

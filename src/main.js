@@ -119,10 +119,11 @@ function renderLine(){
   $('#reading-deck').dataset.voice=voice;
   $('#portrait-left').hidden=voice!=='left';$('#portrait-right').hidden=voice!=='right';
   $('#right-speaker-name').textContent=line.speakerEn;
-  $('#speaker').textContent=speakerName(line);$('#speaker').hidden=false;
+  $('#speaker').textContent=speakerName(line);$('#speaker').hidden=line.speakerEn==='Narration';
   $('#line-count').textContent=`${String(state.line+1).padStart(2,'0')} / ${String(chapter.lines.length).padStart(2,'0')}`;
   $('#reading-progress').style.width=`${(state.line+1)/chapter.lines.length*100}%`;
   $('#dialogue').classList.toggle('inner-voice',line.speakerEn==='Inner voice');
+  $('#dialogue-measure').textContent=line.en;
   $('#dialogue').scrollTop=0;
   if(reduced){finishTyping();return;}
   let count=0;typing=true;showText(line,0);$('#dialogue').setAttribute('aria-busy','true');
@@ -163,7 +164,8 @@ $('#history-open').onclick=()=>{
     const section=document.createElement('section'),name=document.createElement('small'),english=document.createElement('p');
     name.textContent=speakerName(line);
     english.textContent=line.en;english.lang='en';
-    section.append(name,english);content.append(section);
+    if(line.speakerEn!=='Narration')section.append(name);
+    section.append(english);content.append(section);
   });
   showDialog($('#history-dialog'));content.scrollTop=content.scrollHeight;
 };
