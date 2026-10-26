@@ -6,7 +6,7 @@ An English interactive narrative after Fyodor Dostoevsky’s *White Nights*. Exp
 ![City viewed from the side](docs/screenshots/city-wide.png)
 ![The dreamer walking near an interactive place](docs/screenshots/map-walking.png)
 ![English narration](docs/screenshots/adaptive-narration.png)
-![Dialogue and character portrait](docs/screenshots/nastenka-stylized-dialogue.png)
+![Dialogue and character portrait](docs/screenshots/nastenka-refined-dialogue.png)
 
 ## Who it is for
 
