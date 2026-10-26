@@ -2,11 +2,11 @@
 
 An English interactive narrative after Fyodor Dostoevsky’s *White Nights*. Explore an illustrated Petersburg canal, follow the dreamer through four nights and a morning, and read at your own pace. The ending follows the novel; exploration and reading pace belong to the reader.
 
-![The expanded city](docs/screenshots/city-default.png)
+![The expanded city](docs/screenshots/type-home.png)
 ![City viewed from the side](docs/screenshots/city-wide.png)
 ![The dreamer walking near an interactive place](docs/screenshots/map-walking.png)
 ![English narration](docs/screenshots/reading-desktop.png)
-![Dialogue and character portrait](docs/screenshots/dreamer-dialogue.png)
+![Dialogue and character portrait](docs/screenshots/type-dialogue.png)
 
 ## Who it is for
 
@@ -31,7 +31,7 @@ npm run dev
 
 Open the URL printed in the terminal, normally `http://127.0.0.1:5173/`. Stop with Ctrl+C. Do not open `index.html` directly.
 
-Only dependency installation requires a network connection. Reading requires no API key, paid account, Python or AI service. All four scene illustrations, both portraits, and Manrope / Lilita One fonts are bundled. WebGL 2 renders the city; if unavailable, the location directory and reading remain available.
+Only dependency installation requires a network connection. Reading requires no API key, paid account, Python or AI service. All four scene illustrations, both portraits, and Nunito Sans / Lilita One fonts are bundled. WebGL 2 renders the city; if unavailable, the location directory and reading remain available.
 
 For a production preview:
 

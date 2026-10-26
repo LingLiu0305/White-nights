@@ -161,3 +161,10 @@ Kept the taste review's emphasis on one clear river/bridge focus and subject-spe
 References: [White Nights, opening passages](https://www.gutenberg.org/files/36034/36034-h/36034-h.htm), and [UNESCO: Saint Petersburg historic centre](https://whc.unesco.org/en/list/540/). The geometry remains a literary interpretation, not a historical reconstruction.
 
 Verification: 18 unit tests passed. Five affected browser flows passed after the final camera adjustment: first-night reading/history/reload, arrow-key walking, mobile reading/reset, animated chapter travel and touch place selection. Production build and diff checks passed; the existing Three.js chunk-size warning remains. Browser captures reported no runtime errors. Code and visual re-review confirmed the earlier roof-occlusion and distant-window concerns were addressed. Real-phone performance still requires a human-device trial.
+
+
+## Typography matched to the opening title (2026-10-26)
+
+The author rejected the modern rounded Manrope appearance in About and asked for the interface to match the existing cream Lilita One wordmark. After approving Lilita One with Nunito Sans, we kept Lilita One for display/section headings and used Nunito Sans for body text, dialogue, speaker names and controls. Removed the Georgia dialogue override and Manrope dependency. Nunito Sans regular and italic are bundled locally, with its OFL license recorded in CREDITS.md. About now has a smaller display heading, relaxed tracking and a constrained reading measure.
+
+Five affected browser checks passed: tablet map label spacing, mobile reading/reset, portrait/nameplate placement, short phone landscape and English narration. The production build passed with the existing Three.js chunk warning. Chrome confirmed both font families loaded; desktop About, mobile About, homepage and dialogue screenshots were visually inspected. No independent human trial is claimed.

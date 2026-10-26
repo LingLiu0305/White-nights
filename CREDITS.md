@@ -14,13 +14,13 @@
 - `dreamer-portrait.png`、`nastenka-portrait.png`、`summer-street.png`、`rainy-embankment.png`：2026-10-22 使用同一课堂 Easel / `qwen-image-2.1` 接口生成，分别用于梦想家、娜斯坚卡的对话肖像，以及开场街景和雨中河岸。提示词见同名 JSON；这些是原创视觉改编，不是历史人物肖像或原作插图。
 - 旧版程序剪影已移除；界面符号与地图标记由代码绘制。
 - 背景音乐：`src/music.js` 中为本项目编写的短旋律与低音伴奏，使用 Web Audio 三角波、滤波和音量包络实时合成；无外部音乐或录音。
-- 英文字体：[Manrope](https://github.com/sharanda/manrope)，通过 `@fontsource-variable/manrope` 5.3.0 在本地打包，SIL Open Font License 1.1；许可见 `public/licenses/manrope-OFL.txt`。网站现已移除中文显示。早期版本曾使用在线 Noto Serif SC，本轮已取消外部字体请求。
+- 英文正文与控件字体：**Nunito Sans**，通过 `@fontsource-variable/nunito-sans` 5.3.0 本地打包，包含常规与斜体；SIL Open Font License 1.1，许可见 `public/licenses/nunito-sans-OFL.txt`。早期版本的 Manrope 已移除。
 
 - 开场展示字体：Juan Montoreano 的 **Lilita One**，通过 `@fontsource/lilita-one` 5.3.0 本地打包；SIL Open Font License 1.1，许可见 `public/licenses/lilita-one-OFL.txt`。
 
 作者提供的参考图片用于讨论构图和色彩，没有复制进项目资源。作者提出的《鼓手余命十日谭》用于说明以叙事体验为主的方向；本项目不使用其代码、美术或音乐。
 
-首页布局参考 [The Monolith Project](https://themonolithproject.net/) 全屏场景、边缘控件、奶油色厚标题和柔和轮廓的视觉语言。检查其页面样式得到字体名 `BRCobane`；本项目使用开源 Manrope 重新设计，没有复制其字体文件、代码、模型、声音或图片。
+首页布局参考 [The Monolith Project](https://themonolithproject.net/) 全屏场景、边缘控件、奶油色厚标题和柔和轮廓的视觉语言。检查其页面样式得到字体名 `BRCobane`；本项目早期使用开源 Manrope 重新设计，现统一为 Lilita One 与 Nunito Sans，没有复制其字体文件、代码、模型、声音或图片。
 
 ## 代码与工具
 

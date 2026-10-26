@@ -1,4 +1,5 @@
-import '@fontsource-variable/manrope';
+import '@fontsource-variable/nunito-sans';
+import '@fontsource-variable/nunito-sans/wght-italic.css';
 import '@fontsource/lilita-one/latin-400.css';
 import './style.css';
 import './home.css';
