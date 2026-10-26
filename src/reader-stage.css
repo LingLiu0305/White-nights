@@ -19,8 +19,8 @@
 .speaker-portrait{position:absolute;bottom:53px;width:255px;max-width:255px;margin:0;z-index:3;pointer-events:none;display:block}
 #portrait-left{left:-30px}#portrait-right{right:-30px}
 .speaker-portrait{filter:drop-shadow(1px 3px 1px #29243377)}
-#portrait-left{--paper-cut:polygon(8% 100%,9% 83%,14% 70%,23% 59%,33% 52%,32% 47%,26% 42%,22% 34%,21% 22%,26% 12%,36% 5%,48% 3%,60% 5%,69% 9%,75% 18%,77% 28%,73% 39%,67% 47%,65% 52%,78% 58%,91% 71%,96% 88%,95% 100%,70% 99%,63% 100%,45% 99%,28% 100%)}
-#portrait-right{--paper-cut:polygon(15% 100%,14% 87%,18% 75%,22% 63%,37% 53%,34% 48%,29% 42%,27% 30%,31% 19%,38% 11%,48% 6%,58% 5%,68% 9%,76% 17%,79% 27%,77% 40%,74% 51%,84% 60%,89% 77%,86% 87%,83% 99%,66% 100%,53% 99%,37% 100%)}
+#portrait-left{--paper-cut:polygon(3% 97%,4% 83%,8% 69%,20% 61%,34% 54%,33% 48%,27% 42%,22% 33%,21% 22%,27% 12%,39% 6%,54% 5%,65% 10%,69% 20%,68% 30%,67% 36%,65% 46%,62% 51%,69% 56%,83% 63%,93% 73%,97% 91%,94% 98%,75% 99%,54% 98%,32% 100%,16% 98%)}
+#portrait-right{--paper-cut:polygon(8% 99%,10% 86%,14% 76%,12% 71%,19% 60%,31% 52%,40% 48%,35% 43%,32% 35%,31% 25%,35% 15%,43% 8%,58% 6%,69% 10%,76% 18%,77% 29%,74% 36%,69% 41%,71% 46%,65% 49%,79% 56%,89% 64%,97% 72%,92% 78%,96% 94%,89% 100%,68% 99%,45% 100%,26% 99%)}
 .speaker-portrait:before{content:'';position:absolute;inset:-4px;background:#f1dfbf;clip-path:var(--paper-cut);z-index:-1}
 .speaker-portrait img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:0;clip-path:var(--paper-cut);mask-image:none;filter:none}
 .speaker-portrait figcaption{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
