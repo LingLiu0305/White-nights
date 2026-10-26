@@ -17,18 +17,18 @@ export function createMap(container,{onSelect,onNearby,onFail}) {
   renderer.domElement.tabIndex=0;
   renderer.domElement.setAttribute('aria-label','Petersburg story map. Use arrow keys to walk; press Enter near a place to explore. Drag to turn the view.');
   const scene=new THREE.Scene();
-  scene.fog=new THREE.Fog(0xb9b6cc,15,60);scene.add(sky());
+  scene.fog=new THREE.Fog(0xb9b6cc,20,82);scene.add(sky());
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   let mobile=container.clientWidth<760,chapterIndex=0,cameraMove=null,introDone=null,interacting=false,lastInteraction=0;
   const camera=new THREE.PerspectiveCamera(mobile?61:50,1,.1,180);
   const controls=new OrbitControls(camera,renderer.domElement);
   controls.enableDamping=true;controls.enablePan=false;controls.enableZoom=true;
-  controls.minPolarAngle=.94;controls.maxPolarAngle=1.42;
+  controls.minPolarAngle=.8;controls.maxPolarAngle=1.42;
   controls.minAzimuthAngle=-.62;controls.maxAzimuthAngle=.62;
   controls.minDistance=12;controls.maxDistance=31;
   function pose(index=chapterIndex){
     const shifts=[0,-.7,.65,-.3,0];
-    return {position:new THREE.Vector3(shifts[index]+(mobile?.4:2.1),mobile?7.4:6.7,mobile?17:14.8),target:new THREE.Vector3(0,-.4,-7+index*.3)};
+    return {position:new THREE.Vector3(shifts[index]+(mobile?.4:2.1),mobile?7.4:6.7,mobile?17:14.8),target:new THREE.Vector3(0,-.4,-4+index*.3)};
   }
   const initial=pose();camera.position.copy(initial.position);controls.target.copy(initial.target);controls.update();
   function finishIntro(){if(introDone){const done=introDone;introDone=null;done()}}
@@ -71,38 +71,87 @@ export function createMap(container,{onSelect,onNearby,onFail}) {
     box(.055,.055,110,0x656078,world,x,.66,-40);
     box(.035,.035,110,0x82758d,world,x,.35,-40);
   }
-  function building(x,z,w,d,h,color,roof=0x6c8c85,location) {
+  const distantWindow=new THREE.PlaneGeometry(.24,.34);
+  function building(x,z,w,d,h,color,roof=0x6c8c85,location,options={}) {
+    const variant=options.variant??Math.abs(Math.round(x*7+z*3))%4;
+    const simple=options.simple??false;
     const g=new THREE.Group();g.position.set(x,0,z);g.userData.location=location;world.add(g);
     box(w,h,d,color,g,0,h/2,0,true);
     box(w+.16,.13,d+.16,0xe9e0cb,g,0,h,0,true);
     box(w+.1,.15,d+.1,0xcbbeb3,g,0,.18,0,true);
-    for(let level=.8;level<h-.2;level+=.8) {
-      box(w+.04,.055,d+.04,0xe7d7c5,g,0,level+.33,0);
+    if(simple){
+      // Shared flat windows keep perimeter construction light. Distant facades
+      // need rhythm and warm dots, not individual frames and projecting sills.
+      for(let y=.85;y<h-.3;y+=1.1){
+        for(let px=-w/2+.55;px<w/2-.3;px+=1.05)for(const side of [-1,1]){
+          const win=mesh(distantWindow,Math.sin(px*4+y+x)>0.7?0xf4dba1:0x81899d,g,px,y,side*(d/2+.012));
+          if(side<0)win.rotation.y=Math.PI;
+        }
+        for(let pz=-d/2+.55;pz<d/2-.3;pz+=1.05)for(const side of [-1,1]){
+          const win=mesh(distantWindow,0x81899d,g,side*(w/2+.012),y,pz);win.rotation.y=side*Math.PI/2;
+        }
+      }
+    }
+    for(let level=.8;!simple&&level<h-.2;level+=.8) {
+      if(!simple)box(w+.04,.055,d+.04,0xe7d7c5,g,0,level+.33,0);
       for(let px=-w/2+.36;px<w/2-.2;px+=.58) {
         for(const side of [-1,1]) {
-          box(.29,.43,.025,0xeadbc2,g,px,level,side*(d/2+.025));
+          if(!simple&&(variant===1||options.pink)&&side===1&&Math.abs(px)<.5&&level<1.3)continue;
+          if(!simple)box(.29,.43,.025,0xeadbc2,g,px,level,side*(d/2+.025));
           box(.19,.32,.028,Math.sin(x*13+z*7+px*5+level)>0.65?0xf4dba1:0x81899d,g,px,level+.02,side*(d/2+.04));
-          box(.34,.045,.08,0xf0e3d0,g,px,level-.23,side*(d/2+.06));
+          if(!simple)box(.34,.045,.08,0xf0e3d0,g,px,level-.23,side*(d/2+.06));
         }
       }
       for(let pz=-d/2+.36;pz<d/2-.2;pz+=.6) for(const side of [-1,1]){
-        box(.025,.42,.28,0xeadbc2,g,side*(w/2+.02),level,pz);
+        if(!simple)box(.025,.42,.28,0xeadbc2,g,side*(w/2+.02),level,pz);
         box(.03,.31,.18,Math.sin(x+z+pz*9+level)>0.7?0xf4dba1:0x81899d,g,side*(w/2+.04),level+.02,pz);
       }
     }
-    box(.44,.72,.06,0x4c5e61,g,0,.45,d/2+.04,true);
-    const roofShape=new THREE.Shape();roofShape.moveTo(-w/2-.15,0);roofShape.lineTo(0,.75);roofShape.lineTo(w/2+.15,0);roofShape.closePath();
-    const geo=new THREE.ExtrudeGeometry(roofShape,{depth:d+.3,bevelEnabled:false});
-    mesh(geo,roof,g,0,h+.06,-d/2-.15,true);
-    box(.24,.6,.26,0xc9a9a1,g,w*.25,h+.6,-d*.2,true);
+    if(!simple&&(variant===1||options.pink)){
+      // A shallow recessed carriage gate, with a separate stone arch surround.
+      const opening=new THREE.Shape();opening.moveTo(-.36,0);opening.lineTo(-.36,.68);
+      opening.absarc(0,.68,.36,Math.PI,0,true);opening.lineTo(.36,0);opening.closePath();
+      mesh(new THREE.ShapeGeometry(opening),0x504f64,g,0,.1,d/2+.045);
+      const arch=new THREE.Shape();arch.moveTo(-.47,0);arch.lineTo(-.47,.68);
+      arch.absarc(0,.68,.47,Math.PI,0,true);arch.lineTo(.47,0);arch.lineTo(.36,0);
+      arch.lineTo(.36,.68);arch.absarc(0,.68,.36,0,Math.PI,false);arch.lineTo(-.36,0);arch.closePath();
+      mesh(new THREE.ExtrudeGeometry(arch,{depth:.08,bevelEnabled:false}),0xe9deca,g,0,.1,d/2+.06,true);
+    }else box(.44,.72,.06,0x4c5e61,g,0,.45,d/2+.04,!simple);
+    if(variant===2){
+      // A low roof behind a parapet breaks up the repeated triangular silhouette.
+      box(w+.06,.2,d+.06,roof,g,0,h+.19,0,true);
+      for(const side of [-1,1])box(w+.2,.16,.13,0xe9e0cb,g,0,h+.35,side*d/2,true);
+    }else if(variant===3){
+      const v=[-w/2-.13,0,-d/2-.13,w/2+.13,0,-d/2-.13,w/2+.13,0,d/2+.13,-w/2-.13,0,d/2+.13,0,.55,-d*.25,0,.55,d*.25];
+      const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(v,3));
+      geo.setIndex([0,4,1,1,4,5,1,5,2,2,5,3,3,5,4,3,4,0]);geo.computeVertexNormals();
+      // Batching expects UVs on every mesh, including custom roof geometry.
+      geo.setAttribute('uv',new THREE.Float32BufferAttribute([0,0,1,0,1,1,0,1,.5,.25,.5,.75],2));
+      mesh(geo,roof,g,0,h+.06,0,true);
+    }else{
+      const roofShape=new THREE.Shape();roofShape.moveTo(-w/2-.15,0);roofShape.lineTo(0,options.pink?.42:.65);roofShape.lineTo(w/2+.15,0);roofShape.closePath();
+      mesh(new THREE.ExtrudeGeometry(roofShape,{depth:d+.3,bevelEnabled:false}),roof,g,0,h+.06,-d/2-.15,true);
+    }
+    box(.24,.5,.26,0xc9a9a1,g,w*.25,h+.5,-d*.2,!simple);
+    if(!simple&&(variant===1||options.pink))for(const side of [-1,1]){
+      box(.12,h-.4,.1,0xeee0ca,g,side*(w/2-.16),h/2+.1,d/2+.08);
+      box(.21,.13,.16,0xeee0ca,g,side*(w/2-.16),h-.2,d/2+.1);
+    }
+    if(options.pink){
+      // The dreamer's familiar little pink house, recalled in the opening pages.
+      const pediment=new THREE.Shape();pediment.moveTo(-.65,0);pediment.lineTo(0,.35);pediment.lineTo(.65,0);pediment.closePath();
+      mesh(new THREE.ExtrudeGeometry(pediment,{depth:.12,bevelEnabled:false}),0xf0e2cc,g,0,h+.1,d/2+.1,true);
+      for(const side of [-1,1])box(.33,.07,.16,0xe6b9ba,g,side*.65,.5,d/2+.12);
+    }
     return g;
   }
   const palette=[0xe5c9b2,0xd6bcc7,0xe4d9be,0xc8bdd0,0xd5c6d8];
   let bi=0;
   for(const side of [-1,1]) for(const z of [-6.4,-2.8,4.4,7]) {
     const x=side*5.1;
-    building(x,z,2.4,1.7,2.2+(bi%3)*.45,palette[bi%5],0x858ca5,
-      side<0&&z===4.4?'home':side>0&&z===-2.8?'house':undefined);bi++;
+    const pink=side<0&&z===-2.8;
+    building(x,z,2.4,1.7,pink?1.9:2.2+(bi%3)*.45,pink?0xe6b5bc:palette[bi%5],pink?0x827e9b:0x858ca5,
+      side<0&&z===4.4?'home':side>0&&z===-2.8?'house':undefined,pink?{pink:true,variant:0}:{});bi++;
   }
   for(const side of [-1,1]) for(const z of [-6,-2,2.2,6]) {
     building(side*9,z,2.4,2.4,2.3+(bi%3)*.55,palette[bi%5],bi%2?0x8c97ad:0x8d819f);bi++;
@@ -122,8 +171,28 @@ export function createMap(container,{onSelect,onNearby,onFail}) {
     building(side*10,z-1,3.3,3.8,4+(bi%3),palette[bi%5],0x85839f);bi++;
   }
   for(const side of [-1,1])building(side*6.5,11,3.7,3.2,4.4,palette[side+2],0x858aa2);
+  // Perimeter blocks extend beyond the rotated views. Paired rows form
+  // continuous blocks; gaps between blocks read as cross streets.
+  for(const side of [-1,1])for(const x of [18,25,32,39])for(const z of [-48,-38,-28,-18,-8,2,12,22]){
+    const index=Math.abs(x+z),height=2.5+(index%5)*.36;
+    building(side*x,z,5.4,3.6,height,palette[index%5],index%2?0x8d829e:0x8993a5,undefined,{simple:true,variant:index%4});
+    building(side*x,z+3.6,5.4,3.4,height+.25,palette[(index+2)%5],0x89839e,undefined,{simple:true,variant:(index+1)%4});
+  }
+  // Connect the canal district to the outer grid; intersections remain open.
+  for(const side of [-1,1]){
+    for(const x of [15.6,21.5,28.5,35.5])box(1.15,.035,83,0xb3acbf,world,side*x,-.115,-14);
+    for(const z of [-12.8,-2.8,7.2,17.2]){
+      box(33,.035,1.15,0xb3acbf,world,side*25,-.112,z);
+      for(const dz of [-.68,.68])box(33,.045,.09,0xd9cbd1,world,side*25,-.08,z+dz);
+    }
+  }
+  // Block joints make the existing continuous stone quay read at close range.
+  for(const x of [-2.2,2.2])for(let z=-22;z<13;z+=1.2){
+    box(.36,.018,.025,0x9a91a9,world,x,.23,z);
+    box(.025,.27,.025,0x9a91a9,world,x-Math.sign(x)*.18,.08,z);
+  }
   // Small pavilion gives the skyline one distinctive vertical landmark.
-  const pavilion=building(7,-6.5,2.1,1.8,3.4,0xe0d3bc,0x6f8986,'house');
+  const pavilion=building(7,-6.5,2.1,1.8,3.4,0xe0d3bc,0x6f8986,'house',{variant:0});
   mesh(new THREE.CylinderGeometry(.62,.72,.6,12),0xe1d4bb,pavilion,0,4.4,0,true);
   mesh(new THREE.SphereGeometry(.74,16,8,0,Math.PI*2,0,Math.PI/2),0x74948d,pavilion,0,4.7,0,true);
   mesh(new THREE.ConeGeometry(.13,1,8),0x827c68,pavilion,0,5.85,0);
@@ -314,6 +383,11 @@ export function createMap(container,{onSelect,onNearby,onFail}) {
     if(!reduced){halo.scale.setScalar(1+Math.sin(now*.0012)*.07);waterPaper.offset.y=now*.000003;particles.position.y=Math.sin(now*.00013)*.2;particles.position.x=Math.sin(now*.00009)*.2;}
 
     scene.fog.color.lerp(fogTarget,.035);sunlight.color.lerp(lightTarget,.035);
+    // Lift oblique views enough to retain the bridges and walkable riverbank.
+    // Straight-on views may still sit low among the facades.
+    const sideView=Math.min(1,Math.abs(controls.getAzimuthalAngle())/.62)**2;
+    controls.maxPolarAngle=1.42-.52*sideView;
+    controls.minDistance=12+14*sideView;
     controls.update();
     for(const {label,point} of pins){projected.copy(point).project(camera);label.style.left=`${(projected.x*.5+.5)*100}%`;label.style.top=`${(-projected.y*.5+.5)*100}%`;label.hidden=projected.z>1||projected.z< -1||Math.abs(projected.x)>.94||Math.abs(projected.y)>.8;}
     renderer.render(scene,camera);

@@ -2,7 +2,8 @@
 
 An English interactive narrative after Fyodor Dostoevsky’s *White Nights*. Explore an illustrated Petersburg canal, follow the dreamer through four nights and a morning, and read at your own pace. The ending follows the novel; exploration and reading pace belong to the reader.
 
-![The city](docs/screenshots/map-desktop.png)
+![The expanded city](docs/screenshots/city-default.png)
+![City viewed from the side](docs/screenshots/city-wide.png)
 ![The dreamer walking near an interactive place](docs/screenshots/map-walking.png)
 ![English narration](docs/screenshots/reading-desktop.png)
 ![Dialogue and character portrait](docs/screenshots/dreamer-dialogue.png)
