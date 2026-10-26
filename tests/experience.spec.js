@@ -399,3 +399,31 @@ test('English narration uses the empty portrait columns and leaves most of the s
   await expect(page.locator('#history-dialog')).toContainText(chapters[0].lines[0].en);
   await expect(page.locator('#history-dialog')).not.toContainText(/[\u3400-\u9fff]/);
 });
+
+test('dialogue frame stays fixed while typing and between speakers',async({page})=>{
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.goto('/');
+  await page.locator('#start-story').click();
+  await page.getByRole('button',{name:'Skip transition ↗'}).click();
+  await expect(page.locator('#speaker')).toHaveText('The Dreamer');
+  const bounds=()=>page.evaluate(()=>['.dialogue-wrap','#next-line'].map(selector=>{
+    const r=document.querySelector(selector).getBoundingClientRect();
+    return [r.x,r.y,r.width,r.height].map(Math.round);
+  }));
+  const initial=await bounds();
+  expect(initial[1][0]).toBeGreaterThan(900);
+  await page.waitForTimeout(450);
+  expect(await bounds()).toEqual(initial);
+  await page.locator('#next-line').dispatchEvent('click');
+  await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[0].en);
+  expect(await bounds()).toEqual(initial);
+  const spoken=chapters[0].lines.findIndex(line=>line.speakerEn==='The Dreamer');
+  for(let i=0;i<spoken;i++){
+    await page.locator('#next-line').dispatchEvent('click');
+    await page.locator('#next-line').dispatchEvent('click');
+  }
+  await expect(page.locator('#reading-deck')).toHaveAttribute('data-voice','left');
+  expect(await bounds()).toEqual(initial);
+  await page.locator('#history-open').click();
+  await expect(page.locator('#history-dialog')).not.toContainText('Inner voice');
+});

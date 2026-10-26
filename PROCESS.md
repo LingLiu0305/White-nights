@@ -168,3 +168,10 @@ Verification: 18 unit tests passed. Five affected browser flows passed after the
 The author rejected the modern rounded Manrope appearance in About and asked for the interface to match the existing cream Lilita One wordmark. After approving Lilita One with Nunito Sans, we kept Lilita One for display/section headings and used Nunito Sans for body text, dialogue, speaker names and controls. Removed the Georgia dialogue override and Manrope dependency. Nunito Sans regular and italic are bundled locally, with its OFL license recorded in CREDITS.md. About now has a smaller display heading, relaxed tracking and a constrained reading measure.
 
 Five affected browser checks passed: tablet map label spacing, mobile reading/reset, portrait/nameplate placement, short phone landscape and English narration. The production build passed with the existing Three.js chunk warning. Chrome confirmed both font families loaded; desktop About, mobile About, homepage and dialogue screenshots were visually inspected. No independent human trial is claimed.
+
+
+## Fixed dialogue frame (2026-10-26)
+
+The author found “Inner voice” awkward and asked for a fixed dialogue frame while keeping the typewriter reveal. Reflective passages now display “The Dreamer” in both the stage and history, while keeping their narration layout and existing story indices. The frame has a fixed height per viewport and a shared outer width across narration and spoken dialogue. Text scrolls inside its reserved space; Back/Next and the progress line remain anchored. The typewriter and reveal-before-advance behavior are retained.
+
+Added a browser regression comparing frame and Next-button bounds during partial text, completed text and a switch from narration to dialogue. It also verifies the new name in stage/history. This and the affected portrait, narration and small-landscape checks passed (four checks on the final revision); the production build passed with its existing Three.js size warning. Desktop and mobile screenshots were inspected.

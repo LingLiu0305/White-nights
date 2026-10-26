@@ -104,6 +104,7 @@ function setBackground(name){
   img.onerror=()=>{if(token===imageToken)notify('The illustration could not load. You can keep reading.')};
   img.src=asset(name);
 }
+const speakerName=line=>line.speakerEn==='Inner voice'?'The Dreamer':line.speakerEn;
 function showText(line,fraction=1){
   $('#dialogue-en').textContent=line.en.slice(0,Math.ceil(line.en.length*fraction));
 }
@@ -118,7 +119,7 @@ function renderLine(){
   $('#reading-deck').dataset.voice=voice;
   $('#portrait-left').hidden=voice!=='left';$('#portrait-right').hidden=voice!=='right';
   $('#right-speaker-name').textContent=line.speakerEn;
-  $('#speaker').textContent=line.speakerEn;$('#speaker').hidden=false;
+  $('#speaker').textContent=speakerName(line);$('#speaker').hidden=false;
   $('#line-count').textContent=`${String(state.line+1).padStart(2,'0')} / ${String(chapter.lines.length).padStart(2,'0')}`;
   $('#reading-progress').style.width=`${(state.line+1)/chapter.lines.length*100}%`;
   $('#dialogue').classList.toggle('inner-voice',line.speakerEn==='Inner voice');
@@ -160,7 +161,7 @@ $('#history-open').onclick=()=>{
   const content=$('#history-content');content.replaceChildren();
   chapters[state.chapter].lines.slice(0,state.line+1).forEach(line=>{
     const section=document.createElement('section'),name=document.createElement('small'),english=document.createElement('p');
-    name.textContent=line.speakerEn;
+    name.textContent=speakerName(line);
     english.textContent=line.en;english.lang='en';
     section.append(name,english);content.append(section);
   });
