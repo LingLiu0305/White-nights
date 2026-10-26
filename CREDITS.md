@@ -34,3 +34,5 @@
 应用代码是本次项目中 AI 辅助编写的实现，不是未修改的课堂或教程示例。依赖的完整许可保留在安装后的对应软件包中。
 
 - `dreamer-portrait-literary-v2.png` and `nastenka-portrait-literary-v2.png`: generated on 2026-10-26 through the user-authorized classroom Easel API, model `qwen-image-2.1`. Shared art direction uses graphite contours and restrained watercolor inspired by illustrated literary books. These fictional character designs are visual interpretations, not historical portraits. Exact prompts and generation metadata are stored in their companion JSON files; the generation recipe is `docs/portrait-options/generate-literary-pair.py`.
+
+- Current portraits: `dreamer-portrait-stylized-v4.png` and `nastenka-portrait-stylized-v4.png`, generated on 2026-10-26 with the authorized classroom Easel / `qwen-image-2.1` API. Simplified ink contours, flat color and lavender cel shading replace the previous watercolor realism. Companion JSON files contain exact prompts; `docs/portrait-options/generate-stylized-pair.py` contains the generation recipe.

@@ -310,7 +310,7 @@ test('small phone landscape preserves a scrollable reading area',async({page})=>
 });
 
 test('missing character image retains the speaker name and reading controls',async({page})=>{
-  await page.route('**/assets/dreamer-portrait.png',route=>route.abort());
+  await page.route('**/assets/dreamer-portrait*.png',route=>route.abort());
   await page.goto('/');
   await page.locator('#start-story').click();
   const firstSpeech=chapters[0].lines.findIndex(line=>line.speakerEn==='The Dreamer');
