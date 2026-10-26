@@ -116,9 +116,9 @@
 
 1. 对话框收起，桌上的信封出现轻轮廓，提示 `Open the letter`。
 2. 点击信封或同名按钮，信纸展开，持续约 400—600ms；减少动态模式直接显示展开状态。
-3. 用真实 DOM 文字显示当前第 3—7 段的信件内容。实施前再次核对这五段确为信件连续内容。
-4. 长信使用内部滚动，顶部标注 `A letter from Nastenka`，底部固定 `Fold the letter`。
-5. 合上信件后进入当前第 8 段 `The same room · Fifteen years later`。
+3. 信件并非连续五段：当前第 3、4、6 段是来信正文，第 5 段是梦想家的内心反应，第 7 段是读信后的旁白。先在信纸上显示第 3—4 段；点击 `Continue reading` 后收起信纸，呈现第 5 段反应；再推进时显示信纸上的第 6 段。不得把梦想家的反应写成娜斯坚卡的信。
+4. 信纸使用内部滚动，顶部标注 `A letter from Nastenka`。第一部分底部为 `Continue reading`，最后一部分为 `Fold the letter`；按钮始终可见。
+5. 合上信件后呈现第 7 段旁白，再按普通 Next 进入第 8 段 `The same room · Fifteen years later`。保持正文、反应和旁白的原有顺序。
 
 ### 内容与跳过规则
 
