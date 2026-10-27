@@ -56,3 +56,92 @@ test('waiting is optional and does not reorder the next story beat',async({page}
  await page.screenshot({path:'docs/screenshots/pc-waiting.png'});
  await page.locator('#event-skip').click();await expect(page.locator('#line-count')).toHaveText('10 / 23');
 });
+test('take the letter once, then keep and replace a sentence',async({page})=>{
+ await seed(page,1,38);await page.locator('#next-line').click();
+ await expect(page.locator('#event-action')).toHaveText('Take the letter');
+ await page.locator('#event-action').evaluate(b=>{b.click();b.click()});
+ await expect(page.locator('#line-count')).toHaveText('40 / 41');
+ await page.locator('#next-line').click();await page.locator('#next-line').click();
+ await page.locator('#keepsake-choices button').first().click();
+ await expect(page.locator('#keepsake-choices button').first()).toHaveAttribute('aria-pressed','true');
+ await page.locator('#keepsake-choices button').last().click();
+ const chosen=await page.locator('#keepsake-choices button').last().textContent();
+ await page.screenshot({path:'docs/screenshots/pc-keepsake.png'});
+ await page.locator('#end-map').click();await page.reload();await page.locator('#memories-open').click();
+ await expect(page.locator('#memories-content blockquote')).toHaveText(chosen);
+ await page.keyboard.press('Escape');await page.locator('#restart-story-home').click();await page.locator('#confirm-reset').click();
+ await expect(page.locator('#intro-dialog')).toBeVisible();
+ expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key)).keptLines,key)).toEqual({});
+});
+test('turning attention survives reload without advancing or changing the ending',async({page})=>{
+ await seed(page,3,28);await page.locator('#next-line').click();await expect(page.locator('#event-figure svg')).toBeVisible();await page.screenshot({path:'docs/screenshots/pc-footsteps.png'});await page.locator('#event-figure').click();
+ await expect(page.locator('#interaction-dialog')).toHaveClass(/attention-shift/);
+ await page.reload();await page.locator('#start-story').click();
+ await expect(page.locator('#interaction-dialog')).toHaveClass(/attention-shift/);
+ await page.locator('#event-continue').click();await expect(page.locator('#line-count')).toHaveText('30 / 36');
+});
+test('place memories unlock once and retain earlier descriptions',async({page})=>{
+ await seed(page,1,0);await page.locator('#back-map').click();await page.locator('#places-open').click();
+ await expect(page.locator('[data-place="home"] .new-memory')).toBeVisible();await page.locator('[data-place="home"]').click();
+ await expect(page.locator('#place-description-en')).toContainText('tomorrow');
+ await page.locator('#earlier-memories summary').click();await expect(page.locator('#place-memory-history p')).toHaveCount(1);
+ await page.locator('#location-dialog .close-dialog').click();await page.locator('#places-open').click();
+ await expect(page.locator('[data-place="home"] .new-memory')).toHaveCount(0);
+});
+test('PC observation and letter controls fit supported viewports and 200% layout zoom',async({page})=>{
+ test.setTimeout(60000);await seed(page,0,0);await page.locator('#next-line').click();
+ for(const [width,height] of [[1280,720],[1440,900],[1920,1080],[1024,768],[640,360]]){
+  await page.setViewportSize({width,height});
+  await page.locator('.event-object-list button').last().click();
+  const response=page.locator('.event-response');await expect(response).toBeVisible();
+  await page.locator('#event-continue').scrollIntoViewIfNeeded();
+  const r=await page.locator('#event-continue').boundingBox();expect(r.x).toBeGreaterThanOrEqual(0);expect(r.x+r.width).toBeLessThanOrEqual(width);expect(r.y+r.height).toBeLessThanOrEqual(height+1);
+  await page.screenshot({path:`docs/screenshots/pc-observe-${width}.png`});
+ }
+});
+test('complete interactive route preserves all five endings and keepsakes',async({page})=>{
+ test.setTimeout(120000);await page.goto('/');await page.locator('#intro-enter').click();
+ for(let chapter=0;chapter<5;chapter++){
+  await page.locator('#start-story').click();
+  for(let count=0;count<65;count++){
+   if(await page.locator('#chapter-end').isVisible())break;
+   if(await page.locator('#interaction-dialog').isVisible()){
+    if(await page.locator('#open-letter').isVisible())await page.locator('#open-letter').click();
+    else if(await page.locator('#event-action').isVisible())await page.locator('#event-action').click();
+    else await page.locator('#event-continue').click();
+   }else await page.locator('#next-line').click();
+  }
+  await expect(page.locator('#chapter-end')).toBeVisible();
+  await page.locator('#keepsake-choices button').first().click();await page.locator('#end-map').click();
+ }
+ await page.locator('#memories-open').click();await expect(page.locator('#memories-content blockquote')).toHaveCount(5);
+ await page.screenshot({path:'docs/screenshots/pc-memories.png'});
+ await page.reload();await page.locator('#memories-open').click();await expect(page.locator('#memories-content blockquote')).toHaveCount(5);
+});
+test('failed observation image and keyboard controls do not block reading',async({page})=>{
+ await page.route('**/assets/summer-street.png',r=>r.abort());
+ await seed(page,0,0);await page.locator('#music-volume').focus();await page.keyboard.press('ArrowRight');
+ await expect(page.locator('#line-count')).toHaveText('01 / 37');
+ await page.locator('#next-line').click();await expect(page.locator('.event-image-status')).toBeVisible();
+ await page.locator('.event-object-list button').first().focus();await page.keyboard.press('Enter');await expect(page.locator('#event-object-name')).toHaveText('The open window');
+ await page.keyboard.press('ArrowRight');await expect(page.locator('#interaction-dialog')).toBeVisible();
+ await page.locator('#event-skip').click();await expect(page.locator('#line-count')).toHaveText('02 / 37');
+});
+test('ordinary-motion replay restores after refresh without blanking the reader',async({page})=>{
+ await seed(page,0,0);await page.locator('#next-line').click();await page.locator('#event-skip').click();
+ await page.locator('#previous-line').click();await page.locator('#replay-interaction').click();
+ await page.emulateMedia({reducedMotion:'no-preference'});await page.reload();await page.locator('#start-story').click();
+ await expect(page.locator('#interaction-dialog')).toBeVisible();await page.locator('#event-continue').click();
+ await page.locator('#next-line').dispatchEvent('click');await expect(page.locator('#dialogue-en')).not.toBeEmpty();
+ await expect(page.locator('#line-count')).toHaveText('01 / 37');
+});
+test('PC letter remains scrollable with accessible controls at all desktop sizes',async({page})=>{
+ await seed(page,4,1);await page.locator('#next-line').click();await page.locator('#open-letter').click();
+ for(const [width,height] of [[1280,720],[1440,900],[1920,1080],[1024,768],[640,360]]){
+  await page.setViewportSize({width,height});await page.locator('#letter-paper').focus();await page.keyboard.press('PageDown');
+  await page.locator('#event-continue').scrollIntoViewIfNeeded();
+  const r=await page.locator('#event-continue').boundingBox();expect(r.x+r.width).toBeLessThanOrEqual(width);expect(r.y+r.height).toBeLessThanOrEqual(height+1);
+  await page.screenshot({path:`docs/screenshots/pc-letter-${width}.png`});
+ }
+ await page.locator('#event-continue').click();await expect(page.locator('#line-count')).toHaveText('05 / 15');
+});

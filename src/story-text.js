@@ -605,7 +605,7 @@ export const storyText = {
     },
     {
       "speakerEn": "Narration",
-      "en": "She turned away, blushing, and put an already sealed letter into my hand. Long before asking my advice, she had been waiting far too long.",
+      "en": "She turned away, blushing, and held out an already sealed letter. Long before asking my advice, she had been waiting far too long.",
       "sectionEn": "A letter already written",
       "image": "canal-night.png",
       "visual": "together",

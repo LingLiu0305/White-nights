@@ -332,7 +332,7 @@ test('missing character image retains the speaker name and reading controls',asy
 });
 
 test('immersive map hides place names until focus and supports keyboard exploration',async({page})=>{
-  await page.goto('/');
+  await page.removeLocatorHandler(page.locator('#intro-dialog[open]'));await page.goto('/');await page.locator('#intro-skip').click();
   await expect(page.locator('#map-view')).toHaveClass(/intro-complete/);
   const pin=page.locator('.map-label').filter({hasText:'The embankment'});
   await expect(pin.locator('.pin-name')).toHaveCSS('opacity','0');
@@ -345,6 +345,7 @@ test('immersive map hides place names until focus and supports keyboard explorat
 });
 
 test('opening title clears the exploration area after the camera introduction',async({page})=>{
+  await page.addInitScript(()=>localStorage.setItem('white-nights-progress-v1',JSON.stringify({textRevision:2,introSeen:true})));
   await page.emulateMedia({reducedMotion:'no-preference'});
   await page.goto('/');
   await expect(page.locator('#map-view')).toHaveClass(/scene-entering/);
@@ -373,7 +374,7 @@ test('a location transition never interrupts a subsequently opened menu',async({
 test('touch reveals a place before opening it and narrow landscape keeps the start usable',async({browser})=>{
   const context=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true,reducedMotion:'reduce'});
   const page=await context.newPage();
-  await page.goto('http://127.0.0.1:5173/');
+  await page.goto('http://127.0.0.1:5173/');await page.locator('#intro-skip').click();
   const pin=page.locator('.map-label').filter({hasText:'The embankment'});
   await pin.tap();
   await expect(pin.locator('.pin-name')).toHaveCSS('opacity','1');

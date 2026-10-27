@@ -1,5 +1,7 @@
 // Stable paragraph anchors keep events attached to their story beats.
 export const interactions = [
+ {id:'n2-take-letter',chapterId:'night-2',anchor:'night-2-p039',resume:'night-2-p040',kind:'accept',title:'A letter already written',hint:'She holds it out to you.',image:'canal-night.png'},
+ {id:'n4-footsteps',chapterId:'night-4',anchor:'night-4-p029',resume:'night-4-p030',kind:'turn',title:'Footsteps',hint:'A movement at the edge of the evening.',image:'canal-night.png'},
  {id:'n1-observe-city',chapterId:'night-1',anchor:'night-1-p001',resume:'night-1-p002',kind:'observe',title:'A city of familiar strangers',hint:'Take a moment to look around.',image:'summer-street.png',objects:[
   {id:'window',name:'The open window',x:.22,y:.33,text:'Someone has opened a window to the evening air. A small, ordinary gesture—and a life continuing beyond my reach.'},
   {id:'house',name:'The familiar house',x:.46,y:.4,text:'I notice the shutters before I notice the people. Buildings have become easier companions; they never ask why I walk alone.'},
@@ -37,3 +39,12 @@ export const placeMemories={
  bridge:[{after:0,text:'A familiar walk has become a walk I can share.'},{after:3,text:'For a little while, walking together made our imagined tomorrow feel close enough to touch.'}]
 };
 export const unlockedMemories=(id,completed)=>(placeMemories[id]||[]).filter(memory=>memory.after<=completed);
+
+// Two excerpts from the existing chapter; no new outcome or completion score.
+export const keepsakeCandidates={
+ "night-1":["night-1-p035","night-1-p037"],
+ "night-2":["night-2-p013","night-2-p041"],
+ "night-3":["night-3-p020","night-3-p023"],
+ "night-4":["night-4-p028","night-4-p036"],
+ morning:["morning-p013","morning-p015"]
+};

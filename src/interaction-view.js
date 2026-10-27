@@ -9,6 +9,7 @@ export function createInteractionView({dialog,getState,dispatch,onFinish,onSuspe
   const img=$('.event-image'),layer=$('.event-scene');if(!img.naturalWidth)return;
   const scale=Math.max(layer.clientWidth/img.naturalWidth,layer.clientHeight/img.naturalHeight);
   const ox=(layer.clientWidth-img.naturalWidth*scale)/2,oy=(layer.clientHeight-img.naturalHeight*scale)/2;
+  const figure=$('#event-figure');figure.style.left=`${ox+.79*img.naturalWidth*scale}px`;figure.style.top=`${oy+.62*img.naturalHeight*scale}px`;
   dialog.querySelectorAll('.event-hotspot').forEach(button=>{
    const x=ox+Number(button.dataset.x)*img.naturalWidth*scale,y=oy+Number(button.dataset.y)*img.naturalHeight*scale;
    button.style.left=`${x}px`;button.style.top=`${y}px`;button.hidden=x<24||y<100||x>layer.clientWidth-24||y>layer.clientHeight-24;
@@ -38,6 +39,8 @@ export function createInteractionView({dialog,getState,dispatch,onFinish,onSuspe
   $('#event-dialogue').hidden=current.kind!=='letter'||a.replay;
   $('#event-continue').textContent=a.replay?'Return to reading':current.kind==='letter'?(current.id==='morning-read-letter'?'Continue reading':'Fold the letter'):'Continue story';
   $('#event-continue').hidden=current.kind==='letter'&&a.phase==='envelope';
+  dialog.classList.toggle('attention-shift',current.kind==='turn'&&a.phase==='looked');
+  $('#event-action').hidden=false;$('#event-figure').hidden=current.kind!=='turn'||a.phase==='looked';
   $('#event-skip').hidden=a.replay||current.kind==='letter';
   const layer=$('.event-hotspots');layer.replaceChildren();$('.event-object-list').replaceChildren();
   if(current.kind==='observe'){
@@ -62,8 +65,9 @@ export function createInteractionView({dialog,getState,dispatch,onFinish,onSuspe
    $('#event-hint').textContent=current.hint;
    $('#event-action').textContent=current.kind==='accept'?'Take the letter':'Look toward the footsteps';
    $('#event-action').className=current.kind==='accept'?'envelope-button':'attention-button';
-   $('#event-figure').hidden=current.kind!=='turn';
-   $('#event-continue').hidden=true;
+   $('#event-figure').hidden=current.kind!=='turn'||a.phase==='looked';
+   $('#event-action').hidden=current.kind==='turn'&&a.phase==='looked';
+   $('#event-continue').hidden=!(current.kind==='turn'&&a.phase==='looked');
   }
   if(!dialog.open)dialog.showModal();
   positionHotspots();$('#event-title').focus({preventScroll:true});
@@ -73,7 +77,8 @@ export function createInteractionView({dialog,getState,dispatch,onFinish,onSuspe
  $('#event-skip').onclick=()=>onFinish(current.id,{skip:true});
  $('#event-dialogue').onclick=()=>onFinish(current.id,{dialogue:true});
  $('#event-pause').onclick=onSuspend;$('#event-map').onclick=onMap;
- $('#event-action').onclick=()=>onFinish(current.id,{});
+ function act(){if(current?.kind==='turn'){dispatch({type:'INTERACTION_LOOK'});render();$('#event-continue').focus()}else if(current)onFinish(current.id,{})}
+ $('#event-action').onclick=act;$('#event-figure').onclick=act;
  dialog.addEventListener('cancel',event=>{event.preventDefault();onSuspend()});
  $('#letter-paper').onscroll=()=>{clearTimeout(scrollTimer);const el=$('#letter-paper');const ratio=el.scrollTop/Math.max(1,el.scrollHeight-el.clientHeight);dispatch({type:'INTERACTION_SCROLL',ratio},false);scrollTimer=setTimeout(()=>dispatch({type:'INTERACTION_SCROLL',ratio}),200)};
  return {render,close(){clearTimeout(scrollTimer);dialog.close();current=null;},destroy(){observer.disconnect()}};

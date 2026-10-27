@@ -27,7 +27,7 @@
         <p id="walk-status" class="walk-status" role="status" aria-live="polite" hidden></p>
       </section>
       <footer class="map-footer">
-        <div class="map-actions"><button id="places-open" aria-label="Explore places">Places ↗</button><button id="reset-view" aria-label="Reset map view">Reset view ⟲</button><button id="restart-story-home" aria-label="Restart the whole story">Restart story</button></div>
+        <div class="map-actions"><button id="places-open" aria-label="Explore places">Places ↗</button><button id="reset-view" aria-label="Reset map view">Reset view ⟲</button><button id="memories-open" hidden>Your memories</button><button id="restart-story-home" aria-label="Restart the whole story">Restart story</button></div>
         <nav class="chapter-section" aria-label="Chapters"><div id="chapter-list" class="chapter-list"></div></nav>
         <p class="map-hint">Arrow keys to walk · Enter to explore · Drag to look around</p>
       </footer>
@@ -64,20 +64,21 @@
         <button id="replay-interaction" hidden>Replay this moment ↗</button><div class="reading-progress"><span id="reading-progress"></span></div>
       </div>
     </div>
-    <section id="chapter-end" hidden><p id="end-label"></p><h2 id="end-title-en" lang="en"></h2><button class="primary-button" id="end-map" aria-label="Return to map and continue">Return to the city <span aria-hidden="true">↗</span></button></section>
+    <section id="chapter-end" hidden><p id="end-label"></p><h2 id="end-title-en" lang="en"></h2><section id="keepsake-picker" aria-label="Keep a sentence"><h3>A sentence to keep</h3><p>Choose one, or leave this night as it is. You can change your choice later.</p><div id="keepsake-choices"></div><p id="keepsake-status" role="status"></p></section><button id="end-memories" hidden>Your memories ↗</button><button class="primary-button" id="end-map" aria-label="Return to map and continue">Return to the city <span aria-hidden="true">↗</span></button></section>
   </section>
   <dialog id="interaction-dialog" aria-labelledby="event-title">
-    <div class="event-scene"><img class="event-image" alt=""><div class="event-hotspots"></div></div>
+    <div class="event-scene"><img class="event-image" alt=""><div class="event-hotspots"></div><button id="event-figure" aria-label="Look toward the distant figure" hidden><svg viewBox="0 0 40 100" aria-hidden="true"><circle cx="20" cy="10" r="7"/><path d="M13 19L27 19 33 64 25 65 27 96 20 96 18 66 15 96 8 96 12 63 6 63Z"/></svg></button></div>
     <header class="event-header"><button id="event-map">← Map</button><div><p id="event-hint"></p><h2 id="event-title" tabindex="-1"></h2></div><button id="event-pause">Return to reading</button></header>
     <p class="event-image-status" role="status" hidden>The illustration could not load. You can still explore the descriptions.</p>
     <section id="event-observe"><nav class="event-object-list" aria-label="Details to observe"></nav><div class="event-response" aria-live="polite"><h3 id="event-object-name"></h3><p id="event-object-text"></p></div></section>
     <section id="event-letter"><button id="open-letter" class="envelope-button">Open the letter</button><article id="letter-paper" tabindex="0" aria-label="Letter from Nastenka" hidden><p class="letter-heading">My dear friend,</p><div id="letter-body"></div><p class="letter-signature">Nastenka</p></article></section>
-    <section id="event-action-stage" hidden><div id="event-figure" aria-hidden="true" hidden></div><button id="event-action"></button></section>
+    <section id="event-action-stage" hidden><button id="event-action"></button></section>
     <footer class="event-footer"><button id="event-dialogue" hidden>Read as dialogue</button><button id="event-skip">Skip this moment</button><button id="event-continue" class="primary-button">Continue story</button></footer>
   </dialog>
   <dialog id="location-dialog" aria-label="Place introduction"><button class="close-dialog" aria-label="Close introduction">×</button><h2 id="place-en" lang="en"></h2><p id="place-description-en" lang="en"></p><small id="place-note-en" lang="en"></small><details id="earlier-memories" hidden><summary>Earlier memories</summary><div id="place-memory-history"></div></details><button id="place-start" class="primary-button"></button></dialog>
   <dialog id="history-dialog" aria-label="Reading history"><button class="close-dialog" aria-label="Close history">×</button><h2>The words we keep.</h2><div id="history-content"></div></dialog>
   <dialog id="about-dialog" aria-label="About White Nights"><button class="close-dialog" aria-label="Close about">×</button><h2>Four nights.<br>A lifetime of remembering.</h2><p>An interactive adaptation of Fyodor Dostoevsky’s <em>White Nights</em>. Explore Petersburg, follow a dreamer’s footsteps, and read at your own pace. Your progress is saved on this device.</p><p>The city is a literary map, not a historical reconstruction. The English text is an original abridged adaptation informed by Constance Garnett’s translation, with the original ending preserved.</p><small>Illustrations: classroom Qwen Image API. City: procedural 3D.<br>Process, prompts and credits are documented in the repository.</small><button id="intro-replay" class="text-button">Watch the introduction again</button><button id="reset-progress" class="text-button" aria-label="Restart story">Start again ↗</button></dialog>
+  <dialog id="memories-dialog" aria-labelledby="memories-title"><button class="close-dialog" aria-label="Close memories">×</button><h2 id="memories-title">Your memories</h2><p id="memories-empty">You have not kept a sentence. The story is still yours.</p><div id="memories-content"></div></dialog>
   <dialog id="reset-dialog" aria-label="Confirm restart"><h2>Walk these nights again?</h2><p>This clears your reading progress, interactions and saved memories on this browser.</p><div class="dialog-actions"><button class="close-dialog-inline">Keep my place</button><button id="confirm-reset" class="primary-button" aria-label="Confirm restart">Start again ↗</button></div></dialog>
   <div class="toast" id="toast" role="status" hidden></div>
   <script type="module" src="/src/main.js"></script>

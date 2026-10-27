@@ -36,3 +36,24 @@
 #interaction-dialog button:focus-visible,#letter-paper:focus-visible{outline:2px solid #ffe1a4;outline-offset:5px}
 @media(max-height:750px){.event-header{padding:18px 4vw}.event-header h2{font-size:28px}.event-response{bottom:98px;padding:16px 20px}.event-response p{font-size:16px}.event-object-list{top:21%}#letter-paper{max-height:57dvh;padding:22px 36px}.event-footer{bottom:20px}}
 @media(prefers-reduced-motion:reduce){.event-hotspot>span:first-child,.envelope-button{transition:none;transform:none}}
+#event-action-stage{position:absolute;inset:140px 0 100px;pointer-events:none;z-index:2}#event-action-stage button{pointer-events:auto}
+.attention-button{position:absolute;bottom:5vh;left:50%;transform:translateX(-50%);padding:18px 28px;color:#fff0d4;background:#343040e8;border-bottom:1px solid #dfc897;min-height:48px;font-size:19px}
+#event-figure{position:absolute;transform:translate(-50%,-100%);z-index:3;pointer-events:auto;width:44px;height:52px;filter:blur(.4px);opacity:.7;color:#51445f;transition:opacity .2s}#event-figure:hover{opacity:1}#event-figure svg{height:46px;fill:currentColor}
+#interaction-dialog[data-kind="turn"] .event-image{transition:transform 1.2s ease;transform-origin:76% 55%}#interaction-dialog.attention-shift .event-image{transform:scale(1.07)}
+#chapter-end{padding:40px 7%;overflow:auto;justify-content:flex-start;background:#333040df;backdrop-filter:blur(2px);color:#f7e9ca}
+#end-label{color:#d2c1aa;margin:0}#end-title-en{font-size:clamp(28px,3vw,44px);margin:12px 0 20px;color:#f7e9ca}
+#keepsake-picker{width:min(800px,90%);text-align:left}#keepsake-picker h3{font:400 25px var(--font-display);margin:0 0 8px}#keepsake-picker>p{font-size:14px;margin:0 0 14px;color:#e6d8c2}
+#keepsake-choices{display:grid;gap:10px}.keepsake-choice{display:block;width:100%;border:1px solid #b6a88b66;padding:15px 20px;color:inherit;text-align:left;font-size:17px;line-height:1.5;background:#f8e8be08;min-height:44px}
+.keepsake-choice:hover,.keepsake-choice[aria-pressed="true"]{background:#f1dfb7;color:#373141;border-color:#f1dfb7}.keepsake-choice:focus-visible{outline:2px solid #edcf90;outline-offset:3px}
+#keepsake-status{min-height:22px;margin:10px 0!important}#end-map{flex-shrink:0;margin-top:15px;background:#efdfbb;color:#3c3547;padding:14px 28px}#end-memories{color:#fae8c1;min-height:44px;margin:8px 0}
+#memories-dialog{width:min(850px,90vw)}#memories-content section{margin:25px 0;border-bottom:1px solid #c7bda8;padding-bottom:20px}#memories-content h3{font:400 25px var(--font-display)}#memories-content blockquote{margin:15px 0;font-size:19px;line-height:1.65}#memories-content summary{cursor:pointer;min-height:44px;padding:10px 0}#memories-content .keepsake-choice{margin:8px 0;border-color:#a7977d}
+@media(prefers-reduced-motion:reduce){#interaction-dialog[data-kind="turn"] .event-image{transition:none}}
+/* Small effective desktop viewports (including browser zoom): preserve a scrollable reading order. */
+@media(max-width:800px),(max-height:520px){
+ .event-header{grid-template-columns:1fr 1fr;padding:14px 5vw;gap:6px}.event-header>div{grid-row:2;grid-column:1/-1;max-width:none}.event-header>button:last-child{grid-column:2;grid-row:1}.event-header h2{font-size:25px}
+ #event-observe{position:relative;z-index:3;padding:12px 5vw;display:grid;grid-template-columns:1fr 1.2fr;gap:20px;align-items:start}.event-object-list,.event-response{position:relative;top:auto;right:auto;bottom:auto;left:auto;width:auto;max-width:none;margin:0;padding:12px 16px}.event-object-list button{min-height:44px;padding:8px 0;font-size:15px}.event-response p{font-size:15px;line-height:1.5}.event-response h3{font-size:21px}
+ .event-hotspots{display:none}.event-footer{position:sticky;bottom:0;left:auto;right:auto;padding:12px 5vw;margin-top:15px;gap:16px;background:#302c3fef}.event-footer button{font-size:14px}
+ #event-letter{margin:10px auto}#letter-paper{max-height:none;padding:20px 24px}#letter-paper p{font-size:18px}.envelope-button{margin:20px auto;min-height:130px;width:260px}
+ #event-action-stage{position:relative;inset:auto;min-height:160px}.attention-button{bottom:30px;white-space:nowrap;font-size:16px}
+ #chapter-end{padding:24px 5%;}#end-title-en{font-size:27px}#keepsake-picker{width:100%}.keepsake-choice{font-size:15px;padding:12px}
+}

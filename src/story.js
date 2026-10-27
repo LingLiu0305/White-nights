@@ -6,7 +6,12 @@ export const TEXT_REVISION=2;
 const integerIn=(v,min,max)=>Number.isInteger(v)&&v>=min&&v<=max;
 const indexOf=(chapter,id)=>chapters[chapter].lines.findIndex(line=>line.id===id);
 const phaseFor=e=>e.phase||'observe';
-const allowedPhase=(e,p)=>e.kind==='letter'?['envelope','paper'].includes(p):p===phaseFor(e);
+const allowedPhase=(e,p)=>e.kind==='letter'?['envelope','paper'].includes(p):e.kind==='turn'?['observe','looked'].includes(p):p===phaseFor(e);
+function updateActive(state,updates){
+ const active={...state.activeInteraction,...updates};
+ return {...state,activeInteraction:active,interactions:{...state.interactions,[active.id]:{...state.interactions[active.id],phase:active.phase,scrollRatio:active.scrollRatio}}};
+}
+function resumeRecord(e,record,replay=false){return {id:e.id,phase:!replay&&allowedPhase(e,record?.phase)?record.phase:phaseFor(e),scrollRatio:!replay&&Number.isFinite(record?.scrollRatio)?Math.max(0,Math.min(1,record.scrollRatio)):0,replay};}
 function moveTo(state,line){return {...state,line,cursors:state.cursors.map((v,i)=>i===state.chapter?line:v),cursorIds:state.cursorIds.map((v,i)=>i===state.chapter?chapters[i].lines[line].id:v),readThrough:state.readThrough.map((v,i)=>i===state.chapter?Math.max(v,line):v)};}
 function exposeLetter(state){
  const active=state.activeInteraction,e=interactionById(active?.id);
@@ -28,7 +33,7 @@ export function createState(saved){
  for(const e of interactions){
   const ci=chapters.findIndex(c=>c.id===e.chapterId);if(ci>completed+1)continue;
   const record=saved?.interactions?.[e.id];
-  if(record&&['active','completed','skipped'].includes(record.status))records[e.id]={status:record.status,seen:Array.isArray(record.seen)?[...new Set(record.seen.filter(id=>e.objects?.some(o=>o.id===id)))]:[]};
+  if(record&&['active','completed','skipped'].includes(record.status))records[e.id]={status:record.status,phase:allowedPhase(e,record.phase)?record.phase:phaseFor(e),scrollRatio:Number.isFinite(record.scrollRatio)?Math.max(0,Math.min(1,record.scrollRatio)):0,seen:Array.isArray(record.seen)?[...new Set(record.seen.filter(id=>e.objects?.some(o=>o.id===id)))]:[]};
   else if(saved&&!saved.interactionSchemaVersion&&(ci<=completed||indexOf(ci,e.anchor)<cursors[ci]))records[e.id]={status:'skipped',seen:[]};
  }
  let activeInteraction=null;
@@ -53,7 +58,8 @@ export function transition(state,event){
   case 'START':{
    const chapter=event.chapter;if(state.mode!=='map'||!integerIn(chapter,0,Math.min(state.completed+1,chapters.length-1)))return state;
    const active=interactionById(state.activeInteraction?.id);
-   return {...state,chapter,line:state.cursors[chapter],mode:'travel',activeInteraction:active?.chapterId===chapters[chapter].id?state.activeInteraction:null};
+   const interrupted=interactions.find(e=>e.chapterId===chapters[chapter].id&&e.anchor===chapters[chapter].lines[state.cursors[chapter]].id&&state.interactions[e.id]?.status==='active');
+   return {...state,chapter,line:state.cursors[chapter],mode:'travel',activeInteraction:active?.chapterId===chapters[chapter].id?state.activeInteraction:interrupted?resumeRecord(interrupted,state.interactions[interrupted.id]):null};
   }
   case 'ARRIVE':return state.mode==='travel'?{...state,mode:'reading'}:state;
   case 'PREVIOUS':return state.mode==='reading'&&state.line>0?moveTo({...state,activeInteraction:null},state.line-1):state;
@@ -66,15 +72,16 @@ export function transition(state,event){
   }
   case 'INTERACTION_OPEN':{
    const e=interactionById(event.id);if(state.mode!=='reading'||!e||e.chapterId!==chapters[state.chapter].id||e.anchor!==chapters[state.chapter].lines[state.line].id)return state;
-   const old=state.interactions[e.id];if(['completed','skipped'].includes(old?.status)&&!event.replay)return state;
-   const active=state.activeInteraction?.id===e.id?state.activeInteraction:{id:e.id,phase:phaseFor(e),scrollRatio:0,replay:!!event.replay};
-   return exposeLetter({...state,mode:'interaction',activeInteraction:active,interactions:{...state.interactions,[e.id]:{status:active.replay?old.status:'active',seen:old?.seen||[]}}});
+   const old=state.interactions[e.id],replay=!!event.replay||(state.activeInteraction?.id===e.id&&state.activeInteraction.replay);if(['completed','skipped'].includes(old?.status)&&!replay)return state;
+   const active=state.activeInteraction?.id===e.id?state.activeInteraction:resumeRecord(e,old,!!replay);
+   return exposeLetter({...state,mode:'interaction',activeInteraction:active,interactions:{...state.interactions,[e.id]:{...old,status:active.replay?old.status:'active',phase:active.phase,scrollRatio:active.scrollRatio,seen:old?.seen||[]}}});
   }
   case 'INTERACTION_PHASE':{
    const e=interactionById(state.activeInteraction?.id);if(state.mode!=='interaction'||e?.kind!=='letter'||event.phase!=='paper')return state;
-   return exposeLetter({...state,activeInteraction:{...state.activeInteraction,phase:'paper'}});
+   return exposeLetter(updateActive(state,{phase:'paper'}));
   }
-  case 'INTERACTION_SCROLL':return state.mode==='interaction'&&Number.isFinite(event.ratio)?{...state,activeInteraction:{...state.activeInteraction,scrollRatio:Math.max(0,Math.min(1,event.ratio))}}:state;
+  case 'INTERACTION_LOOK':return state.mode==='interaction'&&interactionById(state.activeInteraction?.id)?.kind==='turn'?updateActive(state,{phase:'looked'}):state;
+  case 'INTERACTION_SCROLL':return state.mode==='interaction'&&Number.isFinite(event.ratio)?updateActive(state,{scrollRatio:Math.max(0,Math.min(1,event.ratio))}):state;
   case 'INTERACTION_OBJECT':{
    const id=state.activeInteraction?.id,e=interactionById(id);if(state.mode!=='interaction'||!e?.objects?.some(o=>o.id===event.object))return state;
    const old=state.interactions[id];return {...state,interactions:{...state.interactions,[id]:{...old,seen:[...new Set([...old.seen,event.object])]}}};

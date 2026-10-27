@@ -8,7 +8,7 @@ import './interaction-stage.css';
 import {chapters,locations} from './content.js';
 import {createState,transition,readSave,writeSave} from './story.js';
 import {createMap} from './map.js';
-import {interactionAt,pendingInteraction,interactionById,unlockedMemories} from './interactions.js';
+import {interactionAt,pendingInteraction,interactionById,unlockedMemories,keepsakeCandidates} from './interactions.js';
 import {createInteractionView} from './interaction-view.js';
 import {Soundtrack} from './music.js';
 
@@ -32,7 +32,7 @@ function save(){if(!writeSave(storage,state)){$('#save-status').hidden=false;$('
 function showDialog(dialog){placeRequest++;map?.clearWalkKeys();dialog.showModal();}
 document.querySelectorAll('dialog').forEach(dialog=>{
   dialog.querySelectorAll('.close-dialog,.close-dialog-inline').forEach(button=>button.onclick=()=>dialog.close());
-  dialog.addEventListener('close',()=>{if(state.mode==='map')($('#map-canvas canvas')||$('#start-story')).focus({preventScroll:true})});
+  dialog.addEventListener('close',()=>{const active=document.activeElement;if(state.mode==='map'&&(!active||active===document.body||dialog.contains(active)))($('#map-canvas canvas')||$('#start-story')).focus({preventScroll:true})});
   dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
 });
 function labelFor(index){return `${state.cursors[index]>0?'Continue':index<=state.completed?'Reread':'Begin'} ${chapters[index].labelEn}`;}
@@ -53,7 +53,7 @@ function renderMap(){
     button.innerHTML=`<span>${index===4?'Morning':`Night ${c.roman}`}</span><span class="chapter-state" aria-hidden="true">${index<=state.completed?'✓':''}</span>`;
     button.onclick=()=>{selected=index;renderMap()};$('#chapter-list').append(button);
   });
-  updateMemoryMarkers();save();
+  updateMemoryMarkers();$('#memories-open').hidden=state.completed<4&&!Object.keys(state.keptLines).length;save();
 }
 function updateMemoryMarkers(){for(const place of locations){const latest=unlockedMemories(place.id,state.completed).at(-1);const button=$(`#place-buttons [data-place="${place.id}"]`);if(button){button.querySelector('.new-memory')?.remove();if(latest&&state.placeMemorySeen[place.id]!==latest.after){const small=document.createElement('small');small.className='new-memory';small.textContent='New memory';button.append(small)}}}}
 function selectPlace(id){
@@ -153,12 +153,13 @@ function nextLine(){
     $('#reading-deck').hidden=true;$('#chapter-end').hidden=false;
     $('#end-label').textContent=`End of ${chapters[state.chapter].labelEn}`;
     $('#end-title-en').textContent=chapters[state.chapter].endingEn;
-    $('#end-map').focus({preventScroll:true});
+    renderKeepsakes();$('#end-memories').hidden=state.completed<4;$('#end-map').focus({preventScroll:true});
   }else renderLine();
 }
 function openInteraction(id,replay=false){
-  clearInterval(typeTimer);typing=false;dispatch({type:'INTERACTION_OPEN',id,replay});
+  dispatch({type:'INTERACTION_OPEN',id,replay});
   if(state.mode!=='interaction')return;
+  clearInterval(typeTimer);typing=false;
   map?.clearWalkKeys();$('#reading-deck').hidden=true;eventView.render();
 }
 function finishInteraction(id,options){
@@ -198,6 +199,32 @@ $('#history-open').onclick=()=>{
   });
   showDialog($('#history-dialog'));content.scrollTop=content.scrollHeight;
 };
+function makeKeepsakeChoices(chapterIndex,container,onSelect){
+  const chapter=chapters[chapterIndex];container.replaceChildren();
+  for(const id of keepsakeCandidates[chapter.id]){
+    const line=chapter.lines.find(l=>l.id===id),button=document.createElement('button');
+    button.className='keepsake-choice';button.textContent=line.en;
+    button.setAttribute('aria-pressed',String(state.keptLines[chapter.id]===id));
+    button.onclick=()=>{dispatch({type:'KEEP_LINE',chapterId:chapter.id,lineId:id});onSelect()};container.append(button);
+  }
+}
+function renderKeepsakes(){
+  makeKeepsakeChoices(state.chapter,$('#keepsake-choices'),()=>{renderKeepsakes();$('#keepsake-choices [aria-pressed="true"]').focus({preventScroll:true})});
+  $('#keepsake-status').textContent=state.keptLines[chapters[state.chapter].id]?'Kept for you. Choose another to replace it.':'';
+}
+function renderMemories(){
+ const container=$('#memories-content');container.replaceChildren();
+ $('#memories-empty').hidden=Object.keys(state.keptLines).length>0;
+ for(const [chapterId,lineId] of Object.entries(state.keptLines)){
+  const ci=chapters.findIndex(c=>c.id===chapterId),chapter=chapters[ci];
+  const section=document.createElement('section'),title=document.createElement('h3'),quote=document.createElement('blockquote'),edit=document.createElement('details'),summary=document.createElement('summary'),options=document.createElement('div');
+  title.textContent=chapter.labelEn;quote.textContent=chapter.lines.find(l=>l.id===lineId).en;summary.textContent='Choose another sentence';edit.append(summary,options);
+  makeKeepsakeChoices(ci,options,()=>{quote.textContent=chapter.lines.find(l=>l.id===state.keptLines[chapterId]).en;makeKeepsakeChoices(ci,options,()=>renderMemories());edit.open=false;summary.focus()});
+  section.append(title,quote,edit);container.append(section);
+ }
+}
+function openMemories(){renderMemories();showDialog($('#memories-dialog'))}
+$('#memories-open').onclick=openMemories;$('#end-memories').onclick=openMemories;
 $('#about-open').onclick=()=>showDialog($('#about-dialog'));
 $('#places-open').onclick=()=>showDialog($('#places-dialog'));
 $('#reset-progress').onclick=()=>{$('#about-dialog').close();showDialog($('#reset-dialog'))};
@@ -220,6 +247,7 @@ document.addEventListener('keydown',e=>{
   }
 });
 document.addEventListener('keyup',e=>{if(e.code.startsWith('Arrow'))map?.setWalkKey(e.code,false)});
+document.addEventListener('focusin',e=>{if(!e.target.matches('#map-canvas canvas'))map?.clearWalkKeys()});
 window.addEventListener('blur',()=>map?.clearWalkKeys());
 document.addEventListener('visibilitychange',()=>{if(document.hidden)map?.clearWalkKeys()});
 const music=new Soundtrack();
@@ -239,7 +267,7 @@ async function toggleMusic(){
 }
 musicButtons.forEach(button=>button.onclick=toggleMusic);
 $('#music-volume').oninput=e=>music.setVolume(Number(e.target.value)/100);
-window.addEventListener('pagehide',()=>music.dispose().catch(()=>{}));
+window.addEventListener('pagehide',()=>{map?.clearWalkKeys();save();music.dispose().catch(()=>{})});
 document.addEventListener('visibilitychange',()=>{map?.pause(document.hidden||!['map','intro'].includes(state.mode))});
 function openIntro(){
   state=transition(state,{type:'INTRO'});map?.clearWalkKeys();
