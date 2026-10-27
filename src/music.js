@@ -39,6 +39,11 @@ export class Soundtrack {
       this.step++;this.nextTime+=beat;
     }
   }
+  footsteps(){
+    if(!this.playing||!this.context||this.context.state!=='running')return;
+    // A quiet, short low pulse; the visible prompt carries the same information.
+    try{for(let i=0;i<3;i++)this.note(40,this.context.currentTime+.05+i*.32,.13,.035)}catch{}
+  }
   setVolume(value){this.volume=Math.max(0,Math.min(1,value));if(this.master)this.master.gain.setTargetAtTime(this.volume,this.context.currentTime,.08);}
   async stop(){
     this.playing=false;clearInterval(this.timer);this.timer=null;

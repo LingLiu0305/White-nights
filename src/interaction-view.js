@@ -4,7 +4,7 @@ const asset=name=>`${import.meta.env.BASE_URL}assets/${name}`;
 // This view owns no story position. Every meaningful action goes through the reducer.
 export function createInteractionView({dialog,getState,dispatch,onFinish,onSuspend,onMap}){
  const $=s=>dialog.querySelector(s);
- let current=null,scrollTimer;
+ let current=null,scrollTimer,openingTimer;
  function positionHotspots(){
   const img=$('.event-image'),layer=$('.event-scene');if(!img.naturalWidth)return;
   const scale=Math.max(layer.clientWidth/img.naturalWidth,layer.clientHeight/img.naturalHeight);
@@ -40,7 +40,7 @@ export function createInteractionView({dialog,getState,dispatch,onFinish,onSuspe
   $('#event-continue').textContent=a.replay?'Return to reading':current.kind==='letter'?(current.id==='morning-read-letter'?'Continue reading':'Fold the letter'):'Continue story';
   $('#event-continue').hidden=current.kind==='letter'&&a.phase==='envelope';
   dialog.classList.toggle('attention-shift',current.kind==='turn'&&a.phase==='looked');
-  $('#event-action').hidden=false;$('#event-figure').hidden=current.kind!=='turn'||a.phase==='looked';
+  $('#event-action').hidden=false;$('#event-figure').hidden=current.kind!=='turn';$('#event-figure').disabled=current.kind==='turn'&&a.phase==='looked';
   $('#event-skip').hidden=a.replay||current.kind==='letter';
   const layer=$('.event-hotspots');layer.replaceChildren();$('.event-object-list').replaceChildren();
   if(current.kind==='observe'){
@@ -56,7 +56,7 @@ export function createInteractionView({dialog,getState,dispatch,onFinish,onSuspe
   }
   if(current.kind==='letter'){
    $('#open-letter').hidden=a.phase!=='envelope';$('#letter-paper').hidden=a.phase!=='paper';
-   $('.letter-signature').hidden=current.id!=='morning-letter-return';
+   $('.letter-heading').hidden=current.id==='morning-letter-return';$('.letter-signature').hidden=current.id!=='morning-letter-return';$('.letter-page').textContent=current.id==='morning-letter-return'?'Part 2 of 2':'Part 1 of 2';
    const body=$('#letter-body');body.replaceChildren();
    for(const id of current.paragraphs){const p=document.createElement('p');p.textContent=chapters[state.chapter].lines.find(line=>line.id===id).en;body.append(p);}
    requestAnimationFrame(()=>{if(getState().activeInteraction?.id===current?.id)$('#letter-paper').scrollTop=a.scrollRatio*($('#letter-paper').scrollHeight-$('#letter-paper').clientHeight)});
@@ -65,14 +65,18 @@ export function createInteractionView({dialog,getState,dispatch,onFinish,onSuspe
    $('#event-hint').textContent=current.hint;
    $('#event-action').textContent=current.kind==='accept'?'Take the letter':'Look toward the footsteps';
    $('#event-action').className=current.kind==='accept'?'envelope-button':'attention-button';
-   $('#event-figure').hidden=current.kind!=='turn'||a.phase==='looked';
+   $('#event-figure').hidden=current.kind!=='turn';$('#event-figure').disabled=current.kind==='turn'&&a.phase==='looked';
    $('#event-action').hidden=current.kind==='turn'&&a.phase==='looked';
-   $('#event-continue').hidden=!(current.kind==='turn'&&a.phase==='looked');
+   $('#event-continue').hidden=current.kind==='accept';
   }
   if(!dialog.open)dialog.showModal();
   positionHotspots();$('#event-title').focus({preventScroll:true});
  }
- $('#open-letter').onclick=()=>{dispatch({type:'INTERACTION_PHASE',phase:'paper'});render();$('#letter-paper').focus()};
+ $('#open-letter').onclick=()=>{
+  if(openingTimer)return;const id=current?.id,button=$('#open-letter');button.classList.add('is-opening');button.disabled=true;
+  const finish=()=>{openingTimer=null;button.disabled=false;button.classList.remove('is-opening');if(getState().mode!=='interaction'||getState().activeInteraction?.id!==id)return;dispatch({type:'INTERACTION_PHASE',phase:'paper'});render();$('#letter-paper').focus()};
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)finish();else openingTimer=setTimeout(finish,650);
+ };
  $('#event-continue').onclick=()=>onFinish(current.id,{});
  $('#event-skip').onclick=()=>onFinish(current.id,{skip:true});
  $('#event-dialogue').onclick=()=>onFinish(current.id,{dialogue:true});
@@ -81,5 +85,5 @@ export function createInteractionView({dialog,getState,dispatch,onFinish,onSuspe
  $('#event-action').onclick=act;$('#event-figure').onclick=act;
  dialog.addEventListener('cancel',event=>{event.preventDefault();onSuspend()});
  $('#letter-paper').onscroll=()=>{clearTimeout(scrollTimer);const el=$('#letter-paper');const ratio=el.scrollTop/Math.max(1,el.scrollHeight-el.clientHeight);dispatch({type:'INTERACTION_SCROLL',ratio},false);scrollTimer=setTimeout(()=>dispatch({type:'INTERACTION_SCROLL',ratio}),200)};
- return {render,close(){clearTimeout(scrollTimer);dialog.close();current=null;},destroy(){observer.disconnect()}};
+ return {render,close(){clearTimeout(scrollTimer);clearTimeout(openingTimer);openingTimer=null;$('#open-letter').disabled=false;$('#open-letter').classList.remove('is-opening');dialog.close();current=null;},destroy(){observer.disconnect()}};
 }

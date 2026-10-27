@@ -51,6 +51,7 @@ PROMPTS.update({
         'house among ivory facades, open tall windows, a cart with covered furniture parked in the distance. '
         'Sunlit pale apricot sky at late afternoon, a hint of green trees beyond the city. '
         'Wide view from the pavement, intimate detailed linework, no people, no modern objects.'),
+    'rainy-room-window': STYLE + ('Interior of a modest nineteenth-century Petersburg room, quiet overcast rainy morning. A large double casement window with sheer ivory curtains looks out onto muted blue-grey rooftops and chimney stacks. Fine visible rain streaks and droplets across the window panes, softly blurred grey sky outside. Below the window a plain dark wooden desk with a folded ivory letter, a simple chair on the right and faded olive wallpaper. Calm melancholy atmosphere; delicate architectural ink lines and subtle paper grain, consistent perspective and colors with the existing morning-room scene. No people, no writing, no text.'),
     'rainy-embankment': STYLE + ('The same type of Petersburg canal embankment under gentle summer rain, '
         'wet pale cobblestones and an empty wooden bench beside delicate wrought iron railings. '
         'A low stone bridge and sage rooftops dissolve into grey lavender drizzle. '

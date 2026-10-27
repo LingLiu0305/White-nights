@@ -99,3 +99,7 @@
  #dialogue{min-height:0;max-height:calc(100dvh - 220px)}
  .dialogue-bottom,.reading-deck[data-voice=narration] .dialogue-bottom,.reading-progress,.reading-deck[data-voice=narration] .reading-progress{margin-left:24px;margin-right:24px}
 }
+
+/* Keep portraits above the control row even when a paragraph is short. */
+@media(min-width:761px){.speaker-portrait{bottom:96px}}
+@media(min-width:761px) and (max-height:550px){.speaker-portrait{bottom:83px}}

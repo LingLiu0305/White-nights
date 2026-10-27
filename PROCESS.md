@@ -225,3 +225,12 @@ AI assistance: Codex implemented code and tests, wrote original supplementary ob
 Automated iteration found an Intro-close focus race, incomplete replay restoration and letter phase loss across chapter detours. These were corrected in focus/state handling rather than hidden with animation delays. The old browser tests now explicitly enter through Intro and choose Skip or Read as dialogue where they need to inspect every original paragraph. PC captures cover 1280×720, 1440×900, 1920×1080, 1024×768 and a 640×360 effective layout viewport for 200% zoom. This is a layout-space check, not a claim that Chrome’s toolbar zoom was automated.
 
 **Human trial: still pending, to be arranged by the author.** Automated browser playthroughs and AI review are not human-user observations. Please ask one person to play before explaining the controls, record hesitation or mistakes and one resulting design decision here. No tester identity or recording is needed.
+
+
+## Rain, chapter lighting and the letter (2026-10-28)
+
+The author asked for portraits to clear Back/Next, a progressively darker city across the four nights and brighter morning, a rainy window, a completed footsteps moment and a period-style letter. The chapter palette now changes the 3D sky, fog and lighting together. Portraits move above the control row. The letter uses an animated folded envelope, wax seal, bundled Caveat handwriting and a scrollable paper; the two parts retain the intervening reaction, and the continuation no longer repeats the salutation. Footsteps offers a text alternative and a distant selectable silhouette, with a restrained camera move, a quiet synthesized footstep cue only when sound is enabled, and reduced-motion support.
+
+The classroom Qwen API returned HTTP 502 twice when requested for a rainy room. An OpenAI image editing tool instead added rain to the existing room image; its prompt and source are recorded in the asset metadata. No credential is stored in the project. The design retains the earlier PC-only plan and fixed ending; previously deferred P3 branches remain deferred. Human trial is still pending.
+
+Verification: `npm test` passed 29 tests; `npm run test:e2e` passed 44 Chrome tests; `npm run build` passed with the pre-existing Three.js chunk-size warning. Screenshots of each chapter tint, the letter, footsteps and both portrait positions were inspected.

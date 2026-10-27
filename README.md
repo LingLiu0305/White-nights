@@ -29,7 +29,7 @@ This iteration targets desktop keyboard and mouse. First-time readers see an Eng
 - **Accept the letter:** near the end of Second Night, take the sealed envelope or skip the gesture. Delivery remains part of the next chapter’s existing narration.
 - **Wait:** Third Night offers the bridge, water and street as optional observations. There is no timer or correct choice.
 - **Turn toward footsteps:** Fourth Night offers a distant figure or a text button. Looking gently reframes the scene; Continue returns to the fixed story.
-- **Read the morning letter:** open the envelope and read the paper, return to the dreamer’s reaction, then read the remainder. Read as dialogue keeps the original paragraph-by-paragraph presentation.
+- **Read the morning letter:** open the period-style envelope with a short animation and read the handwritten paper, return to the dreamer’s reaction, then read the remainder. Read as dialogue keeps the original paragraph-by-paragraph presentation.
 - **Pause or revisit:** Return to reading / Escape pauses an interaction; Map suspends it. Continue restores unfinished interaction state, even after reload. Back to an event’s anchor exposes Replay this moment; completed moments do not block ordinary rereading. History retains exposed letter text.
 - **Keep a memory:** at each chapter end, optionally keep one of two original passages. Replace it later in Your memories. Uncollected chapters have no empty slots or completion score. Places also gain descriptions as chapters end; New memory clears after reading.
 
@@ -50,7 +50,7 @@ npm run dev
 
 Open the URL printed in the terminal, normally `http://127.0.0.1:5173/`. Stop with Ctrl+C. Do not open `index.html` directly.
 
-Only dependency installation requires a network connection. Reading requires no API key, paid account, Python or AI service. All four scene illustrations, both portraits, and Nunito Sans / Lilita One fonts are bundled. WebGL 2 renders the city; if unavailable, the location directory and reading remain available.
+Only dependency installation requires a network connection. Reading requires no API key, paid account, Python or AI service. Scene illustrations, both portraits, and Nunito Sans, Lilita One and Caveat fonts are bundled. WebGL 2 renders the city; if unavailable, the location directory and reading remain available.
 
 For a production preview:
 

@@ -633,7 +633,7 @@ export const storyText = {
       "speakerEn": "Inner voice",
       "en": "It is raining today, and my room has not brightened all day. She said she would not come if it rained. By the window, I keep returning to yesterday: our third meeting.",
       "sectionEn": "A rainy day · Remembering yesterday",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "night-3-p001"
     },
@@ -641,7 +641,7 @@ export const storyText = {
       "speakerEn": "Narration",
       "en": "The letter had been delivered as she asked. That evening I approached the riverbank with so much I wanted to say. She was waiting for an answer—or for a particular person’s footsteps.",
       "sectionEn": "A rainy day · Remembering yesterday",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "night-3-p002"
     },
@@ -649,7 +649,7 @@ export const storyText = {
       "speakerEn": "Inner voice",
       "en": "What follows happened last night. For a moment I leave today’s rain outside the window and return to that evening of waiting.",
       "sectionEn": "A rainy day · Remembering yesterday",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "night-3-p003"
     },
@@ -1109,7 +1109,7 @@ export const storyText = {
       "speakerEn": "Narration",
       "en": "Morning brought rain. The room was dim, the world beyond the window grey. Last night’s light seemed to have left the city, but Matrona came in as she always did.",
       "sectionEn": "A letter · Asking forgiveness",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p001"
     },
@@ -1117,7 +1117,7 @@ export const storyText = {
       "speakerEn": "Narration",
       "en": "She brought a letter. I recognised who had written it. Alone in the room, I held the envelope for a moment.",
       "sectionEn": "A letter · Asking forgiveness",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p002"
     },
@@ -1125,7 +1125,7 @@ export const storyText = {
       "speakerEn": "Nastenka’s letter",
       "en": "Please forgive me. Yesterday feels like a dream. I deceived you, and myself. It pains me deeply to think that I have hurt you.",
       "sectionEn": "A letter · Asking forgiveness",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p003"
     },
@@ -1133,7 +1133,7 @@ export const storyText = {
       "speakerEn": "Nastenka’s letter",
       "en": "But I am still grateful to you, and love you as a friend. I wish you every happiness, and want you to know how much you have helped me.",
       "sectionEn": "A letter · Asking forgiveness",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p004"
     },
@@ -1141,7 +1141,7 @@ export const storyText = {
       "speakerEn": "Inner voice",
       "en": "Her kindness did not make the farewell lighter. The words I had wanted to believe last night had become another kind of tenderness. I had to admit they no longer pointed towards a shared life.",
       "sectionEn": "A letter · Asking forgiveness",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p005"
     },
@@ -1149,7 +1149,7 @@ export const storyText = {
       "speakerEn": "Nastenka’s letter",
       "en": "We are to marry soon. I still want to tell you about what happened after his return. I hope you will visit us, and remain our friend.",
       "sectionEn": "A letter · Asking forgiveness",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p006"
     },
@@ -1157,7 +1157,7 @@ export const storyText = {
       "speakerEn": "Narration",
       "en": "I read for a long time, then read again. Every word on the page was clear, yet when I put the letter down, I still did not know what to do.",
       "sectionEn": "A letter · Asking forgiveness",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p007"
     },
@@ -1165,7 +1165,7 @@ export const storyText = {
       "speakerEn": "Narration",
       "en": "Matrona said she had cleared away the cobwebs: the room was ready for visitors again. I looked up, but saw only the familiar old room.",
       "sectionEn": "The same room · Fifteen years later",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p008"
     },
@@ -1173,7 +1173,7 @@ export const storyText = {
       "speakerEn": "Inner voice",
       "en": "For a moment, the walls, the furniture, even the houses outside seemed suddenly aged. I saw myself fifteen years later, still sitting here, still alone.",
       "sectionEn": "The same room · Fifteen years later",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p009"
     },
@@ -1181,7 +1181,7 @@ export const storyText = {
       "speakerEn": "Inner voice",
       "en": "It was a future I feared, not a fate already fulfilled. Yet the life that had opened last night now felt like a door slowly closing again.",
       "sectionEn": "The same room · Fifteen years later",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p010"
     },
@@ -1189,7 +1189,7 @@ export const storyText = {
       "speakerEn": "Inner voice",
       "en": "Could I hate her for it? Could I demand that she give up the man she had waited a year for, simply for my happiness? I knew I did not wish to do that.",
       "sectionEn": "The same room · Fifteen years later",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p011"
     },
@@ -1197,7 +1197,7 @@ export const storyText = {
       "speakerEn": "Inner voice",
       "en": "May her sky remain clear. I would not make my sadness a shadow over her life, or let guilt be all she remembered of me.",
       "sectionEn": "The light that remains",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p012"
     },
@@ -1205,7 +1205,7 @@ export const storyText = {
       "speakerEn": "Inner voice",
       "en": "Those nights did not become false because they ended. Someone had listened to me and held my hand. I had truly entered another person’s life.",
       "sectionEn": "The light that remains",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p013"
     },
@@ -1213,7 +1213,7 @@ export const storyText = {
       "speakerEn": "Inner voice",
       "en": "Perhaps I was still the same dreamer. But now, when I returned to the riverbank, there would be one memory I did not have to invent.",
       "sectionEn": "The light that remains",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p014"
     },
@@ -1221,7 +1221,7 @@ export const storyText = {
       "speakerEn": "Inner voice",
       "en": "In a whole lifetime, there had been one complete moment of happiness. So brief, and yet so real. Was that not reason enough to cherish it?",
       "sectionEn": "The light that remains",
-      "image": "morning-room.png",
+      "image": "rainy-room-window.png",
       "visual": "empty",
       "id": "morning-p015"
     }

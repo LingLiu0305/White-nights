@@ -17,7 +17,7 @@ export function createMap(container,{onSelect,onNearby,onFail,onWalk,initialPlay
   renderer.domElement.tabIndex=0;
   renderer.domElement.setAttribute('aria-label','Petersburg story map. Use arrow keys to walk; press Enter near a place to explore. Drag to turn the view.');
   const scene=new THREE.Scene();
-  scene.fog=new THREE.Fog(0xb9b6cc,20,82);scene.add(sky());
+  scene.fog=new THREE.Fog(0xb9b6cc,20,82);const skyDome=sky();scene.add(skyDome);
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   let mobile=container.clientWidth<760,chapterIndex=0,cameraMove=null,introDone=null,interacting=false,lastInteraction=0;
   const camera=new THREE.PerspectiveCamera(mobile?61:50,1,.1,180);
@@ -48,7 +48,8 @@ export function createMap(container,{onSelect,onNearby,onFail,onWalk,initialPlay
   const tones=new THREE.DataTexture(new Uint8Array([128,184,230]),3,1,THREE.RedFormat);
   tones.minFilter=tones.magFilter=THREE.NearestFilter;tones.needsUpdate=true;
   const paper=paperTexture(),waterPaper=paperTexture(true);
-  const lightTarget=sunlight.color.clone(),fogTarget=scene.fog.color.clone();
+  const lightTarget=sunlight.color.clone(),fogTarget=scene.fog.color.clone(),skyTarget=skyDome.material.color.clone();
+  let ambientTarget=ambient.intensity,sunTarget=sunlight.intensity;
   const materials=new Map();
   const mat=color=>{if(!materials.has(color))materials.set(color,new THREE.MeshToonMaterial({color,gradientMap:tones,map:paper}));return materials.get(color)};
   const ink=new THREE.LineBasicMaterial({color:0x534961,transparent:true,opacity:.55});
@@ -326,9 +327,15 @@ export function createMap(container,{onSelect,onNearby,onFail,onWalk,initialPlay
   function setChapter(index){
     chapterIndex=index;person.rotation.y=.32;finishIntro();moveCamera(pose(),1300);
     placeMarker(...walkPosition);updateNearby();
-    fogTarget.set(index===2?0xb0aec8:index===4?0xc6c2cf:0xb9b6cc);
-    lightTarget.set(index===2?0xd8ceee:index===4?0xffecd2:0xffdfb8);
-    if(reduced){scene.fog.color.copy(fogTarget);sunlight.color.copy(lightTarget);}
+    const palettes=[
+      {fog:0xbdb7ca,sky:0xfff2e9,light:0xffdfbd,ambient:2.1,sun:2.1},
+      {fog:0xa59dbb,sky:0xded4ef,light:0xe9cde0,ambient:1.85,sun:1.8},
+      {fog:0x8d86aa,sky:0xbeb8df,light:0xbab9df,ambient:1.55,sun:1.5},
+      {fog:0x746c92,sky:0x9996c9,light:0xaaa9dc,ambient:1.25,sun:1.2},
+      {fog:0xd2cbd0,sky:0xfff3e6,light:0xffefd4,ambient:2.35,sun:2.35}
+    ];
+    const palette=palettes[index];fogTarget.set(palette.fog);skyTarget.set(palette.sky);lightTarget.set(palette.light);ambientTarget=palette.ambient;sunTarget=palette.sun;
+    if(reduced){scene.fog.color.copy(fogTarget);skyDome.material.color.copy(skyTarget);sunlight.color.copy(lightTarget);ambient.intensity=ambientTarget;sunlight.intensity=sunTarget;}
     if(routeLine){scene.remove(routeLine);routeLine.geometry.dispose();routeLine.material.dispose();routeLine=null;}
   }
   function travel(_route,onArrive){
@@ -388,7 +395,7 @@ export function createMap(container,{onSelect,onNearby,onFail,onWalk,initialPlay
     person.position.y=walking&&!reduced?Math.sin(now*.017)*.025:0;
     if(!reduced){halo.scale.setScalar(1+Math.sin(now*.0012)*.07);waterPaper.offset.y=now*.000003;particles.position.y=Math.sin(now*.00013)*.2;particles.position.x=Math.sin(now*.00009)*.2;}
 
-    scene.fog.color.lerp(fogTarget,.035);sunlight.color.lerp(lightTarget,.035);
+    scene.fog.color.lerp(fogTarget,.035);skyDome.material.color.lerp(skyTarget,.035);sunlight.color.lerp(lightTarget,.035);ambient.intensity+=(ambientTarget-ambient.intensity)*.035;sunlight.intensity+=(sunTarget-sunlight.intensity)*.035;
     // Lift oblique views enough to retain the bridges and walkable riverbank.
     // Straight-on views may still sit low among the facades.
     const sideView=Math.min(1,Math.abs(controls.getAzimuthalAngle())/.62)**2;

@@ -145,3 +145,52 @@ test('PC letter remains scrollable with accessible controls at all desktop sizes
  }
  await page.locator('#event-continue').click();await expect(page.locator('#line-count')).toHaveText('05 / 15');
 });
+test('speaker portraits stay above reading controls',async({page})=>{
+ await seed(page,0,29);
+ for(const portrait of ['#portrait-left','#portrait-right']){
+  await expect(page.locator(portrait)).toBeVisible();
+  const p=await page.locator(portrait).boundingBox(),control=await page.locator(portrait.includes('left')?'#previous-line':'#next-line').boundingBox();
+  expect(p.y+p.height).toBeLessThanOrEqual(control.y+1);
+  await page.screenshot({path:`docs/screenshots/portrait-safe-${portrait.includes('left')?'dreamer':'nastenka'}.png`});
+  if(portrait.includes('left'))await page.locator('#next-line').click();
+ }
+});
+test('rainy room, period letter and split passage remain readable',async({page})=>{
+ await seed(page,4,1);await expect(page.locator('#scene-backdrop')).toHaveCSS('background-image',/rainy-room-window/);
+ await page.locator('#next-line').click();await expect(page.locator('#open-letter .wax-seal')).toBeVisible();
+ await page.screenshot({path:'docs/screenshots/period-envelope.png'});
+ await page.locator('#open-letter').click();await expect(page.locator('#letter-paper')).toBeVisible();
+ await expect(page.locator('#letter-paper')).toHaveCSS('overflow-y','auto');
+ await expect(page.locator('#letter-body p')).toHaveCount(2);await expect(page.locator('.letter-heading')).toBeVisible();
+ await expect(page.locator('#letter-body p').first()).toHaveCSS('font-family',/Caveat/);
+ await page.screenshot({path:'docs/screenshots/period-letter.png'});
+ await page.locator('#event-continue').click();await expect(page.locator('#line-count')).toHaveText('05 / 15');
+ await page.locator('#next-line').click();await expect(page.locator('.letter-heading')).toBeHidden();await expect(page.locator('.letter-signature')).toBeVisible();
+ await expect(page.locator('.letter-page')).toHaveText('Part 2 of 2');await page.locator('#event-continue').click();await expect(page.locator('#line-count')).toHaveText('07 / 15');
+});
+test('footsteps offer an immediate alternative and keep the figure when looking',async({page})=>{
+ await seed(page,3,28);await page.locator('#next-line').click();await expect(page.locator('#event-hint')).toHaveText('Someone is approaching.');
+ await expect(page.locator('#event-continue')).toBeVisible();await page.locator('#event-action').click();
+ await expect(page.locator('#event-figure')).toBeVisible();await expect(page.locator('#event-figure')).toBeDisabled();
+ await page.screenshot({path:'docs/screenshots/footsteps-looked.png'});
+ await page.locator('#event-continue').click();await expect(page.locator('#line-count')).toHaveText('30 / 36');
+});
+test('chapter selection applies an individual map tint',async({page})=>{
+ await seed(page,4,0);await page.locator('#back-map').click();
+ for(const [i,tint] of ['first','second','third','fourth','morning'].entries()){
+  await page.locator('.chapter-tab').nth(i).click();await expect(page.locator('#map-view')).toHaveAttribute('data-chapter-tint',tint);
+  await page.screenshot({path:`docs/screenshots/map-tint-${tint}.png`});
+ }
+});
+test('letter opening animation can be interrupted and long text can scroll',async({page})=>{
+ await seed(page,4,1);await page.locator('#next-line').click();await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.locator('#open-letter').click();await expect(page.locator('#open-letter')).toHaveClass(/is-opening/);
+ await page.locator('#event-dialogue').click();await expect(page.locator('#line-count')).toHaveText('03 / 15');
+ await page.waitForTimeout(800);await expect(page.locator('#line-count')).toHaveText('03 / 15');
+ await page.locator('#previous-line').click();await page.locator('#replay-interaction').click();await page.locator('#open-letter').click();
+ await expect(page.locator('#letter-paper')).toBeVisible();
+ await page.locator('#letter-body').evaluate(el=>{el.firstElementChild.textContent=el.firstElementChild.textContent.repeat(20)});
+ const scroll=await page.locator('#letter-paper').evaluate(el=>{el.scrollTop=el.scrollHeight;return {top:el.scrollTop,height:el.scrollHeight,client:el.clientHeight}});
+ expect(scroll.height).toBeGreaterThan(scroll.client);expect(scroll.top).toBeGreaterThan(0);
+ await page.locator('#event-continue').click();await expect(page.locator('#line-count')).toHaveText('02 / 15');
+});

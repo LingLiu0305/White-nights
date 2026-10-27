@@ -1,7 +1,7 @@
 // Stable paragraph anchors keep events attached to their story beats.
 export const interactions = [
  {id:'n2-take-letter',chapterId:'night-2',anchor:'night-2-p039',resume:'night-2-p040',kind:'accept',title:'A letter already written',hint:'She holds it out to you.',image:'canal-night.png'},
- {id:'n4-footsteps',chapterId:'night-4',anchor:'night-4-p029',resume:'night-4-p030',kind:'turn',title:'Footsteps',hint:'A movement at the edge of the evening.',image:'canal-night.png'},
+ {id:'n4-footsteps',chapterId:'night-4',anchor:'night-4-p029',resume:'night-4-p030',kind:'turn',title:'Footsteps',hint:'Someone is approaching.',image:'canal-night.png'},
  {id:'n1-observe-city',chapterId:'night-1',anchor:'night-1-p001',resume:'night-1-p002',kind:'observe',title:'A city of familiar strangers',hint:'Take a moment to look around.',image:'summer-street.png',objects:[
   {id:'window',name:'The open window',x:.22,y:.33,text:'Someone has opened a window to the evening air. A small, ordinary gesture—and a life continuing beyond my reach.'},
   {id:'house',name:'The familiar house',x:.46,y:.4,text:'I notice the shutters before I notice the people. Buildings have become easier companions; they never ask why I walk alone.'},
@@ -12,8 +12,8 @@ export const interactions = [
   {id:'water',name:'The water',x:.48,y:.66,text:'The water carries the last light beneath the bridge. It seems able to go on without an answer.'},
   {id:'street',name:'The distant street',x:.78,y:.37,text:'Her eyes keep returning to the street. I follow her gaze, although we are hoping for different things.'}
  ]},
- {id:'morning-read-letter',chapterId:'morning',anchor:'morning-p002',resume:'morning-p005',kind:'letter',title:'A letter from Nastenka',phase:'envelope',paragraphs:['morning-p003','morning-p004']},
- {id:'morning-letter-return',chapterId:'morning',anchor:'morning-p005',resume:'morning-p007',kind:'letter',title:'The rest of her letter',phase:'paper',paragraphs:['morning-p006']}
+ {id:'morning-read-letter',chapterId:'morning',anchor:'morning-p002',resume:'morning-p005',kind:'letter',title:'A letter from Nastenka',image:'rainy-room-window.png',phase:'envelope',paragraphs:['morning-p003','morning-p004']},
+ {id:'morning-letter-return',chapterId:'morning',anchor:'morning-p005',resume:'morning-p007',kind:'letter',title:'The rest of her letter',image:'rainy-room-window.png',phase:'paper',paragraphs:['morning-p006']}
 ];
 export const interactionById=id=>interactions.find(event=>event.id===id);
 export const interactionAt=(chapterId,lineId)=>interactions.find(event=>event.chapterId===chapterId&&event.anchor===lineId);

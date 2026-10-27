@@ -1,6 +1,7 @@
 import '@fontsource-variable/nunito-sans';
 import '@fontsource-variable/nunito-sans/wght-italic.css';
 import '@fontsource/lilita-one/latin-400.css';
+import '@fontsource/caveat/500.css';
 import './style.css';
 import './home.css';
 import './reader-stage.css';
@@ -42,6 +43,7 @@ function renderMap(){
   mapView.hidden=false;mapView.inert=false;reader.hidden=true;$('#travel-overlay').hidden=true;
   document.body.classList.remove('is-reading','is-travelling');map?.pause(false);map?.setChapter(selected);
   const chapter=chapters[selected];
+  mapView.dataset.chapterTint=chapter.tint;
   $('#chapter-label').textContent=chapter.labelEn;
   $('#chapter-title-en').textContent=sentenceCase(chapter.en);
   const start=$('#start-story');start.innerHTML=`${labelFor(selected)} <span aria-hidden="true">↗</span>`;start.disabled=false;
@@ -161,6 +163,7 @@ function openInteraction(id,replay=false){
   if(state.mode!=='interaction')return;
   clearInterval(typeTimer);typing=false;
   map?.clearWalkKeys();$('#reading-deck').hidden=true;eventView.render();
+  if(id==='n4-footsteps'&&state.activeInteraction.phase==='observe')music.footsteps();
 }
 function finishInteraction(id,options){
   const before=state;dispatch({type:'INTERACTION_FINISH',id,...options});if(state===before)return;

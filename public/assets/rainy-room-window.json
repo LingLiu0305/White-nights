@@ -1,0 +1,8 @@
+{
+  "provider": "OpenAI image generation tool",
+  "generated_on": "2026-10-28",
+  "source_image": "morning-room.png",
+  "purpose": "Rain-streaked window for Third Night and Morning",
+  "prompt": "Preserve the original room, furnishings, window, architecture, crop and hand-drawn linework; add gentle visible rain streaks and droplets only on the window and an overcast blue-grey morning outside. No people or text.",
+  "note": "Classroom Easel/Qwen generation was attempted twice and returned HTTP 502; this is an edit of the existing classroom-generated illustration."
+}

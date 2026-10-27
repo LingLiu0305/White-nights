@@ -13,7 +13,7 @@
 - 3D 地图与穿长外套的梦想家标记：本项目用 Three.js 几何体和卡通材质构建，未下载第三方模型。纸张与水纹为程序生成的 CanvasTexture；细线的不规则偏移、雾、天空渐变和环境微粒均由代码生成，不使用外部贴图。
 - `dreamer-portrait.png`、`nastenka-portrait.png`、`summer-street.png`、`rainy-embankment.png`：2026-10-22 使用同一课堂 Easel / `qwen-image-2.1` 接口生成，分别用于梦想家、娜斯坚卡的对话肖像，以及开场街景和雨中河岸。提示词见同名 JSON；这些是原创视觉改编，不是历史人物肖像或原作插图。
 - 旧版程序剪影已移除；界面符号与地图标记由代码绘制。
-- 背景音乐：`src/music.js` 中为本项目编写的短旋律与低音伴奏，使用 Web Audio 三角波、滤波和音量包络实时合成；无外部音乐或录音。
+- 背景音乐：`src/music.js` 中为本项目编写的短旋律与低音伴奏，使用 Web Audio 三角波、滤波和音量包络实时合成；第四夜脚步声是遵循音量设置的短合成低音脉冲；无外部音乐或录音。
 - 英文正文与控件字体：**Nunito Sans**，通过 `@fontsource-variable/nunito-sans` 5.3.0 本地打包，包含常规与斜体；SIL Open Font License 1.1，许可见 `public/licenses/nunito-sans-OFL.txt`。早期版本的 Manrope 已移除。
 
 - 开场展示字体：Juan Montoreano 的 **Lilita One**，通过 `@fontsource/lilita-one` 5.3.0 本地打包；SIL Open Font License 1.1，许可见 `public/licenses/lilita-one-OFL.txt`。
@@ -40,3 +40,7 @@
 - Current female portrait: `nastenka-portrait-stylized-v6.png`, generated through the authorized classroom Easel / `qwen-image-2.1` API on 2026-10-26. Refined facial proportions retain the approved flat-color palette. Prompt and metadata are in the companion JSON; generation recipe: `docs/portrait-options/generate-nastenka-refinement.py`.
 
 - `memory-grandmother-room.png` and `memory-upstairs-door.png`: generated on 2026-10-27 using the user-authorized classroom Easel API (`qwen-image-2.1`), for optional Second Night memory interactions. These are fictional illustrative spaces, not historical reconstructions. The images are prepared but not yet used by the runtime. Exact prompts are in companion JSON files; generation script: `tools/generate_interaction_assets.py`.
+
+
+- `rainy-room-window.png`: edited from the project’s existing Qwen-generated `morning-room.png` using the OpenAI image generation tool on 2026-10-28, adding rain through the window while preserving the room. Classroom Easel / Qwen returned HTTP 502 on two attempts; the generation prompt and provenance are recorded in `rainy-room-window.json`.
+- Letter handwriting font: **Caveat** via `@fontsource/caveat` 5.2.6, SIL Open Font License 1.1; see `public/licenses/caveat-OFL.txt`. Text remains selectable and the dialogue alternative uses the standard interface font.
