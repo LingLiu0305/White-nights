@@ -1,0 +1,8 @@
+{
+  "provider": "classroom Easel API",
+  "model": "qwen-image-2.1",
+  "prompt": "Original illustrated narrative game background for White Nights, 1840s Saint Petersburg. Thin slightly imperfect dark grey-purple ink contours, restrained cel shaded flat planes, delicate subtle paper grain. Muted lavender shadows, mist blue, warm ivory plaster, dusty peach and sage. Soft northern summer evening light. Architectural line drawing with simple color, matching an illustrated canal city. NOT photorealistic, no oil painting, no dense pencil shading, no glossy 3D. Wide cinematic landscape composition, lower quarter quiet for UI. No people, no faces, no lettering, no readable text, no watermark, no modern devices. A modest sitting room inside a small old wooden Petersburg house. Three tall narrow windows along the rear wall, pale warm light through thin curtains. At left an empty plain wooden armchair with an ivory shawl draped over its arm; beside it a small sewing basket on a side table. At center a modest table with two clearly visible closed clothbound books, blank covers without lettering. At right a half-open wooden interior door with a glimpse of a narrow staircase upward. Faded sage wallpaper, worn floorboards, simple domestic furniture, intimate and humble rather than grand or wealthy. Keep books, chair and doorway visually distinct for clickable observation hotspots. Empty room, a recollection of a sheltered life.",
+  "requested_size": "1536x1024",
+  "purpose": "Original background for White Nights",
+  "generated_on": "2026-10-27"
+}
