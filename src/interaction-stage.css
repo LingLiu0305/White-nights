@@ -1,0 +1,10 @@
+/* Narrative interactions share the reader's paper, ink and lavender palette. */
+#intro-dialog{inset:0;width:100%;max-width:none;height:100dvh;max-height:none;margin:0;padding:clamp(30px,6vh,72px) 9vw;border:0;border-radius:0;background:linear-gradient(90deg,#292739ef 0%,#343145d9 48%,#46405250 100%);color:#fff0d4;box-shadow:none;overflow:auto}
+#intro-dialog::backdrop{background:#22213225;backdrop-filter:none}
+.intro-content{max-width:720px;margin:auto 0}.intro-credit{font-size:15px!important;letter-spacing:.04em;color:#eadbbf}
+#intro-title{font:400 clamp(56px,8vw,112px)/.88 var(--font-display);margin:28px 0;color:#ffedbe;letter-spacing:0}
+#intro-dialog p{font-size:clamp(17px,1.5vw,22px);line-height:1.5;max-width:57ch;margin:16px 0}
+#intro-dialog small{display:block;font-size:13px;color:#d3c8bb}.intro-actions{display:flex;align-items:center;gap:26px;margin-top:28px;flex-wrap:wrap}.intro-actions button{min-height:44px;color:inherit}.intro-actions .primary-button{background:#f3e4c0;color:#34313f;padding:16px 26px}
+.showing-intro .scene-heading{display:none!important}
+#intro-replay{display:block;margin:24px 0}
+@media(max-height:750px){#intro-dialog{padding-top:28px;padding-bottom:28px}#intro-title{font-size:70px;margin:18px 0}#intro-dialog p{font-size:18px;margin:12px 0}}

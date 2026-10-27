@@ -3,6 +3,7 @@ import {chapters} from '../src/content.js';
 
 // No external font service should be required: fonts are bundled with the app.
 test.beforeEach(async({page})=>{
+  await page.addLocatorHandler(page.locator('#intro-dialog[open]'),async()=>{await page.locator('#intro-skip').click()});
   await page.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//,route=>route.abort());
 });
 
@@ -51,11 +52,11 @@ test('arrow keys walk the dreamer; nearby places respond to Enter',async({page})
   await page.keyboard.up('w');
   await expect(page.locator('#walk-status')).toContainText('The little room');
   await page.keyboard.down('ArrowUp');
-  await page.waitForTimeout(1100);
+  await expect(page.locator('#walk-status')).toBeHidden({timeout:10000});
   await page.keyboard.up('ArrowUp');
   await expect(page.locator('#walk-status')).toBeHidden();
   await page.keyboard.down('ArrowDown');
-  await page.waitForTimeout(1100);
+  await expect(page.locator('#walk-status')).toContainText('The little room',{timeout:10000});
   await page.keyboard.up('ArrowDown');
   await expect(page.locator('#walk-status')).toContainText('The little room');
   await page.screenshot({path:'test-results/map-walking.png'});

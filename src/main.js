@@ -4,6 +4,7 @@ import '@fontsource/lilita-one/latin-400.css';
 import './style.css';
 import './home.css';
 import './reader-stage.css';
+import './interaction-stage.css';
 import {chapters,locations} from './content.js';
 import {createState,transition,readSave,writeSave} from './story.js';
 import {createMap} from './map.js';
@@ -27,6 +28,7 @@ function save(){if(!writeSave(storage,state)){$('#save-status').hidden=false;$('
 function showDialog(dialog){placeRequest++;map?.clearWalkKeys();dialog.showModal();}
 document.querySelectorAll('dialog').forEach(dialog=>{
   dialog.querySelectorAll('.close-dialog,.close-dialog-inline').forEach(button=>button.onclick=()=>dialog.close());
+  dialog.addEventListener('close',()=>{if(state.mode==='map')($('#map-canvas canvas')||$('#start-story')).focus({preventScroll:true})});
   dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
 });
 function labelFor(index){return `${state.cursors[index]>0?'Continue':index<=state.completed?'Reread':'Begin'} ${chapters[index].labelEn}`;}
@@ -71,9 +73,9 @@ function fallback(){
   $('#map-fallback').hidden=false;$('#map-canvas').hidden=true;$('#reset-view').hidden=true;$('#walk-status').hidden=true;
   document.querySelector('.map-hint').textContent='Open Places to explore';
 }
-map=createMap($('#map-canvas'),{onSelect:selectPlace,onFail:fallback,onNearby:id=>{
+map=createMap($('#map-canvas'),{initialPlayer:state.mapPlayer,onWalk:player=>{state=transition(state,{type:'PLAYER',player});save()},onSelect:selectPlace,onFail:fallback,onNearby:id=>{
   const status=$('#walk-status');status.hidden=!id;
-  if(id)status.textContent=`${sentenceCase(locations.find(place=>place.id===id).en)} · Press Enter to explore`;
+  if(id)status.textContent=`${sentenceCase(locations.find(place=>place.id===id).en)} · Enter to ${chapters[selected].place===id?(selected===4?'return':'meet her'):'explore'}`;
 }});
 function startChapter(index){
   placeRequest++;
@@ -173,10 +175,10 @@ $('#about-open').onclick=()=>showDialog($('#about-dialog'));
 $('#places-open').onclick=()=>showDialog($('#places-dialog'));
 $('#reset-progress').onclick=()=>{$('#about-dialog').close();showDialog($('#reset-dialog'))};
 $('#restart-story-home').onclick=()=>showDialog($('#reset-dialog'));
-$('#confirm-reset').onclick=()=>{$('#reset-dialog').close();state=transition(state,{type:'RESET'});selected=0;map?.resetStory();renderMap();notify('A new beginning.');$('#start-story').focus()};
+$('#confirm-reset').onclick=()=>{$('#reset-dialog').close();state=transition(state,{type:'RESET'});selected=0;map?.resetStory();renderMap();notify('A new beginning.');openIntro()};
 document.addEventListener('keydown',e=>{
   if(document.querySelector('dialog[open]'))return;
-  if(state.mode==='map'&&map&&!e.target.closest('input,select,textarea,[contenteditable]')){
+  if(state.mode==='map'&&map&&e.target.matches('#map-canvas canvas')){
     if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)){
       e.preventDefault();map.setWalkKey(e.code,true);return;
     }
@@ -192,10 +194,12 @@ document.addEventListener('keydown',e=>{
 });
 document.addEventListener('keyup',e=>{if(e.code.startsWith('Arrow'))map?.setWalkKey(e.code,false)});
 window.addEventListener('blur',()=>map?.clearWalkKeys());
+document.addEventListener('visibilitychange',()=>{if(document.hidden)map?.clearWalkKeys()});
 const music=new Soundtrack();
-const musicButtons=[$('#sound'),$('#reader-sound')];
+const musicButtons=[$('#sound'),$('#reader-sound'),$('#intro-sound')];
 function updateMusicControls(){
   musicButtons.forEach((button,index)=>{button.setAttribute('aria-pressed',String(music.playing));button.setAttribute('aria-label',`${music.playing?'Pause':'Play'} ${index?'reading music':'music'}`)});
+  $('#intro-sound').textContent=music.playing?'Sound on':'Sound off';
   $('#sound-label').textContent=music.playing?'Sound on':'Sound off';
   $('#reader-sound').textContent=music.playing?'Pause':'Sound';
 }
@@ -209,7 +213,23 @@ async function toggleMusic(){
 musicButtons.forEach(button=>button.onclick=toggleMusic);
 $('#music-volume').oninput=e=>music.setVolume(Number(e.target.value)/100);
 window.addEventListener('pagehide',()=>music.dispose().catch(()=>{}));
-document.addEventListener('visibilitychange',()=>{map?.pause(document.hidden||state.mode==='reading'||state.mode==='end')});
+document.addEventListener('visibilitychange',()=>{map?.pause(document.hidden||!['map','intro'].includes(state.mode))});
+function openIntro(){
+  state=transition(state,{type:'INTRO'});map?.clearWalkKeys();
+  mapView.classList.add('intro-complete');document.body.classList.add('showing-intro');
+  $('#intro-dialog').showModal();$('#intro-title').focus();
+}
+function closeIntro(){
+  $('#intro-dialog').close();document.body.classList.remove('showing-intro');
+  state=transition(state,{type:'INTRO_DONE'});renderMap();
+  notify('Use the arrow keys to walk. Press Enter near a place to explore.');
+  ($('#map-canvas canvas')||$('#start-story')).focus({preventScroll:true});
+}
+$('#intro-enter').onclick=closeIntro;$('#intro-skip').onclick=closeIntro;
+$('#intro-dialog').addEventListener('cancel',e=>{e.preventDefault();closeIntro()});
+$('#intro-dialog').onclick=e=>e.stopPropagation();
+$('#intro-replay').onclick=()=>{$('#about-dialog').close();openIntro()};
 renderMap();
-if(map){mapView.classList.add('scene-entering');map.introduce(()=>{mapView.classList.remove('scene-entering');mapView.classList.add('intro-complete')})}
+if(!state.introSeen)openIntro();
+if(map&&state.introSeen){mapView.classList.add('scene-entering');map.introduce(()=>{mapView.classList.remove('scene-entering');mapView.classList.add('intro-complete')})}
 if(saved?.editionUpdated)notify('Expanded story: your unlocked chapters are kept.');

@@ -3,9 +3,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { locations, chapters } from './content.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {paperTexture,drawnEdges,sky,batchArchitecture} from './scene-art.js';
-import {WALK_START,WALK_PLACES,walkStep,nearbyPlace,routeOnPaving,pavingHeight} from './walking.js';
+import {WALK_START,WALK_PLACES,walkStep,nearbyPlace,routeOnPaving,pavingHeight,cameraDirection,validPlayer} from './walking.js';
 
-export function createMap(container,{onSelect,onNearby,onFail}) {
+export function createMap(container,{onSelect,onNearby,onFail,onWalk,initialPlayer}) {
   let renderer;
   try { renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power'}); }
   catch { onFail(); return null; }
@@ -37,7 +37,7 @@ export function createMap(container,{onSelect,onNearby,onFail}) {
     if(reduced){camera.position.copy(destination.position);controls.target.copy(destination.target);controls.update();done?.();return;}
     cameraMove={from:camera.position.clone(),targetFrom:controls.target.clone(),...destination,start:performance.now(),duration,done};
   }
-  controls.addEventListener('start',()=>{interacting=true;cameraMove=null;finishIntro()});
+  controls.addEventListener('start',()=>{walkKeys.clear();walking=false;interacting=true;cameraMove=null;finishIntro()});
   controls.addEventListener('end',()=>{interacting=false;lastInteraction=performance.now()});
   const ambient=new THREE.HemisphereLight(0xe9e2f6,0x756584,2.1);scene.add(ambient);
   const sunlight=new THREE.DirectionalLight(0xffdfb8,2.1);
@@ -274,7 +274,9 @@ export function createMap(container,{onSelect,onNearby,onFail}) {
   mesh(new THREE.SphereGeometry(.022,8,6),0xd6a889,person,0,1.055,.133);
   box(.07,.035,.075,0xebe0cd,person,0,.915,.06);
   let routeLine,journey=null,paused=false,selectedPlace=null,hoverPlace=null,nearbyId=null;
-  let walkPosition=[...WALK_START],walking=false,lastFrame=performance.now();
+  let walkPosition=validPlayer(initialPlayer)?[initialPlayer.x,initialPlayer.z]:[...WALK_START],walking=false,lastFrame=performance.now(),lastWalkSave=0;
+  const reportWalk=()=>onWalk?.({x:walkPosition[0],z:walkPosition[1],facing:person.rotation.y});
+  const cameraForward=new THREE.Vector3(),followPoint=new THREE.Vector3();
   const walkKeys=new Set();
   batchArchitecture(world,mergeGeometries);
   const interactive=[];
@@ -286,9 +288,9 @@ export function createMap(container,{onSelect,onNearby,onFail}) {
       if(child.isLineSegments)child.material.opacity=group.userData.location===id?.9:.55;
     });
   }
-  function updateHighlight(){highlight(hoverPlace||selectedPlace||nearbyId)}
+  function updateHighlight(){highlight(selectedPlace||nearbyId||hoverPlace)}
   function updateNearby(){
-    const id=nearbyPlace(walkPosition);
+    const id=nearbyPlace(walkPosition,1.25,nearbyId);
     if(id!==nearbyId){nearbyId=id;onNearby?.(id)}
     updateHighlight();
   }
@@ -320,11 +322,8 @@ export function createMap(container,{onSelect,onNearby,onFail}) {
     if(wasMobile!==mobile){cameraMove=null;const p=pose();camera.position.copy(p.position);controls.target.copy(p.target);finishIntro();}
   }
   new ResizeObserver(resize).observe(container);resize();
-  function finishTravel(){if(!journey)return;const j=journey;journey=null;marker.position.copy(j.points.at(-1));walkPosition=[marker.position.x,marker.position.z];controls.enabled=true;j.onArrive();}
+  function finishTravel(){if(!journey)return;const j=journey;journey=null;marker.position.copy(j.points.at(-1));walkPosition=[marker.position.x,marker.position.z];controls.enabled=true;reportWalk();j.onArrive();}
   function setChapter(index){
-    if(index!==chapterIndex){
-      walkPosition=index===2?[...WALK_PLACES.house]:index===4?[...WALK_PLACES.canal]:[...WALK_START];
-    }
     chapterIndex=index;person.rotation.y=.32;finishIntro();moveCamera(pose(),1300);
     placeMarker(...walkPosition);updateNearby();
     fogTarget.set(index===2?0xb0aec8:index===4?0xc6c2cf:0xb9b6cc);
@@ -339,7 +338,7 @@ export function createMap(container,{onSelect,onNearby,onFail}) {
     const distances=[0];for(let i=1;i<points.length;i++)distances.push(distances[i-1]+points[i].distanceTo(points[i-1]));
     if(routeLine){scene.remove(routeLine);routeLine.geometry.dispose();routeLine.material.dispose();}
     routeLine=new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),new THREE.LineDashedMaterial({color:0xc39761,dashSize:.25,gapSize:.16,transparent:true,opacity:.85}));routeLine.computeLineDistances();scene.add(routeLine);
-    journey={points,distances,onArrive,start:performance.now(),duration:distances.at(-1)<.01?500:4400};controls.enabled=false;
+    journey={points,distances,onArrive,start:performance.now(),duration:nearbyPlace(walkPosition)===chapters[chapterIndex].place?350:Math.min(8000,Math.max(500,distances.at(-1)/3.5*1000))};controls.enabled=false;
     marker.position.copy(points[0]);if(reduced)queueMicrotask(finishTravel);
   }
   const particlePositions=[];
@@ -349,18 +348,25 @@ export function createMap(container,{onSelect,onNearby,onFail}) {
   const projected=new THREE.Vector3();
   function frame(now){
     requestAnimationFrame(frame);
-    const dt=Math.min((now-lastFrame)/1000,.15);lastFrame=now;
+    const dt=Math.min((now-lastFrame)/1000,.05);lastFrame=now;
     if(paused)return;
-    if(!journey&&walkKeys.size){
+    if(!journey&&!interacting&&walkKeys.size){
       const dx=Number(walkKeys.has('ArrowRight'))-Number(walkKeys.has('ArrowLeft'));
       const dz=Number(walkKeys.has('ArrowDown'))-Number(walkKeys.has('ArrowUp'));
-      const next=walkStep(walkPosition,[dx,dz],dt*2.65);
+      camera.getWorldDirection(cameraForward);
+      const direction=cameraDirection([dx,dz],[cameraForward.x,cameraForward.z]);
+      const next=walkStep(walkPosition,direction,dt*2.65);
       walking=Math.hypot(next[0]-walkPosition[0],next[1]-walkPosition[1])>.001;
       if(walking){
-        const shift=next[1]-walkPosition[1];
-        if(shift){const targetZ=THREE.MathUtils.clamp(controls.target.z+shift*.48,-12,-3);camera.position.z+=targetZ-controls.target.z;controls.target.z=targetZ;}
         person.rotation.y=Math.atan2(next[0]-walkPosition[0],next[1]-walkPosition[1]);
         walkPosition=next;placeMarker(...walkPosition);updateNearby();
+        followPoint.copy(marker.position).project(camera);
+        if(Math.abs(followPoint.x)>.5||followPoint.y<-.3||followPoint.y>.5){
+          const gain=reduced?1:Math.min(1,dt*3);
+          const shift=new THREE.Vector3((walkPosition[0]-controls.target.x)*gain,0,(walkPosition[1]-controls.target.z)*gain);
+          camera.position.add(shift);controls.target.add(shift);
+        }
+        if(now-lastWalkSave>2000){reportWalk();lastWalkSave=now;}
       }
     }else walking=false;
     if(journey){
@@ -396,10 +402,10 @@ export function createMap(container,{onSelect,onNearby,onFail}) {
   requestAnimationFrame(frame);setChapter(0);
   renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();paused=true;cameraMove=null;finishIntro();finishTravel();onFail();});
   return {travel,finishTravel,setChapter,
-    setWalkKey(code,pressed){if(pressed){if(paused||journey)return;cameraMove=null;finishIntro();hoverPlace=null;selectedPlace=null;updateHighlight();walkKeys.add(code)}else walkKeys.delete(code)},
-    clearWalkKeys(){walkKeys.clear();walking=false},
+    setWalkKey(code,pressed){if(pressed){if(paused||journey||interacting)return;cameraMove=null;finishIntro();hoverPlace=null;selectedPlace=null;updateHighlight();walkKeys.add(code)}else {walkKeys.delete(code);if(!walkKeys.size)reportWalk()}},
+    clearWalkKeys(){walkKeys.clear();walking=false;reportWalk()},
     exploreNearby(){if(!paused&&!journey&&nearbyId){selectedPlace=nearbyId;onSelect(nearbyId);return true}return false},
-    resetStory(){walkKeys.clear();walkPosition=[...WALK_START];chapterIndex=0;selectedPlace=null;hoverPlace=null;placeMarker(...walkPosition);updateNearby()},
+    resetStory(){walkKeys.clear();walkPosition=[...WALK_START];chapterIndex=0;selectedPlace=null;hoverPlace=null;placeMarker(...walkPosition);updateNearby();reportWalk()},
     introduce(done){
       introDone=done;
       if(reduced){cameraMove=null;const p=pose();camera.position.copy(p.position);controls.target.copy(p.target);finishIntro();return;}
@@ -411,5 +417,5 @@ export function createMap(container,{onSelect,onNearby,onFail}) {
       const [x,,z]=loc.position;
       moveCamera({position:new THREE.Vector3(x*.2,mobile?6.8:5.5,z+16),target:new THREE.Vector3(x*.65,1,z-2)},950,done);
     },
-    reset(){finishIntro();selectedPlace=null;hoverPlace=null;updateHighlight();moveCamera(pose(),1000)},pause(value){paused=value;if(value)walkKeys.clear();controls.enabled=!value&&!journey}};
+    reset(){finishIntro();selectedPlace=null;hoverPlace=null;updateHighlight();const p=pose();const shift=new THREE.Vector3(walkPosition[0],0,walkPosition[1]+2);p.position.add(shift);p.target.add(shift);moveCamera(p,1000)},pause(value){paused=value;if(value){walkKeys.clear();reportWalk();}controls.enabled=!value&&!journey}};
 }

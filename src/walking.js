@@ -30,13 +30,29 @@ export function walkStep(position, direction, distance) {
   return [x, z];
 }
 
-export function nearbyPlace(position, radius = 1.25) {
-  let closest = null, best = radius;
-  for (const [id, point] of Object.entries(WALK_PLACES)) {
-    const distance = Math.hypot(position[0] - point[0], position[1] - point[1]);
-    if (distance < best) { closest = id; best = distance; }
+// Nearby targets must be reachable on paving, not merely close across a wall/water.
+export function clearPath(start,end) {
+  const steps=Math.max(1,Math.ceil(Math.hypot(end[0]-start[0],end[1]-start[1])/.08));
+  for(let i=0;i<=steps;i++){const t=i/steps;if(!canWalk(start[0]+(end[0]-start[0])*t,start[1]+(end[1]-start[1])*t))return false;}
+  return true;
+}
+export function nearbyPlace(position, radius = 1.25, current = null) {
+  const active=WALK_PLACES[current];
+  if(active&&Math.hypot(position[0]-active[0],position[1]-active[1])<1.55&&clearPath(position,active))return current;
+  let closest=null,best=radius;
+  for(const [id,point] of Object.entries(WALK_PLACES)){
+    const distance=Math.hypot(position[0]-point[0],position[1]-point[1]);
+    if(distance<best&&clearPath(position,point)){closest=id;best=distance;}
   }
   return closest;
+}
+export function cameraDirection([dx,dz],[fx,fz]) {
+  const fLength=Math.hypot(fx,fz)||1;fx/=fLength;fz/=fLength;
+  const x=-fz*dx-fx*dz,z=fx*dx-fz*dz,length=Math.hypot(x,z);
+  return length?[x/length||0,z/length||0]:[0,0];
+}
+export function validPlayer(player) {
+  return player&&Number.isFinite(player.x)&&Number.isFinite(player.z)&&Number.isFinite(player.facing)&&canWalk(player.x,player.z);
 }
 
 export function routeOnPaving(start, end) {
