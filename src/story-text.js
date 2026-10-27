@@ -1115,7 +1115,7 @@ export const storyText = {
     },
     {
       "speakerEn": "Narration",
-      "en": "She brought a letter. I recognised who had written it, opened the envelope, and read alone.",
+      "en": "She brought a letter. I recognised who had written it. Alone in the room, I held the envelope for a moment.",
       "sectionEn": "A letter · Asking forgiveness",
       "image": "morning-room.png",
       "visual": "empty",

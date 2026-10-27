@@ -1,6 +1,14 @@
 import {test,expect} from '@playwright/test';
 import {chapters} from '../src/content.js';
 
+async function skipMoment(page){
+ if(await page.locator('#interaction-dialog').isVisible()){
+  const classic=page.locator('#event-dialogue');
+  await (await classic.isVisible()?classic:page.locator('#event-skip')).click();
+ }
+}
+async function advance(page){await page.locator('#next-line').click();await skipMoment(page)}
+
 // No external font service should be required: fonts are bundled with the app.
 test.beforeEach(async({page})=>{
   await page.addLocatorHandler(page.locator('#intro-dialog[open]'),async()=>{await page.locator('#intro-skip').click()});
@@ -20,7 +28,7 @@ test('map to first night, history, reload and completion',async({page})=>{
   await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
   await expect(page.locator('#reader')).toBeVisible();
   await expect(page.locator('#dialogue')).toContainText(chapters[0].lines[0].en);
-  await page.getByRole('button',{name:'Continue reading',exact:true}).click();
+  await advance(page);
   await expect(page.locator('#dialogue')).toContainText('street corners');
   await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[1].en);
   await expect(page.locator('#scene-backdrop')).not.toHaveCSS('background-image','none');
@@ -32,7 +40,7 @@ test('map to first night, history, reload and completion',async({page})=>{
   await page.reload();
   await page.getByRole('button',{name:'Continue First Night',exact:true}).click();
   await expect(page.locator('#dialogue')).toContainText('street corners');
-  for(let i=1;i<chapters[0].lines.length;i++) await page.getByRole('button',{name:'Continue reading',exact:true}).click();
+  for(let i=1;i<chapters[0].lines.length;i++) await advance(page);
   await expect(page.locator('#chapter-end')).toBeVisible();
   await page.getByRole('button',{name:'Return to map and continue'}).click();
   await expect(page.getByRole('button',{name:'Begin Second Night',exact:true})).toBeEnabled();
@@ -65,7 +73,7 @@ test('arrow keys walk the dreamer; nearby places respond to Enter',async({page})
 test('homepage restart asks first, then clears the story',async({page})=>{
   await page.goto('/');
   await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
-  await page.getByRole('button',{name:'Continue reading',exact:true}).click();
+  await advance(page);
   await page.getByRole('button',{name:'Back to map',exact:true}).click();
   await expect(page.getByRole('button',{name:'Continue First Night',exact:true})).toBeVisible();
   await page.getByRole('button',{name:'Restart the whole story'}).click();
@@ -117,7 +125,7 @@ test('mobile layout, keyboard reading and reset',async({page})=>{
   await page.screenshot({path:'test-results/map-mobile.png',fullPage:true});
   await page.getByRole('button',{name:'Begin First Night',exact:true}).click();
   await page.locator('#reader').focus();
-  await page.keyboard.press('Space');
+  await page.keyboard.press('Space');await skipMoment(page);
   await expect(page.locator('#dialogue')).toContainText('street corners');
   await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[1].en);
   await expect(page.locator('#scene-backdrop')).not.toHaveCSS('background-image','none');
@@ -140,7 +148,7 @@ test('all five chapters reach the fixed ending in English',async({page})=>{
       await expect(page.locator('#reader')).not.toContainText(/[\u3400-\u9fff]/);
       await expect(page.locator('#dialogue-en')).toHaveText(chapter.lines[index].en);
       if(chapter.id==='night-4'&&chapter.lines[index].visual==='leaving'&&chapter.lines[index-1]?.visual!=='leaving')await page.screenshot({path:'test-results/fourth-night.png'});
-      await page.getByRole('button',{name:'Continue reading',exact:true}).click();
+      await advance(page);
     }
     await expect(page.locator('#end-title-en')).toHaveText(chapter.endingEn);
     await page.getByRole('button',{name:'Return to map and continue'}).click();
@@ -155,10 +163,10 @@ test('ordinary motion, duplicate start, skip and reveal text before advancing',a
   await page.locator('#start-story').evaluate(button=>{button.click();button.click()});
   await expect(page.locator('#travel-overlay')).toBeVisible();
   await page.getByRole('button',{name:'Skip transition ↗'}).click();
-  await page.locator('#next-line').dispatchEvent('click');
+  await page.locator('#next-line').dispatchEvent('click');await skipMoment(page);
   await expect(page.locator('#line-count')).toHaveText(`01 / ${chapters[0].lines.length}`);
   await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[0].en);
-  await page.getByRole('button',{name:'Continue reading',exact:true}).click();
+  await advance(page);
   await expect(page.locator('#line-count')).toHaveText(`02 / ${chapters[0].lines.length}`);
 });
 
@@ -229,7 +237,7 @@ test('text selection does not advance, previous works, and music is controllable
   await page.locator('#dialogue-en').evaluate(el=>{const range=document.createRange();range.selectNodeContents(el);getSelection().removeAllRanges();getSelection().addRange(range)});
   await page.locator('#dialogue').dispatchEvent('click');
   await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[0].en);
-  await page.getByRole('button',{name:'Continue reading',exact:true}).click();
+  await advance(page);
   await page.getByRole('button',{name:'Previous paragraph',exact:true}).click();
   await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[0].en);
   await page.getByRole('button',{name:'Play reading music',exact:true}).click();
@@ -247,7 +255,7 @@ test('music failure gives feedback without claiming playback',async({page})=>{
   await page.getByRole('button',{name:'Play reading music',exact:true}).click();
   await expect(page.locator('#toast')).toContainText('Music could not start');
   await expect(page.locator('#reader-sound')).toHaveAttribute('aria-pressed','false');
-  await page.getByRole('button',{name:'Continue reading',exact:true}).click();
+  await advance(page);
   await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[1].en);
 });
 
@@ -268,7 +276,7 @@ test('speaker portraits alternate sides without covering dialogue',async({page})
   await expect(page.locator('#portrait-left')).toBeHidden();
   await expect(page.locator('#portrait-right')).toBeHidden();
   const firstSpeech=chapters[0].lines.findIndex(line=>line.speakerEn==='The Dreamer');
-  for(let i=0;i<firstSpeech;i++)await page.locator('#next-line').click();
+  for(let i=0;i<firstSpeech;i++)await advance(page);
   await expect(page.locator('#portrait-left')).toBeVisible();
   await expect(page.locator('#portrait-left')).toContainText('The Dreamer');
   await expect(page.locator('#portrait-right')).toBeHidden();
@@ -277,7 +285,7 @@ test('speaker portraits alternate sides without covering dialogue',async({page})
   expect(left.x+left.width).toBeLessThanOrEqual(words.x);
   await page.screenshot({path:'test-results/dreamer-dialogue.png'});
   const nextSpeech=chapters[0].lines.findIndex((line,i)=>i>firstSpeech&&line.speakerEn==='The young woman');
-  for(let i=firstSpeech;i<nextSpeech;i++)await page.locator('#next-line').click();
+  for(let i=firstSpeech;i<nextSpeech;i++)await advance(page);
   await expect(page.locator('#portrait-left')).toBeHidden();
   await expect(page.locator('#portrait-right')).toBeVisible();
   await expect(page.locator('#portrait-right')).toContainText('The young woman');
@@ -315,11 +323,11 @@ test('missing character image retains the speaker name and reading controls',asy
   await page.goto('/');
   await page.locator('#start-story').click();
   const firstSpeech=chapters[0].lines.findIndex(line=>line.speakerEn==='The Dreamer');
-  for(let i=0;i<firstSpeech;i++)await page.locator('#next-line').click();
+  for(let i=0;i<firstSpeech;i++)await advance(page);
   await expect(page.locator('#portrait-left figcaption')).toBeVisible();
   await expect(page.locator('#portrait-left')).toContainText('The Dreamer');
   await expect(page.locator('#portrait-left img')).toBeHidden();
-  await page.locator('#next-line').click();
+  await advance(page);
   await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[firstSpeech+1].en);
 });
 
@@ -415,13 +423,13 @@ test('dialogue frame reserves the complete paragraph while typing',async({page})
   expect(initial[1][0]).toBeGreaterThan(900);
   await page.waitForTimeout(450);
   expect(await bounds()).toEqual(initial);
-  await page.locator('#next-line').dispatchEvent('click');
+  await page.locator('#next-line').dispatchEvent('click');await skipMoment(page);
   await expect(page.locator('#dialogue-en')).toHaveText(chapters[0].lines[0].en);
   expect(await bounds()).toEqual(initial);
   const spoken=chapters[0].lines.findIndex(line=>line.speakerEn==='The Dreamer');
   for(let i=0;i<spoken;i++){
-    await page.locator('#next-line').dispatchEvent('click');
-    await page.locator('#next-line').dispatchEvent('click');
+    await page.locator('#next-line').dispatchEvent('click');await skipMoment(page);
+    await page.locator('#next-line').dispatchEvent('click');await skipMoment(page);
   }
   await expect(page.locator('#reading-deck')).toHaveAttribute('data-voice','left');
   const spokenBounds=await bounds();
@@ -445,7 +453,7 @@ test('reader title is centered and complete paragraphs choose compact heights',a
   for(let i=0;i<20;i++){
     heights.add(Math.round((await page.locator('.dialogue-wrap').boundingBox()).height));
     if(chapters[0].lines[i].speakerEn==='Narration')await expect(page.locator('#speaker')).toBeHidden();
-    if(i<19)await page.locator('#next-line').click();
+    if(i<19)await advance(page);
   }
   expect(heights.size).toBeGreaterThan(1);
   await page.locator('#history-open').click();

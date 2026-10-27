@@ -61,12 +61,21 @@
         </div>
         <figure class="speaker-portrait" id="portrait-right" hidden><img src="/assets/nastenka-portrait-stylized-v6.png" alt="" width="1024" height="1024"><figcaption><strong id="right-speaker-name">The young woman</strong></figcaption></figure>
         <div class="dialogue-bottom"><button id="previous-line" aria-label="Previous paragraph">← <span>Back</span></button><span class="reading-hint">Space to continue</span><button id="next-line" aria-label="Continue reading">Next <span class="next-arrow" aria-hidden="true">→</span></button></div>
-        <div class="reading-progress"><span id="reading-progress"></span></div>
+        <button id="replay-interaction" hidden>Replay this moment ↗</button><div class="reading-progress"><span id="reading-progress"></span></div>
       </div>
     </div>
     <section id="chapter-end" hidden><p id="end-label"></p><h2 id="end-title-en" lang="en"></h2><button class="primary-button" id="end-map" aria-label="Return to map and continue">Return to the city <span aria-hidden="true">↗</span></button></section>
   </section>
-  <dialog id="location-dialog" aria-label="Place introduction"><button class="close-dialog" aria-label="Close introduction">×</button><h2 id="place-en" lang="en"></h2><p id="place-description-en" lang="en"></p><small id="place-note-en" lang="en"></small><button id="place-start" class="primary-button"></button></dialog>
+  <dialog id="interaction-dialog" aria-labelledby="event-title">
+    <div class="event-scene"><img class="event-image" alt=""><div class="event-hotspots"></div></div>
+    <header class="event-header"><button id="event-map">← Map</button><div><p id="event-hint"></p><h2 id="event-title" tabindex="-1"></h2></div><button id="event-pause">Return to reading</button></header>
+    <p class="event-image-status" role="status" hidden>The illustration could not load. You can still explore the descriptions.</p>
+    <section id="event-observe"><nav class="event-object-list" aria-label="Details to observe"></nav><div class="event-response" aria-live="polite"><h3 id="event-object-name"></h3><p id="event-object-text"></p></div></section>
+    <section id="event-letter"><button id="open-letter" class="envelope-button">Open the letter</button><article id="letter-paper" tabindex="0" aria-label="Letter from Nastenka" hidden><p class="letter-heading">My dear friend,</p><div id="letter-body"></div><p class="letter-signature">Nastenka</p></article></section>
+    <section id="event-action-stage" hidden><div id="event-figure" aria-hidden="true" hidden></div><button id="event-action"></button></section>
+    <footer class="event-footer"><button id="event-dialogue" hidden>Read as dialogue</button><button id="event-skip">Skip this moment</button><button id="event-continue" class="primary-button">Continue story</button></footer>
+  </dialog>
+  <dialog id="location-dialog" aria-label="Place introduction"><button class="close-dialog" aria-label="Close introduction">×</button><h2 id="place-en" lang="en"></h2><p id="place-description-en" lang="en"></p><small id="place-note-en" lang="en"></small><details id="earlier-memories" hidden><summary>Earlier memories</summary><div id="place-memory-history"></div></details><button id="place-start" class="primary-button"></button></dialog>
   <dialog id="history-dialog" aria-label="Reading history"><button class="close-dialog" aria-label="Close history">×</button><h2>The words we keep.</h2><div id="history-content"></div></dialog>
   <dialog id="about-dialog" aria-label="About White Nights"><button class="close-dialog" aria-label="Close about">×</button><h2>Four nights.<br>A lifetime of remembering.</h2><p>An interactive adaptation of Fyodor Dostoevsky’s <em>White Nights</em>. Explore Petersburg, follow a dreamer’s footsteps, and read at your own pace. Your progress is saved on this device.</p><p>The city is a literary map, not a historical reconstruction. The English text is an original abridged adaptation informed by Constance Garnett’s translation, with the original ending preserved.</p><small>Illustrations: classroom Qwen Image API. City: procedural 3D.<br>Process, prompts and credits are documented in the repository.</small><button id="intro-replay" class="text-button">Watch the introduction again</button><button id="reset-progress" class="text-button" aria-label="Restart story">Start again ↗</button></dialog>
   <dialog id="reset-dialog" aria-label="Confirm restart"><h2>Walk these nights again?</h2><p>This clears your reading progress, interactions and saved memories on this browser.</p><div class="dialog-actions"><button class="close-dialog-inline">Keep my place</button><button id="confirm-reset" class="primary-button" aria-label="Confirm restart">Start again ↗</button></div></dialog>

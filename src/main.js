@@ -8,6 +8,8 @@ import './interaction-stage.css';
 import {chapters,locations} from './content.js';
 import {createState,transition,readSave,writeSave} from './story.js';
 import {createMap} from './map.js';
+import {interactionAt,pendingInteraction,interactionById,unlockedMemories} from './interactions.js';
+import {createInteractionView} from './interaction-view.js';
 import {Soundtrack} from './music.js';
 
 const $=s=>document.querySelector(s);
@@ -18,12 +20,14 @@ let state=createState(saved),selected=state.chapter,typing=false,typeTimer,toast
 let imageToken=0,placeRequest=0;
 const asset=name=>`${import.meta.env.BASE_URL}assets/${name}`;
 const mapView=$('#map-view'),reader=$('#reader');
+const eventView=createInteractionView({dialog:$('#interaction-dialog'),getState:()=>state,dispatch,onFinish:finishInteraction,onSuspend:suspendInteraction,onMap:returnToMap});
 // A missing portrait must never hide the speaker's name or interrupt the story.
 document.querySelectorAll('.speaker-portrait img').forEach(img=>{
   img.addEventListener('error',()=>img.parentElement.classList.add('portrait-missing'));
   if(img.complete&&!img.naturalWidth)img.parentElement.classList.add('portrait-missing');
 });
 function notify(message){clearTimeout(toastTimer);$('#toast').textContent=message;$('#toast').hidden=false;toastTimer=setTimeout(()=>$('#toast').hidden=true,4200)}
+function dispatch(event,persist=true){state=transition(state,event);if(persist)save()}
 function save(){if(!writeSave(storage,state)){$('#save-status').hidden=false;$('#save-status').textContent='Progress cannot be saved on this device. You can still read.'}}
 function showDialog(dialog){placeRequest++;map?.clearWalkKeys();dialog.showModal();}
 document.querySelectorAll('dialog').forEach(dialog=>{
@@ -49,22 +53,27 @@ function renderMap(){
     button.innerHTML=`<span>${index===4?'Morning':`Night ${c.roman}`}</span><span class="chapter-state" aria-hidden="true">${index<=state.completed?'✓':''}</span>`;
     button.onclick=()=>{selected=index;renderMap()};$('#chapter-list').append(button);
   });
-  save();
+  updateMemoryMarkers();save();
 }
+function updateMemoryMarkers(){for(const place of locations){const latest=unlockedMemories(place.id,state.completed).at(-1);const button=$(`#place-buttons [data-place="${place.id}"]`);if(button){button.querySelector('.new-memory')?.remove();if(latest&&state.placeMemorySeen[place.id]!==latest.after){const small=document.createElement('small');small.className='new-memory';small.textContent='New memory';button.append(small)}}}}
 function selectPlace(id){
   if(state.mode!=='map')return;
   const place=locations.find(l=>l.id===id);if(!place)return;
   const request=++placeRequest;
   $('#places-dialog').close();
   $('#place-en').textContent=sentenceCase(place.en);
-  $('#place-description-en').textContent=place.descriptionEn;$('#place-note-en').textContent=place.noteEn;
+  const memories=unlockedMemories(id,state.completed),latest=memories.at(-1);
+  $('#place-description-en').textContent=latest?.text||place.descriptionEn;$('#place-note-en').textContent=latest?'A memory of these nights':place.noteEn;
+  $('#earlier-memories').hidden=!memories.length;$('#earlier-memories').open=false;
+  const history=$('#place-memory-history');history.replaceChildren();
+  for(const text of [place.descriptionEn,...memories.slice(0,-1).map(m=>m.text)]){const p=document.createElement('p');p.textContent=text;history.append(p)}
   const button=$('#place-start');button.hidden=chapters[selected].place!==id;
   button.textContent=`${labelFor(selected)} ↗`;button.onclick=()=>{$('#location-dialog').close();startChapter(selected)};
-  const open=()=>{if(request===placeRequest&&state.mode==='map'&&!document.querySelector('dialog[open]'))showDialog($('#location-dialog'))};
+  const open=()=>{if(request===placeRequest&&state.mode==='map'&&!document.querySelector('dialog[open]')){dispatch({type:'PLACE_READ',id});updateMemoryMarkers();showDialog($('#location-dialog'))}};
   if(map)map.focusPlace(id,open);else open();
 }
 for(const location of locations){
-  const button=document.createElement('button');button.className='place-link';button.setAttribute('aria-label',`Place: ${sentenceCase(location.en)}`);
+  const button=document.createElement('button');button.className='place-link';button.dataset.place=location.id;button.setAttribute('aria-label',`Place: ${sentenceCase(location.en)}`);
   button.innerHTML=`${sentenceCase(location.en)}<span class="place-arrow" aria-hidden="true">↗</span>`;
   button.onclick=()=>selectPlace(location.id);$('#place-buttons').append(button);
 }
@@ -95,7 +104,7 @@ function arrive(){
   reader.dataset.tint=chapters[state.chapter].tint;
   $('#reader-chapter').textContent=chapters[state.chapter].labelEn;
   $('#reader-subtitle').textContent=sentenceCase(chapters[state.chapter].en);
-  currentImage='';reader.focus({preventScroll:true});renderLine();
+  currentImage='';reader.focus({preventScroll:true});renderLine();if(state.activeInteraction)openInteraction(state.activeInteraction.id);
 }
 let currentImage='';
 function setBackground(name){
@@ -127,6 +136,9 @@ function renderLine(){
   $('#dialogue').classList.toggle('inner-voice',line.speakerEn==='Inner voice');
   $('#dialogue-measure').textContent=line.en;
   $('#dialogue').scrollTop=0;
+  const moment=interactionAt(chapter.id,line.id),record=moment&&state.interactions[moment.id];
+  $('#replay-interaction').hidden=!record;$('#replay-interaction').textContent=record?.status==='active'?'Resume this moment ↗':'Replay this moment ↗';
+  $('#replay-interaction').onclick=()=>{finishTyping();openInteraction(moment.id,record.status!=='active')};
   if(reduced){finishTyping();return;}
   let count=0;typing=true;showText(line,0);$('#dialogue').setAttribute('aria-busy','true');
   typeTimer=setInterval(()=>{count+=4;showText(line,Math.min(count/line.en.length,1));if(count>=line.en.length)finishTyping()},28);
@@ -134,6 +146,8 @@ function renderLine(){
 function nextLine(){
   if(state.mode!=='reading')return;
   if(typing){finishTyping();return;}
+  const pending=pendingInteraction(state,chapters[state.chapter].id,chapters[state.chapter].lines[state.line].id);
+  if(pending){openInteraction(pending.id);return;}
   state=transition(state,{type:'NEXT'});save();
   if(state.mode==='end'){
     $('#reading-deck').hidden=true;$('#chapter-end').hidden=false;
@@ -142,7 +156,20 @@ function nextLine(){
     $('#end-map').focus({preventScroll:true});
   }else renderLine();
 }
+function openInteraction(id,replay=false){
+  clearInterval(typeTimer);typing=false;dispatch({type:'INTERACTION_OPEN',id,replay});
+  if(state.mode!=='interaction')return;
+  map?.clearWalkKeys();$('#reading-deck').hidden=true;eventView.render();
+}
+function finishInteraction(id,options){
+  const before=state;dispatch({type:'INTERACTION_FINISH',id,...options});if(state===before)return;
+  eventView.close();renderLine();reader.focus({preventScroll:true});
+}
+function suspendInteraction(){
+  dispatch({type:'INTERACTION_SUSPEND'});eventView.close();renderLine();finishTyping();$('#replay-interaction').focus();
+}
 function returnToMap(){
+  eventView.close();
   clearInterval(typeTimer);typing=false;state=transition(state,{type:'MAP'});selected=state.chapter;
   renderMap();$('#start-story').focus({preventScroll:true});
 }
@@ -162,7 +189,7 @@ $('#dialogue').onpointerdown=()=>{if(typing)finishTyping()};
 $('#back-map').onclick=returnToMap;$('#end-map').onclick=returnToMap;
 $('#history-open').onclick=()=>{
   const content=$('#history-content');content.replaceChildren();
-  chapters[state.chapter].lines.slice(0,state.line+1).forEach(line=>{
+  chapters[state.chapter].lines.slice(0,Math.max(state.line,state.readThrough[state.chapter])+1).forEach(line=>{
     const section=document.createElement('section'),name=document.createElement('small'),english=document.createElement('p');
     name.textContent=speakerName(line);
     english.textContent=line.en;english.lang='en';
