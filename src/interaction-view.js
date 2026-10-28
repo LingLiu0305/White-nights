@@ -63,7 +63,7 @@ export function createInteractionView({dialog,getState,dispatch,onFinish,onSuspe
   }
   if(current.kind==='accept'||current.kind==='turn'){
    $('#event-hint').textContent=current.hint;
-   $('#event-action').textContent=current.kind==='accept'?'Take the letter':'Look toward the footsteps';
+   if(current.kind==='accept')$('#event-action').innerHTML='<span class="envelope-flap" aria-hidden="true"></span><span class="wax-seal" aria-hidden="true">N</span><span class="envelope-caption">Take the letter</span>';else $('#event-action').textContent='Look toward the footsteps';
    $('#event-action').className=current.kind==='accept'?'envelope-button':'attention-button';
    $('#event-figure').hidden=current.kind!=='turn';$('#event-figure').disabled=current.kind==='turn'&&a.phase==='looked';
    $('#event-action').hidden=current.kind==='turn'&&a.phase==='looked';

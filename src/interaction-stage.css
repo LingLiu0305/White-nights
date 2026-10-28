@@ -59,17 +59,20 @@
 }
 /* A folded letter and warm, readable handwriting: the text remains real DOM. */
 #event-letter{width:min(780px,82vw);max-width:780px;margin:1vh auto 0}
-#open-letter.envelope-button{width:min(410px,72vw);height:250px;min-height:0;isolation:isolate;overflow:hidden;margin:9vh auto 40px;border:1px solid #ab8a64;background:#e9d4ae;box-shadow:0 16px 38px #25202e66;color:#55443d!important;transition:transform .4s,opacity .4s}
-#open-letter.envelope-button:before{z-index:0;background:linear-gradient(29deg,transparent 49.6%,#ba9c78 49.8%,#e5cfaa 50.3%,transparent 50.5%),linear-gradient(-29deg,transparent 49.6%,#ba9c78 49.8%,#e5cfaa 50.3%,transparent 50.5%);pointer-events:none}
+:is(#open-letter,#event-action.envelope-button){width:min(410px,72vw);height:250px;min-height:0;isolation:isolate;overflow:hidden;margin:9vh auto 40px;border:1px solid #ab8a64;background:#e9d4ae;box-shadow:0 16px 38px #25202e66;color:#55443d!important;transition:transform .4s,opacity .4s}
+:is(#open-letter,#event-action.envelope-button):before{z-index:0;background:linear-gradient(29deg,transparent 49.6%,#ba9c78 49.8%,#e5cfaa 50.3%,transparent 50.5%),linear-gradient(-29deg,transparent 49.6%,#ba9c78 49.8%,#e5cfaa 50.3%,transparent 50.5%);pointer-events:none}
 .envelope-flap{position:absolute;inset:0;z-index:1;background:#f1dfbc;clip-path:polygon(0 0,100% 0,50% 66%);border-top:1px solid #bea180;transform-origin:top center;transition:transform .5s ease}
 .wax-seal{position:absolute;z-index:2;left:50%;top:59%;transform:translate(-50%,-50%);width:43px;height:43px;display:grid;place-items:center;border-radius:50%;border:2px solid #a46754;background:#8a4f47;color:#e8c9ac;font-family:Georgia,serif;font-style:italic;box-shadow:0 2px 3px #58372e55}
 .envelope-caption{position:absolute;z-index:3;bottom:20px;left:50%;transform:translateX(-50%);white-space:nowrap;padding:6px 15px;color:#59433e;background:#f2e2c7d9;font-size:15px}
-#open-letter.is-opening{transform:translateY(-12px);opacity:.65}#open-letter.is-opening .envelope-flap{transform:rotateX(165deg)}#open-letter.is-opening .wax-seal{opacity:0}
+:is(#open-letter,#event-action).is-opening{transform:translateY(-12px);opacity:.65}:is(#open-letter,#event-action).is-opening .envelope-flap{transform:rotateX(165deg)}:is(#open-letter,#event-action).is-opening .wax-seal{opacity:0}
 #letter-paper{position:relative;max-height:min(62dvh,660px);overflow-y:auto;overscroll-behavior:contain;padding:38px clamp(34px,5vw,70px);background:#f3e7cd;color:#4f3936;border:1px solid #bda580;box-shadow:4px 10px 35px #29253555;scrollbar-color:#a68b6e #f3e7cd}
 #letter-paper:before{content:'';position:absolute;inset:9px;border:1px solid #c8ad8377;pointer-events:none}
 #letter-paper p{font-family:'Caveat',cursive;font-size:clamp(25px,2.5vw,34px);font-weight:500;line-height:1.45;letter-spacing:.01em;margin:0 0 18px}.letter-heading,.letter-signature{font-style:normal}.letter-signature{text-align:right}.letter-page{font:600 11px/1.4 var(--font-body)!important;color:#947e70;letter-spacing:.06em!important;text-transform:uppercase;text-align:right}
 #interaction-dialog[data-kind="turn"] .event-scene{transition:transform 1.2s ease;transform-origin:79% 62%}#interaction-dialog.attention-shift .event-scene{transform:scale(1.1)}#interaction-dialog[data-kind="turn"] .event-image{transform:none;transition:none}
 #event-figure{color:#55465b;opacity:.88;filter:drop-shadow(0 1px 2px #f3e3c4)}#event-figure:disabled{opacity:.88}#event-figure:focus-visible{outline:2px solid #ffe1a4;outline-offset:3px}
-@media(max-height:750px){#open-letter.envelope-button{height:185px;margin:3vh auto 20px}#letter-paper{max-height:55dvh;padding:24px 40px}#letter-paper p{font-size:26px;line-height:1.4}}
-@media(max-width:800px),(max-height:520px){#letter-paper{max-height:none}#open-letter.envelope-button{height:140px;margin:10px auto 20px}}
-@media(prefers-reduced-motion:reduce){#open-letter.envelope-button,#open-letter .envelope-flap,#interaction-dialog[data-kind="turn"] .event-scene{transition:none}}
+@media(max-height:750px){:is(#open-letter,#event-action.envelope-button){height:185px;margin:3vh auto 20px}#letter-paper{max-height:55dvh;padding:24px 40px}#letter-paper p{font-size:26px;line-height:1.4}}
+@media(max-width:800px),(max-height:520px){#letter-paper{max-height:none}:is(#open-letter,#event-action.envelope-button){height:140px;margin:10px auto 20px}}
+@media(prefers-reduced-motion:reduce){:is(#open-letter,#event-action.envelope-button),#open-letter .envelope-flap,#interaction-dialog[data-kind="turn"] .event-scene{transition:none}}
+
+/* Keep the letter available even when a reader previously chose dialogue. */
+#replay-interaction.letter-reopen{align-self:flex-start;color:#ffe7ae;font-size:14px;font-weight:700;min-height:36px;border-bottom:1px solid #dbc697;padding:0 2px}

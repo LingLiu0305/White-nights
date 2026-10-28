@@ -234,3 +234,8 @@ The author asked for portraits to clear Back/Next, a progressively darker city a
 The classroom Qwen API returned HTTP 502 twice when requested for a rainy room. An OpenAI image editing tool instead added rain to the existing room image; its prompt and source are recorded in the asset metadata. No credential is stored in the project. The design retains the earlier PC-only plan and fixed ending; previously deferred P3 branches remain deferred. Human trial is still pending.
 
 Verification: `npm test` passed 29 tests; `npm run test:e2e` passed 44 Chrome tests; `npm run build` passed with the pre-existing Three.js chunk-size warning. Screenshots of each chapter tint, the letter, footsteps and both portrait positions were inspected.
+
+
+## Envelope consistency and reopening (2026-10-28)
+
+The author spotted that the Second Night handoff still displayed the older plain envelope, and that an existing Morning save could show the letter as dialogue. The handoff now shares the wax-sealed visual design. When a reader has chosen the dialogue alternative, the letter paragraphs offer an explicit Open the letter control; closing the replay returns to the same paragraph without resetting progress. Added browser and save-restoration regression checks.

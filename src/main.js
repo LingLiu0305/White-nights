@@ -138,9 +138,10 @@ function renderLine(){
   $('#dialogue').classList.toggle('inner-voice',line.speakerEn==='Inner voice');
   $('#dialogue-measure').textContent=line.en;
   $('#dialogue').scrollTop=0;
-  const moment=interactionAt(chapter.id,line.id),record=moment&&state.interactions[moment.id];
-  $('#replay-interaction').hidden=!record;$('#replay-interaction').textContent=record?.status==='active'?'Resume this moment ↗':'Replay this moment ↗';
-  $('#replay-interaction').onclick=()=>{finishTyping();openInteraction(moment.id,record.status!=='active')};
+  const letterMoment=chapter.id==='morning'&&line.speakerEn==='Nastenka’s letter'?interactionById(line.id==='morning-p006'?'morning-letter-return':'morning-read-letter'):null;
+  const moment=interactionAt(chapter.id,line.id)||letterMoment,record=moment&&state.interactions[moment.id];
+  $('#replay-interaction').classList.toggle('letter-reopen',!!letterMoment);$('#replay-interaction').hidden=!record&&!letterMoment;$('#replay-interaction').textContent=letterMoment?'Open the letter ↗':record?.status==='active'?'Resume this moment ↗':'Replay this moment ↗';
+  $('#replay-interaction').onclick=()=>{finishTyping();openInteraction(moment.id,!!letterMoment||record?.status!=='active')};
   if(reduced){finishTyping();return;}
   let count=0;typing=true;showText(line,0);$('#dialogue').setAttribute('aria-busy','true');
   typeTimer=setInterval(()=>{count+=4;showText(line,Math.min(count/line.en.length,1));if(count>=line.en.length)finishTyping()},28);

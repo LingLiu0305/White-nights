@@ -66,3 +66,9 @@ test('a restored completed replay reopens and returns without advancing',()=>{
  s=transition(s,{type:'START',chapter:0});s=transition(s,{type:'ARRIVE'});s=transition(s,{type:'INTERACTION_OPEN',id:'n1-observe-city'});
  assert.equal(s.mode,'interaction');s=transition(s,{type:'INTERACTION_FINISH',id:'n1-observe-city'});assert.equal(s.line,0);
 });
+test('letter replay opened from a dialogue paragraph restores without moving the cursor',()=>{
+ let s=reading(4,2);s=transition(s,{type:'INTERACTION_OPEN',id:'morning-read-letter',replay:true});
+ assert.equal(s.mode,'interaction');s=createState(s);
+ s=transition(s,{type:'START',chapter:4});s=transition(s,{type:'ARRIVE'});s=transition(s,{type:'INTERACTION_OPEN',id:'morning-read-letter'});
+ assert.equal(s.mode,'interaction');s=transition(s,{type:'INTERACTION_FINISH',id:'morning-read-letter'});assert.equal(s.line,2);
+});

@@ -58,7 +58,7 @@ test('waiting is optional and does not reorder the next story beat',async({page}
 });
 test('take the letter once, then keep and replace a sentence',async({page})=>{
  await seed(page,1,38);await page.locator('#next-line').click();
- await expect(page.locator('#event-action')).toHaveText('Take the letter');
+ await expect(page.locator('#event-action .envelope-caption')).toHaveText('Take the letter');await expect(page.locator('#event-action .wax-seal')).toBeVisible();
  await page.locator('#event-action').evaluate(b=>{b.click();b.click()});
  await expect(page.locator('#line-count')).toHaveText('40 / 41');
  await page.locator('#next-line').click();await page.locator('#next-line').click();
@@ -193,4 +193,12 @@ test('letter opening animation can be interrupted and long text can scroll',asyn
  const scroll=await page.locator('#letter-paper').evaluate(el=>{el.scrollTop=el.scrollHeight;return {top:el.scrollTop,height:el.scrollHeight,client:el.clientHeight}});
  expect(scroll.height).toBeGreaterThan(scroll.client);expect(scroll.top).toBeGreaterThan(0);
  await page.locator('#event-continue').click();await expect(page.locator('#line-count')).toHaveText('02 / 15');
+});
+
+test('classic morning letter can be reopened from its text without losing position',async({page})=>{
+ await seed(page,4,1);await page.locator('#next-line').click();await page.locator('#event-dialogue').click();
+ await expect(page.locator('#line-count')).toHaveText('03 / 15');await page.locator('#replay-interaction').click();
+ await expect(page.locator('#open-letter .wax-seal')).toBeVisible();await page.locator('#open-letter').click();
+ await expect(page.locator('#letter-paper')).toBeVisible();await page.locator('#event-continue').click();
+ await expect(page.locator('#line-count')).toHaveText('03 / 15');
 });

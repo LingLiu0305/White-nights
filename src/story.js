@@ -38,7 +38,7 @@ export function createState(saved){
  }
  let activeInteraction=null;
  const a=saved?.activeInteraction,e=interactionById(a?.id);
- if(e&&e.chapterId===chapters[chapter].id&&e.anchor===chapters[chapter].lines[cursors[chapter]].id&&allowedPhase(e,a.phase)){
+ if(e&&e.chapterId===chapters[chapter].id&&(e.anchor===chapters[chapter].lines[cursors[chapter]].id||(a.replay&&e.kind==='letter'&&e.paragraphs.includes(chapters[chapter].lines[cursors[chapter]].id)))&&allowedPhase(e,a.phase)){
   activeInteraction={id:e.id,phase:a.phase,scrollRatio:Number.isFinite(a.scrollRatio)?Math.max(0,Math.min(1,a.scrollRatio)):0,replay:!!a.replay};
   records[e.id]??={status:'active',seen:[]};
  }
@@ -71,10 +71,10 @@ export function transition(state,event){
     cursors:state.cursors.map((v,i)=>i===state.chapter?0:v),cursorIds:state.cursorIds.map((v,i)=>i===state.chapter?chapters[i].lines[0].id:v)};
   }
   case 'INTERACTION_OPEN':{
-   const e=interactionById(event.id);if(state.mode!=='reading'||!e||e.chapterId!==chapters[state.chapter].id||e.anchor!==chapters[state.chapter].lines[state.line].id)return state;
+   const e=interactionById(event.id);if(state.mode!=='reading'||!e||e.chapterId!==chapters[state.chapter].id||(e.anchor!==chapters[state.chapter].lines[state.line].id&&!((event.replay||(state.activeInteraction?.id===e.id&&state.activeInteraction.replay))&&e.kind==='letter'&&e.paragraphs.includes(chapters[state.chapter].lines[state.line].id))))return state;
    const old=state.interactions[e.id],replay=!!event.replay||(state.activeInteraction?.id===e.id&&state.activeInteraction.replay);if(['completed','skipped'].includes(old?.status)&&!replay)return state;
    const active=state.activeInteraction?.id===e.id?state.activeInteraction:resumeRecord(e,old,!!replay);
-   return exposeLetter({...state,mode:'interaction',activeInteraction:active,interactions:{...state.interactions,[e.id]:{...old,status:active.replay?old.status:'active',phase:active.phase,scrollRatio:active.scrollRatio,seen:old?.seen||[]}}});
+   return exposeLetter({...state,mode:'interaction',activeInteraction:active,interactions:{...state.interactions,[e.id]:{...old,status:active.replay?(old?.status||'skipped'):'active',phase:active.phase,scrollRatio:active.scrollRatio,seen:old?.seen||[]}}});
   }
   case 'INTERACTION_PHASE':{
    const e=interactionById(state.activeInteraction?.id);if(state.mode!=='interaction'||e?.kind!=='letter'||event.phase!=='paper')return state;
