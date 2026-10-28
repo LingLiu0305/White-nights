@@ -34,14 +34,14 @@ export function createInteractionView({dialog,getState,dispatch,onFinish,onSuspe
   $('#event-title').textContent=current.title;$('#event-hint').textContent=current.hint||'Morning · A letter';
   const img=$('.event-image');img.hidden=false;$('.event-image-status').hidden=true;
   const src=asset(current.image||'morning-room.png');if(img.getAttribute('src')!==src)img.src=src;
-  $('#event-observe').hidden=current.kind!=='observe';$('#event-letter').hidden=current.kind!=='letter';
+  $('#event-observe').hidden=current.kind!=='observe';$('#event-choice').hidden=current.kind!=='choice';$('#event-letter').hidden=current.kind!=='letter';
   $('#event-action-stage').hidden=!['accept','turn'].includes(current.kind);
   $('#event-dialogue').hidden=current.kind!=='letter'||a.replay;
   $('#event-continue').textContent=a.replay?'Return to reading':current.kind==='letter'?(current.id==='morning-read-letter'?'Continue reading':'Fold the letter'):'Continue story';
   $('#event-continue').hidden=current.kind==='letter'&&a.phase==='envelope';
   dialog.classList.toggle('attention-shift',current.kind==='turn'&&a.phase==='looked');
   $('#event-action').hidden=false;$('#event-figure').hidden=current.kind!=='turn';$('#event-figure').disabled=current.kind==='turn'&&a.phase==='looked';
-  $('#event-skip').hidden=a.replay||current.kind==='letter';
+  $('#event-skip').hidden=a.replay||current.kind==='letter'||current.kind==='choice';
   const layer=$('.event-hotspots');layer.replaceChildren();$('.event-object-list').replaceChildren();
   if(current.kind==='observe'){
    $('#event-object-name').textContent='A moment to notice';$('#event-object-text').textContent='Choose a detail in the scene, or continue whenever you are ready.';
@@ -53,6 +53,13 @@ export function createInteractionView({dialog,getState,dispatch,onFinish,onSuspe
     const name=document.createElement('span');name.textContent=object.name;const small=document.createElement('small');small.textContent=state.interactions[current.id]?.seen.includes(object.id)?'Look again':'Observe';
     button.append(name,small);button.onclick=()=>selectObject(object);$('.event-object-list').append(button);
    }
+  }
+  if(current.kind==='choice'){
+   const chosen=state.interactions[current.id]?.choice;
+   const options=$('#choice-options');options.replaceChildren();
+   for(const choice of current.choices){const button=document.createElement('button');button.className='choice-option';button.textContent=choice.label;button.disabled=!!chosen||a.replay;button.setAttribute('aria-pressed',String(chosen===choice.id));button.onclick=()=>{dispatch({type:'INTERACTION_CHOICE',choice:choice.id});render();$('#event-continue').focus()};options.append(button)}
+   $('#choice-response').textContent=current.choices.find(c=>c.id===chosen)?.response||'You can choose a response, or continue listening.';
+   $('#event-continue').textContent=a.replay?'Return to reading':chosen?'Continue story':'Continue without choosing';
   }
   if(current.kind==='letter'){
    $('#open-letter').hidden=a.phase!=='envelope';$('#letter-paper').hidden=a.phase!=='paper';

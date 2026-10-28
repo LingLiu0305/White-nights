@@ -1,5 +1,8 @@
 // Stable paragraph anchors keep events attached to their story beats.
 export const interactions = [
+ {id:'n2-listen',addedVersion:2,chapterId:'night-2',anchor:'night-2-p018',resume:'night-2-p019',kind:'choice',title:'A story she is ready to share',hint:'Choose how to listen. The story and its ending remain the same.',image:'canal-night.png',choices:[
+  {id:'quiet',label:'Listen quietly',response:'I let the silence settle between us. She gathers her thoughts, and begins at the beginning.'},
+  {id:'ask',label:'Ask about her childhood',response:'“Where should your story begin?” I ask. “With my grandmother,” she says, and her voice softens.'}]},
  {id:'n2-take-letter',chapterId:'night-2',anchor:'night-2-p039',resume:'night-2-p040',kind:'accept',title:'A letter already written',hint:'She holds it out to you.',image:'canal-night.png'},
  {id:'n4-footsteps',chapterId:'night-4',anchor:'night-4-p029',resume:'night-4-p030',kind:'turn',title:'Footsteps',hint:'Someone is approaching.',image:'canal-night.png'},
  {id:'n1-observe-city',chapterId:'night-1',anchor:'night-1-p001',resume:'night-1-p002',kind:'observe',title:'A city of familiar strangers',hint:'Take a moment to look around.',image:'summer-street.png',objects:[

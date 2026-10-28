@@ -1,4 +1,5 @@
 import {chapters,locations} from './content.js';
+import {memories,memoryById} from './memories.js';
 import {validPlayer,WALK_START} from './walking.js';
 import {interactions,interactionById,unlockedMemories} from './interactions.js';
 export const SAVE_KEY='white-nights-progress-v1';
@@ -33,8 +34,8 @@ export function createState(saved){
  for(const e of interactions){
   const ci=chapters.findIndex(c=>c.id===e.chapterId);if(ci>completed+1)continue;
   const record=saved?.interactions?.[e.id];
-  if(record&&['active','completed','skipped'].includes(record.status))records[e.id]={status:record.status,phase:allowedPhase(e,record.phase)?record.phase:phaseFor(e),scrollRatio:Number.isFinite(record.scrollRatio)?Math.max(0,Math.min(1,record.scrollRatio)):0,seen:Array.isArray(record.seen)?[...new Set(record.seen.filter(id=>e.objects?.some(o=>o.id===id)))]:[]};
-  else if(saved&&!saved.interactionSchemaVersion&&(ci<=completed||indexOf(ci,e.anchor)<cursors[ci]))records[e.id]={status:'skipped',seen:[]};
+  if(record&&['active','completed','skipped'].includes(record.status))records[e.id]={status:record.status,choice:e.choices?.some(c=>c.id===record.choice)?record.choice:null,phase:allowedPhase(e,record.phase)?record.phase:phaseFor(e),scrollRatio:Number.isFinite(record.scrollRatio)?Math.max(0,Math.min(1,record.scrollRatio)):0,seen:Array.isArray(record.seen)?[...new Set(record.seen.filter(id=>e.objects?.some(o=>o.id===id)))]:[]};
+  else if(saved&&(!saved.interactionSchemaVersion||(e.addedVersion&&(!saved.interactionSchemaVersion||saved.interactionSchemaVersion<e.addedVersion)))&&(ci<=completed||indexOf(ci,e.anchor)<cursors[ci]))records[e.id]={status:'skipped',seen:[]};
  }
  let activeInteraction=null;
  const a=saved?.activeInteraction,e=interactionById(a?.id);
@@ -42,13 +43,14 @@ export function createState(saved){
   activeInteraction={id:e.id,phase:a.phase,scrollRatio:Number.isFinite(a.scrollRatio)?Math.max(0,Math.min(1,a.scrollRatio)):0,replay:!!a.replay};
   records[e.id]??={status:'active',seen:[]};
  }
- const keptLines={},placeMemorySeen={};
+ const keptLines={},placeMemorySeen={},memoryState={};
+ for(const m of memories){const ci=chapters.findIndex(c=>c.id===m.chapterId),at=indexOf(ci,m.anchor),stored=saved?.memories?.[m.id];if(ci<=completed+1&&readThrough[ci]>=at&&Array.isArray(stored))memoryState[m.id]=[...new Set(stored.filter(id=>m.objects.some(o=>o.id===id)))];}
  for(let i=0;i<=completed;i++){const id=saved?.keptLines?.[chapters[i].id];if(indexOf(i,id)>=0)keptLines[chapters[i].id]=id;}
  for(const place of locations){const version=saved?.placeMemorySeen?.[place.id];if(integerIn(version,-1,completed))placeMemorySeen[place.id]=version;}
  return {chapter,line:cursors[chapter],cursors,cursorIds:chapters.map((c,i)=>c.lines[cursors[i]].id),completed,mode:'map',textRevision:TEXT_REVISION,
   introSeen:typeof saved?.introSeen==='boolean'?saved.introSeen:!!saved,introVersion:1,
   mapPlayer:validPlayer(saved?.mapPlayer)?{x:saved.mapPlayer.x,z:saved.mapPlayer.z,facing:saved.mapPlayer.facing}:{x:WALK_START[0],z:WALK_START[1],facing:0},
-  interactionSchemaVersion:1,interactions:records,activeInteraction,readThrough,placeMemorySeen,keptLines};
+  interactionSchemaVersion:2,interactions:records,activeInteraction,readThrough,placeMemorySeen,keptLines,memories:memoryState};
 }
 export function transition(state,event){
  switch(event.type){
@@ -82,6 +84,14 @@ export function transition(state,event){
   }
   case 'INTERACTION_LOOK':return state.mode==='interaction'&&interactionById(state.activeInteraction?.id)?.kind==='turn'?updateActive(state,{phase:'looked'}):state;
   case 'INTERACTION_SCROLL':return state.mode==='interaction'&&Number.isFinite(event.ratio)?updateActive(state,{scrollRatio:Math.max(0,Math.min(1,event.ratio))}):state;
+  case 'INTERACTION_CHOICE':{
+   const id=state.activeInteraction?.id,e=interactionById(id);if(state.mode!=='interaction'||e?.kind!=='choice'||!e.choices.some(c=>c.id===event.choice)||state.activeInteraction.replay)return state;
+   return {...state,interactions:{...state.interactions,[id]:{...state.interactions[id],choice:event.choice}}};
+  }
+  case 'MEMORY_SEEN':{
+   const m=memoryById(event.id),ci=chapters.findIndex(c=>c.id===m?.chapterId);if(!['reading','end'].includes(state.mode)||!m||ci!==state.chapter||state.readThrough[ci]<indexOf(ci,m.anchor)||(event.object&&!m.objects.some(o=>o.id===event.object)))return state;
+   return {...state,memories:{...state.memories,[m.id]:[...new Set([...(state.memories[m.id]||[]),...(event.object?[event.object]:[])])]}};
+  }
   case 'INTERACTION_OBJECT':{
    const id=state.activeInteraction?.id,e=interactionById(id);if(state.mode!=='interaction'||!e?.objects?.some(o=>o.id===event.object))return state;
    const old=state.interactions[id];return {...state,interactions:{...state.interactions,[id]:{...old,seen:[...new Set([...old.seen,event.object])]}}};

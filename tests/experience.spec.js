@@ -4,7 +4,7 @@ import {chapters} from '../src/content.js';
 async function skipMoment(page){
  if(await page.locator('#interaction-dialog').isVisible()){
   const classic=page.locator('#event-dialogue');
-  await (await classic.isVisible()?classic:page.locator('#event-skip')).click();
+  const skip=page.locator('#event-skip');await (await classic.isVisible()?classic:await skip.isVisible()?skip:page.locator('#event-continue')).click();
  }
 }
 async function advance(page){await page.locator('#next-line').click();await skipMoment(page)}

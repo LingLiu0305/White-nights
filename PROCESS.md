@@ -239,3 +239,14 @@ Verification: `npm test` passed 29 tests; `npm run test:e2e` passed 44 Chrome te
 ## Envelope consistency and reopening (2026-10-28)
 
 The author spotted that the Second Night handoff still displayed the older plain envelope, and that an existing Morning save could show the letter as dialogue. The handoff now shares the wax-sealed visual design. When a reader has chosen the dialogue alternative, the letter paragraphs offer an explicit Open the letter control; closing the replay returns to the same paragraph without resetting progress. Added browser and save-restoration regression checks.
+
+
+## Second interaction iteration (2026-10-28)
+
+The author asked for a plan and direct implementation of stronger interaction while keeping the fixed ending. The plan is `docs/superpowers/plans/2026-10-28-second-interaction-iteration.md`. This iteration revisits two options previously deferred: a single response choice before Nastenka's story and optional explorations of her grandmother's room and the upstairs landing. Existing classroom-generated illustrations are reused; no image API was called.
+
+The two listening choices offer different immediate text and a no-choice continuation. They never change the story outcome. Both memory scenes provide named buttons as well as picture hotspots, and show only information available by the paragraph that opens them. A visited memory is available again in History. The existing story, letter and walking state remain compatible with old saves.
+
+Codex helped design the interactions, write the supplementary English text and code, inspect browser screenshots and run tests. The author still needs to arrange an independent human playtest and record what was observed; automated tests are not a substitute.
+
+Verification: 35 unit tests and 48 Chrome browser tests passed, including complete reading and interactive routes; the build passed with the existing Three.js size warning. Independent review identified two History-memory issues, which were fixed and retested.

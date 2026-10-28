@@ -107,6 +107,7 @@ test('complete interactive route preserves all five endings and keepsakes',async
    if(await page.locator('#chapter-end').isVisible())break;
    if(await page.locator('#interaction-dialog').isVisible()){
     if(await page.locator('#open-letter').isVisible())await page.locator('#open-letter').click();
+    else if(await page.locator('.choice-option').first().isVisible()&&await page.locator('.choice-option').first().isEnabled())await page.locator('.choice-option').first().click();
     else if(await page.locator('#event-action').isVisible())await page.locator('#event-action').click();
     else await page.locator('#event-continue').click();
    }else await page.locator('#next-line').click();
@@ -201,4 +202,30 @@ test('classic morning letter can be reopened from its text without losing positi
  await expect(page.locator('#open-letter .wax-seal')).toBeVisible();await page.locator('#open-letter').click();
  await expect(page.locator('#letter-paper')).toBeVisible();await page.locator('#event-continue').click();
  await expect(page.locator('#line-count')).toHaveText('03 / 15');
+});
+
+test('listening choices give distinct feedback and persist through refresh',async({page})=>{
+ await seed(page,1,17);await page.locator('#next-line').click();
+ await expect(page.locator('#event-title')).toHaveText('A story she is ready to share');
+ await page.screenshot({path:'docs/screenshots/listening-choice.png'});
+ await page.getByRole('button',{name:'Ask about her childhood'}).click();await expect(page.locator('#choice-response')).toContainText('grandmother');
+ await page.reload();await page.locator('#start-story').click();await expect(page.locator('#choice-response')).toContainText('grandmother');
+ await page.locator('#event-continue').click();await expect(page.locator('#line-count')).toHaveText('19 / 41');
+ await page.locator('#history-open').click();await expect(page.locator('#history-content')).toContainText('Where should your story begin?');
+});
+test('optional memories return to the same paragraph and can be revisited from History',async({page})=>{
+ await seed(page,1,18);await expect(page.locator('#memory-open')).toBeVisible();await page.locator('#memory-open').click();
+ await expect(page.locator('#memory-title')).toHaveText('The house with three windows');
+ await page.locator('#memory-objects button').first().focus();await page.keyboard.press('Enter');
+ await expect(page.locator('#memory-response')).toContainText('Three windows');await page.screenshot({path:'docs/screenshots/her-memory-room.png'});
+ await page.locator('#memory-close').click();await expect(page.locator('#line-count')).toHaveText('19 / 41');await expect(page.locator('#memory-open')).toBeFocused();
+ await page.reload();await page.locator('#start-story').click();await page.locator('#history-open').click();
+ await page.getByRole('button',{name:'Revisit her memory ↗'}).click();await expect(page.locator('#memory-objects button').first()).toContainText('Look again');
+ await page.locator('#memory-close').click();await expect(page.locator('#history-dialog')).toBeVisible();await expect(page.getByRole('button',{name:'Revisit her memory ↗'})).toBeFocused();
+});
+test('upstairs memory has no spoiler and works if its image fails',async({page})=>{
+ await page.route('**/memory-upstairs-door.png',route=>route.abort());await seed(page,1,26);await page.locator('#memory-open').click();
+ await expect(page.locator('#memory-image-status')).toBeVisible();await page.locator('#memory-objects button').first().click();
+ await expect(page.locator('#memory-response')).toContainText('bundle');await page.locator('#memory-close').click();
+ await expect(page.locator('#line-count')).toHaveText('27 / 41');await page.locator('#next-line').click();await expect(page.locator('#line-count')).toHaveText('28 / 41');
 });

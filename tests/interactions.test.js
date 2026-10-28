@@ -72,3 +72,28 @@ test('letter replay opened from a dialogue paragraph restores without moving the
  s=transition(s,{type:'START',chapter:4});s=transition(s,{type:'ARRIVE'});s=transition(s,{type:'INTERACTION_OPEN',id:'morning-read-letter'});
  assert.equal(s.mode,'interaction');s=transition(s,{type:'INTERACTION_FINISH',id:'morning-read-letter'});assert.equal(s.line,2);
 });
+test('listening choice is optional, distinct and survives refresh without changing the story',()=>{
+ let s=reading(1,17);s=transition(s,{type:'INTERACTION_OPEN',id:'n2-listen'});
+ s=transition(s,{type:'INTERACTION_CHOICE',choice:'ask'});assert.equal(s.interactions['n2-listen'].choice,'ask');
+ s=createState(s);s=transition(s,{type:'START',chapter:1});s=transition(s,{type:'ARRIVE'});s=transition(s,{type:'INTERACTION_OPEN',id:'n2-listen'});
+ assert.equal(s.interactions['n2-listen'].choice,'ask');s=transition(s,{type:'INTERACTION_FINISH',id:'n2-listen'});assert.equal(s.line,18);
+});
+test('new choice does not interrupt old completed or past-anchor saves',()=>{
+ const s=createState({textRevision:2,interactionSchemaVersion:1,completed:1,chapter:1,cursors:[0,25,0,0,0]});
+ assert.equal(s.interactions['n2-listen'].status,'skipped');
+});
+test('memory observations save only valid, already reached objects',()=>{
+ let s=reading(1,18);s=transition(s,{type:'MEMORY_SEEN',id:'grandmother',object:'chair'});
+ assert.deepEqual(s.memories.grandmother,['chair']);s=transition(s,{type:'MEMORY_SEEN',id:'upstairs',object:'bundle'});
+ assert.equal(s.memories.upstairs,undefined);assert.deepEqual(createState(s).memories.grandmother,['chair']);
+});
+test('listening can be skipped and cannot be completed twice',()=>{
+ let s=reading(1,17);s=transition(s,{type:'INTERACTION_OPEN',id:'n2-listen'});
+ s=transition(s,{type:'INTERACTION_FINISH',id:'n2-listen',skip:true});assert.equal(s.line,18);
+ assert.equal(transition(s,{type:'INTERACTION_FINISH',id:'n2-listen'}),s);
+});
+test('visited memories can record observations from chapter-end history',()=>{
+ let s=reading(1,18);s=transition(s,{type:'MEMORY_SEEN',id:'grandmother',object:'windows'});
+ s={...s,mode:'end'};s=transition(s,{type:'MEMORY_SEEN',id:'grandmother',object:'chair'});
+ assert.deepEqual(s.memories.grandmother,['windows','chair']);
+});

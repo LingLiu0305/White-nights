@@ -61,7 +61,7 @@
         </div>
         <figure class="speaker-portrait" id="portrait-right" hidden><img src="/assets/nastenka-portrait-stylized-v6.png" alt="" width="1024" height="1024"><figcaption><strong id="right-speaker-name">The young woman</strong></figcaption></figure>
         <div class="dialogue-bottom"><button id="previous-line" aria-label="Previous paragraph">← <span>Back</span></button><span class="reading-hint">Space to continue</span><button id="next-line" aria-label="Continue reading">Next <span class="next-arrow" aria-hidden="true">→</span></button></div>
-        <button id="replay-interaction" hidden>Replay this moment ↗</button><div class="reading-progress"><span id="reading-progress"></span></div>
+        <button id="memory-open" hidden>See her memory ↗</button><button id="replay-interaction" hidden>Replay this moment ↗</button><div class="reading-progress"><span id="reading-progress"></span></div>
       </div>
     </div>
     <section id="chapter-end" hidden><p id="end-label"></p><h2 id="end-title-en" lang="en"></h2><section id="keepsake-picker" aria-label="Keep a sentence"><h3>A sentence to keep</h3><p>Choose one, or leave this night as it is. You can change your choice later.</p><div id="keepsake-choices"></div><p id="keepsake-status" role="status"></p></section><button id="end-memories" hidden>Your memories ↗</button><button class="primary-button" id="end-map" aria-label="Return to map and continue">Return to the city <span aria-hidden="true">↗</span></button></section>
@@ -71,9 +71,16 @@
     <header class="event-header"><button id="event-map">← Map</button><div><p id="event-hint"></p><h2 id="event-title" tabindex="-1"></h2></div><button id="event-pause">Return to reading</button></header>
     <p class="event-image-status" role="status" hidden>The illustration could not load. You can still explore the descriptions.</p>
     <section id="event-observe"><nav class="event-object-list" aria-label="Details to observe"></nav><div class="event-response" aria-live="polite"><h3 id="event-object-name"></h3><p id="event-object-text"></p></div></section>
+    <section id="event-choice" hidden><div id="choice-options"></div><p id="choice-response" aria-live="polite"></p></section>
     <section id="event-letter"><button id="open-letter" class="envelope-button" aria-label="Open the letter"><span class="envelope-flap" aria-hidden="true"></span><span class="wax-seal" aria-hidden="true">N</span><span class="envelope-caption">Open the letter</span></button><article id="letter-paper" tabindex="0" aria-label="Letter from Nastenka" hidden><p class="letter-heading">My dear friend,</p><p class="letter-page" aria-label="Letter section"></p><div id="letter-body"></div><p class="letter-signature">Nastenka</p></article></section>
     <section id="event-action-stage" hidden><button id="event-action"></button></section>
     <footer class="event-footer"><button id="event-dialogue" hidden>Read as dialogue</button><button id="event-skip">Skip this moment</button><button id="event-continue" class="primary-button">Continue story</button></footer>
+  </dialog>
+  <dialog id="memory-dialog" aria-labelledby="memory-title">
+    <div class="memory-scene"><img id="memory-image" alt=""><div id="memory-hotspots"></div></div>
+    <header class="memory-header"><span>Her memory</span><h2 id="memory-title" tabindex="-1"></h2><button id="memory-close">Return to the riverbank ↗</button></header>
+    <p id="memory-image-status" role="status" hidden>The illustration is unavailable. You can still explore the details below.</p>
+    <nav id="memory-objects" aria-label="Things to explore"></nav><section id="memory-response" aria-live="polite"><h3>A moment from her past</h3><p>Choose a detail to look closer, or return to her story.</p></section>
   </dialog>
   <dialog id="location-dialog" aria-label="Place introduction"><button class="close-dialog" aria-label="Close introduction">×</button><h2 id="place-en" lang="en"></h2><p id="place-description-en" lang="en"></p><small id="place-note-en" lang="en"></small><details id="earlier-memories" hidden><summary>Earlier memories</summary><div id="place-memory-history"></div></details><button id="place-start" class="primary-button"></button></dialog>
   <dialog id="history-dialog" aria-label="Reading history"><button class="close-dialog" aria-label="Close history">×</button><h2>The words we keep.</h2><div id="history-content"></div></dialog>

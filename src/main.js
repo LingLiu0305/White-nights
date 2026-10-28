@@ -11,6 +11,8 @@ import {createState,transition,readSave,writeSave} from './story.js';
 import {createMap} from './map.js';
 import {interactionAt,pendingInteraction,interactionById,unlockedMemories,keepsakeCandidates} from './interactions.js';
 import {createInteractionView} from './interaction-view.js';
+import {memories,memoryAt} from './memories.js';
+import {createMemoryView} from './memory-view.js';
 import {Soundtrack} from './music.js';
 
 const $=s=>document.querySelector(s);
@@ -21,6 +23,8 @@ let state=createState(saved),selected=state.chapter,typing=false,typeTimer,toast
 let imageToken=0,placeRequest=0;
 const asset=name=>`${import.meta.env.BASE_URL}assets/${name}`;
 const mapView=$('#map-view'),reader=$('#reader');
+let memoryHistoryTrigger=null,memoryHistoryScroll=0;
+const memoryView=createMemoryView({dialog:$('#memory-dialog'),getState:()=>state,dispatch,onReturn:()=>{if(memoryHistoryTrigger){const trigger=memoryHistoryTrigger;memoryHistoryTrigger=null;showDialog($('#history-dialog'));$('#history-content').scrollTop=memoryHistoryScroll;trigger.focus({preventScroll:true})}else $('#memory-open').focus({preventScroll:true})}});
 const eventView=createInteractionView({dialog:$('#interaction-dialog'),getState:()=>state,dispatch,onFinish:finishInteraction,onSuspend:suspendInteraction,onMap:returnToMap});
 // A missing portrait must never hide the speaker's name or interrupt the story.
 document.querySelectorAll('.speaker-portrait img').forEach(img=>{
@@ -121,7 +125,7 @@ const speakerName=line=>line.speakerEn==='Inner voice'?'The Dreamer':line.speake
 function showText(line,fraction=1){
   $('#dialogue-en').textContent=line.en.slice(0,Math.ceil(line.en.length*fraction));
 }
-function finishTyping(){clearInterval(typeTimer);typing=false;showText(chapters[state.chapter].lines[state.line]);$('#dialogue').setAttribute('aria-busy','false');}
+function finishTyping(){clearInterval(typeTimer);typing=false;showText(chapters[state.chapter].lines[state.line]);$('#dialogue').setAttribute('aria-busy','false');$('#memory-open').disabled=false;}
 function renderLine(){
   clearInterval(typeTimer);const chapter=chapters[state.chapter],line=chapter.lines[state.line];
   setBackground(line.image||chapter.image);
@@ -138,6 +142,7 @@ function renderLine(){
   $('#dialogue').classList.toggle('inner-voice',line.speakerEn==='Inner voice');
   $('#dialogue-measure').textContent=line.en;
   $('#dialogue').scrollTop=0;
+  const memory=memoryAt(chapter.id,line.id);$('#memory-open').hidden=!memory;$('#memory-open').disabled=!!memory&&!reduced;$('#memory-open').onclick=()=>{if(memory){memoryHistoryTrigger=null;memoryView.open(memory.id)}};
   const letterMoment=chapter.id==='morning'&&line.speakerEn==='Nastenka’s letter'?interactionById(line.id==='morning-p006'?'morning-letter-return':'morning-read-letter'):null;
   const moment=interactionAt(chapter.id,line.id)||letterMoment,record=moment&&state.interactions[moment.id];
   $('#replay-interaction').classList.toggle('letter-reopen',!!letterMoment);$('#replay-interaction').hidden=!record&&!letterMoment;$('#replay-interaction').textContent=letterMoment?'Open the letter ↗':record?.status==='active'?'Resume this moment ↗':'Replay this moment ↗';
@@ -199,7 +204,12 @@ $('#history-open').onclick=()=>{
     name.textContent=speakerName(line);
     english.textContent=line.en;english.lang='en';
     if(line.speakerEn!=='Narration')section.append(name);
-    section.append(english);content.append(section);
+    section.append(english);
+    const memory=memoryAt(chapters[state.chapter].id,line.id);
+    if(memory&&Object.hasOwn(state.memories,memory.id)){const button=document.createElement('button');button.className='history-memory';button.textContent='Revisit her memory ↗';button.onclick=()=>{memoryHistoryTrigger=button;memoryHistoryScroll=content.scrollTop;$('#history-dialog').close();memoryView.open(memory.id)};section.append(button)}
+    const response=interactionAt(chapters[state.chapter].id,line.id);const choice=state.interactions[response?.id]?.choice;
+    if(response?.kind==='choice'&&choice){const paragraph=document.createElement('p');paragraph.className='history-response';paragraph.textContent=response.choices.find(c=>c.id===choice)?.response||'';section.append(paragraph)}
+    content.append(section);
   });
   showDialog($('#history-dialog'));content.scrollTop=content.scrollHeight;
 };

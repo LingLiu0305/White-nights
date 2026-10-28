@@ -26,6 +26,7 @@ This iteration targets desktop keyboard and mouse. First-time readers see an Eng
 
 - **Walk and meet:** click the canvas to give it keyboard focus. Use arrows (not WASD), Enter to inspect a nearby place, then confirm the chapter entry. Proximity only highlights; it never starts reading automatically. Begin/Continue also offers an automatic journey and Skip transition.
 - **Notice the city:** after the opening paragraph, inspect a window, a house and a moving cart in any order. The object list is keyboard accessible. Continue or skip whenever you wish.
+- **Listen and explore memories:** during Second Night, choose how the dreamer responds before Nastenka tells her story, or continue without choosing. At the relevant paragraphs, `See her memory` opens a scene with optional objects; close it to return to the same line. Visited memories can also be reopened from History. These choices do not change the ending.
 - **Accept the letter:** near the end of Second Night, take the sealed envelope or skip the gesture. Delivery remains part of the next chapter’s existing narration.
 - **Wait:** Third Night offers the bridge, water and street as optional observations. There is no timer or correct choice.
 - **Turn toward footsteps:** Fourth Night offers a distant figure or a text button. Looking gently reframes the scene; Continue returns to the fixed story.
@@ -80,6 +81,7 @@ Automated checks and AI reviews do not replace the assignment’s independent hu
 | `src/story-text.js`, `src/content.js` | English prose, speaker names, chapter metadata and locations |
 | `src/story.js`, `src/main.js` | Validated saves, progress state, focus and interface behavior |
 | `src/interactions.js`, `src/interaction-view.js`, `src/interaction-stage.css` | Stable event anchors, optional scene interfaces and PC layouts |
+| `src/memories.js`, `src/memory-view.js` | Optional memory scenes and keyboard-accessible observation |
 | `src/map.js`, `src/walking.js`, `src/scene-art.js` | City geometry, walkable route, miniature character, materials, camera and picking |
 | `src/style.css`, `src/home.css`, `index.html` | Reading and city layouts |
 | `src/music.js` | Original melody and bass synthesized with Web Audio |
