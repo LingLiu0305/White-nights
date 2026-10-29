@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#b9b6cc">
+  <meta name="description" content="Four nights in Petersburg. An illustrated journey through Dostoevsky’s White Nights.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%233e5753'/%3E%3Ctext x='32' y='45' font-size='44' text-anchor='middle' fill='%23f5eee0'%3EW%3C/text%3E%3C/svg%3E">
+  <title>White Nights</title>
+</head>
+<body>
+  <div id="map-view">
+    <header class="site-header">
+      <div class="brand-group"><span class="small-brand" aria-label="White Nights">WHITE<br>NIGHTS</span><button id="about-open" aria-label="About the story ↗">About ↗</button></div>
+      <button id="sound" aria-label="Play music" aria-pressed="false"><span id="sound-label">Sound off</span></button>
+    </header>
+    <main>
+      <section class="map-composition" aria-label="Petersburg story map">
+        <div class="scene-heading"><h1><span>WHITE</span><span>NIGHTS</span></h1><p>A story to walk through.</p></div>
+        <div class="map-stage" id="map-stage">
+          <div id="map-canvas"></div>
+          <div id="map-fallback" hidden><h2>The city is still here.</h2><p>3D is unavailable on this device.<br>Explore Places or begin the story below.</p></div>
+        </div>
+        <div class="journey-dock">
+          <div class="current-chapter"><span id="chapter-label">First Night</span><h2 id="chapter-title-en">Before we met</h2></div>
+          <button id="start-story" class="primary-button">Begin the story <span aria-hidden="true">↗</span></button>
+        </div>
+        <p id="walk-status" class="walk-status" role="status" aria-live="polite" hidden></p>
+      </section>
+      <footer class="map-footer">
+        <div class="map-actions"><button id="places-open" aria-label="Explore places">Places ↗</button><button id="reset-view" aria-label="Reset map view">Reset view ⟲</button><button id="memories-open" hidden>Your memories</button><button id="restart-story-home" aria-label="Restart the whole story">Restart story</button></div>
+        <nav class="chapter-section" aria-label="Chapters"><div id="chapter-list" class="chapter-list"></div></nav>
+        <p class="map-hint">Arrow keys to walk · Enter to explore · Drag to look around</p>
+      </footer>
+      <p id="save-status" class="save-status" role="status" hidden></p>
+    </main>
+  </div>
+  <dialog id="intro-dialog" aria-labelledby="intro-title">
+    <div class="intro-content"><p class="intro-credit">Inspired by <em>White Nights</em> by Fyodor Dostoevsky</p>
+    <h2 id="intro-title" tabindex="-1">WHITE<br>NIGHTS</h2>
+    <p>In Petersburg, the summer nights never quite turn dark.</p>
+    <p>A lonely dreamer walks familiar streets, until one meeting changes the meaning of them all.</p>
+    <p>Step into his world. Follow his footsteps through four nights and a morning, and discover what a brief encounter can leave behind.</p>
+    <small>Explore at your own pace. Your progress is saved on this device.</small>
+    <div class="intro-actions"><button id="intro-enter" class="primary-button">Enter the story ↗</button><button id="intro-skip">Skip introduction</button><button id="intro-sound" aria-label="Play introduction music">Sound off</button></div></div>
+  </dialog>
+  <dialog id="places-dialog" aria-label="Places"><button class="close-dialog" aria-label="Close places">×</button><h2>Along the way.</h2><div id="place-buttons"></div></dialog>
+  <section id="travel-overlay" hidden aria-label="Chapter transition"><div><span id="travel-roman"></span><p id="travel-title"></p><small id="travel-subtitle"></small></div><button id="skip-travel">Skip transition ↗</button></section>
+  <section id="reader" hidden tabindex="-1" aria-label="Story reader">
+    <div id="scene-backdrop"></div><div class="scene-vignette"></div>
+    <header class="reader-header">
+      <button id="back-map" class="reader-control" aria-label="Back to map">← <span>Map</span></button>
+      <div><span id="reader-chapter"></span><small id="reader-subtitle"></small></div>
+      <div class="reader-tools"><button id="reader-sound" class="reader-control" aria-label="Play reading music" aria-pressed="false">Sound</button><input id="music-volume" type="range" min="0" max="100" value="45" aria-label="Music volume"><button id="history-open" class="reader-control" aria-label="Reading history">History</button></div>
+    </header>
+    <div class="reading-deck" id="reading-deck">
+      <div class="dialogue-wrap" id="dialogue-wrap">
+        <figure class="speaker-portrait" id="portrait-left" hidden><img src="/assets/dreamer-portrait-stylized-v4.png" alt="" width="1024" height="1024"><figcaption><strong>The Dreamer</strong></figcaption></figure>
+        <div class="dialogue-column">
+          <div class="dialogue-meta"><div><span class="reading-scene" id="reading-scene"></span><span id="speaker"></span></div><span id="line-count"></span></div>
+          <div id="dialogue" aria-live="polite"><p id="dialogue-measure" lang="en" aria-hidden="true"></p><p id="dialogue-en" lang="en"></p></div>
+        </div>
+        <figure class="speaker-portrait" id="portrait-right" hidden><img src="/assets/nastenka-portrait-stylized-v6.png" alt="" width="1024" height="1024"><figcaption><strong id="right-speaker-name">The young woman</strong></figcaption></figure>
+        <div class="dialogue-bottom"><button id="previous-line" aria-label="Previous paragraph">← <span>Back</span></button><span class="reading-hint">Space to continue</span><button id="next-line" aria-label="Continue reading">Next <span class="next-arrow" aria-hidden="true">→</span></button></div>
+        <button id="memory-open" hidden>See her memory ↗</button><button id="replay-interaction" hidden>Replay this moment ↗</button><div class="reading-progress"><span id="reading-progress"></span></div>
+      </div>
+    </div>
+    <section id="chapter-end" hidden><p id="end-label"></p><h2 id="end-title-en" lang="en"></h2><section id="keepsake-picker" aria-label="Keep a sentence"><h3>A sentence to keep</h3><p>Choose one, or leave this night as it is. You can change your choice later.</p><div id="keepsake-choices"></div><p id="keepsake-status" role="status"></p></section><button id="end-memories" hidden>Your memories ↗</button><button class="primary-button" id="end-map" aria-label="Return to map and continue">Return to the city <span aria-hidden="true">↗</span></button></section>
+  </section>
+  <dialog id="interaction-dialog" aria-labelledby="event-title">
+    <div class="event-scene"><img class="event-image" alt=""><div class="event-hotspots"></div><button id="event-figure" aria-label="Look toward the distant figure" hidden><svg viewBox="0 0 40 100" aria-hidden="true"><circle cx="20" cy="10" r="7"/><path d="M13 19L27 19 33 64 25 65 27 96 20 96 18 66 15 96 8 96 12 63 6 63Z"/></svg></button></div>
+    <header class="event-header"><button id="event-map">← Map</button><div><p id="event-hint"></p><h2 id="event-title" tabindex="-1"></h2></div><button id="event-pause">Return to reading</button></header>
+    <p class="event-image-status" role="status" hidden>The illustration could not load. You can still explore the descriptions.</p>
+    <section id="event-observe"><nav class="event-object-list" aria-label="Details to observe"></nav><div class="event-response" aria-live="polite"><h3 id="event-object-name"></h3><p id="event-object-text"></p></div></section>
+    <section id="event-choice" hidden><div id="choice-options"></div><p id="choice-response" aria-live="polite"></p></section>
+    <section id="event-letter"><button id="open-letter" class="envelope-button" aria-label="Open the letter"><span class="envelope-flap" aria-hidden="true"></span><span class="wax-seal" aria-hidden="true">N</span><span class="envelope-caption">Open the letter</span></button><article id="letter-paper" tabindex="0" aria-label="Letter from Nastenka" hidden><p class="letter-heading">My dear friend,</p><p class="letter-page" aria-label="Letter section"></p><div id="letter-body"></div><p class="letter-signature">Nastenka</p></article></section>
+    <section id="event-action-stage" hidden><button id="event-action"></button></section>
+    <footer class="event-footer"><button id="event-dialogue" hidden>Read as dialogue</button><button id="event-skip">Skip this moment</button><button id="event-continue" class="primary-button">Continue story</button></footer>
+  </dialog>
+  <dialog id="memory-dialog" aria-labelledby="memory-title">
+    <div class="memory-scene"><img id="memory-image" alt=""><div id="memory-hotspots"></div></div>
+    <header class="memory-header"><span>Her memory</span><h2 id="memory-title" tabindex="-1"></h2><button id="memory-close">Return to the riverbank ↗</button></header>
+    <p id="memory-image-status" role="status" hidden>The illustration is unavailable. You can still explore the details below.</p>
+    <nav id="memory-objects" aria-label="Things to explore"></nav><section id="memory-response" aria-live="polite"><h3>A moment from her past</h3><p>Choose a detail to look closer, or return to her story.</p></section>
+  </dialog>
+  <dialog id="location-dialog" aria-label="Place introduction"><button class="close-dialog" aria-label="Close introduction">×</button><h2 id="place-en" lang="en"></h2><p id="place-description-en" lang="en"></p><small id="place-note-en" lang="en"></small><details id="earlier-memories" hidden><summary>Earlier memories</summary><div id="place-memory-history"></div></details><button id="place-start" class="primary-button"></button></dialog>
+  <dialog id="history-dialog" aria-label="Reading history"><button class="close-dialog" aria-label="Close history">×</button><h2>The words we keep.</h2><div id="history-content"></div></dialog>
+  <dialog id="about-dialog" aria-label="About White Nights"><button class="close-dialog" aria-label="Close about">×</button><h2>Four nights.<br>A lifetime of remembering.</h2><p>An interactive adaptation of Fyodor Dostoevsky’s <em>White Nights</em>. Explore Petersburg, follow a dreamer’s footsteps, and read at your own pace. Your progress is saved on this device.</p><p>The city is a literary map, not a historical reconstruction. The English text is an original abridged adaptation informed by Constance Garnett’s translation, with the original ending preserved.</p><small>Illustrations: classroom Qwen Image API and OpenAI image editing. City: procedural 3D.<br>Process, prompts and credits are documented in the repository.</small><button id="intro-replay" class="text-button">Watch the introduction again</button><button id="reset-progress" class="text-button" aria-label="Restart story">Start again ↗</button></dialog>
+  <dialog id="memories-dialog" aria-labelledby="memories-title"><button class="close-dialog" aria-label="Close memories">×</button><h2 id="memories-title">Your memories</h2><p id="memories-empty">You have not kept a sentence. The story is still yours.</p><div id="memories-content"></div></dialog>
+  <dialog id="reset-dialog" aria-label="Confirm restart"><h2>Walk these nights again?</h2><p>This clears your reading progress, interactions and saved memories on this browser.</p><div class="dialog-actions"><button class="close-dialog-inline">Keep my place</button><button id="confirm-reset" class="primary-button" aria-label="Confirm restart">Start again ↗</button></div></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <script type="module" src="/src/main.js"></script>
+</body></html>
