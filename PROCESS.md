@@ -250,3 +250,13 @@ The two listening choices offer different immediate text and a no-choice continu
 Codex helped design the interactions, write the supplementary English text and code, inspect browser screenshots and run tests. The author still needs to arrange an independent human playtest and record what was observed; automated tests are not a substitute.
 
 Verification: 35 unit tests and 48 Chrome browser tests passed, including complete reading and interactive routes; the build passed with the existing Three.js size warning. Independent review identified two History-memory issues, which were fixed and retested.
+
+## City and avatar detailing (2026-10-30)
+
+The author asked to refine the homepage models and align the walking Dreamer with his approved illustrated portrait. Codex added near-field architectural details, balcony ironwork, bridge ornament, stone paving, framed lanterns, slatted benches, an open rowing boat and layered tree crowns. Far buildings remain simpler, and the added static geometry uses the existing material batching. The existing riverbank and bridge navigation remains unchanged; street furniture now sits closer to the river edge, clear of the walking lane.
+
+The map avatar was rebuilt with swept brown hair, facial features, a grey-blue coat, brown waistcoat, cream collar and dark cravat. His limbs now articulate gently during manual and automatic walking, return to rest when stopped, and remain still with reduced motion. The portrait, story text and saved progress were retained. All new models are procedural Three.js geometry; no image API or third-party model asset was used. Visual comparisons and implementation notes are in `docs/design/2026-10-30-model-refinement.md`.
+
+AI assistance: Codex designed and implemented these model refinements, ran tests and inspected browser captures. The simpler distant buildings were deliberately retained to keep the scene readable and limit extra geometry. Human playtesting is still pending and must be arranged by the author.
+
+Verification: 37 unit tests and 48 Chrome browser tests passed on the final city-plus-avatar version. Production build passed with the existing Three.js chunk-size warning. Default/rotated city and front/rear avatar captures were inspected; chapter-tint screenshots were refreshed by the browser suite.

@@ -2,7 +2,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { locations, chapters } from './content.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
-import {paperTexture,drawnEdges,sky,batchArchitecture} from './scene-art.js';
+import {paperTexture,pavingTexture,drawnEdges,sky,batchArchitecture} from './scene-art.js';
+import {cityDetails} from './city-details.js';
+import {createDreamer} from './dreamer.js';
 import {WALK_START,WALK_PLACES,walkStep,nearbyPlace,routeOnPaving,pavingHeight,cameraDirection,validPlayer} from './walking.js';
 
 export function createMap(container,{onSelect,onNearby,onFail,onWalk,initialPlayer}) {
@@ -60,6 +62,8 @@ export function createMap(container,{onSelect,onNearby,onFail,onWalk,initialPlay
     return m;
   }
   const box=(w,h,d,color,parent,x=0,y=0,z=0,outline=false)=>mesh(new THREE.BoxGeometry(w,h,d),color,parent,x,y,z,outline);
+  const details=cityDetails({mesh,box});
+  const paving=new THREE.MeshToonMaterial({color:0xd9c7ce,gradientMap:tones,map:pavingTexture()});
   const world=new THREE.Group();scene.add(world);
   // Continuous banks reach past the view; there is no floating platform edge.
   for(const side of [-1,1])box(46,.2,160,0xc8bdce,world,side*25,-.24,-35);
@@ -67,7 +71,7 @@ export function createMap(container,{onSelect,onNearby,onFail,onWalk,initialPlay
   water.material=new THREE.MeshToonMaterial({color:0x8cbdc9,gradientMap:tones,map:waterPaper});
   for(const x of [-2.2,2.2]) {
     box(.35,.45,110,0xc8bacd,world,x,0,-40,true);
-    box(1.8,.13,110,0xd9c7ce,world,x+Math.sign(x)*.9,.02,-40);
+    box(1.8,.13,110,0xd9c7ce,world,x+Math.sign(x)*.9,.02,-40).material=paving;
     for(let z=-90;z<=15;z+=.85)box(.045,.48,.045,0x656078,world,x,.42,z);
     box(.055,.055,110,0x656078,world,x,.66,-40);
     box(.035,.035,110,0x82758d,world,x,.35,-40);
@@ -144,6 +148,7 @@ export function createMap(container,{onSelect,onNearby,onFail,onWalk,initialPlay
       mesh(new THREE.ExtrudeGeometry(pediment,{depth:.12,bevelEnabled:false}),0xf0e2cc,g,0,h+.1,d/2+.1,true);
       for(const side of [-1,1])box(.33,.07,.16,0xe6b9ba,g,side*.65,.5,d/2+.12);
     }
+    if(!simple)details.building(g,{w,d,h,variant,x,z,pink:options.pink});
     return g;
   }
   const palette=[0xe5c9b2,0xd6bcc7,0xe4d9be,0xc8bdd0,0xd5c6d8];
@@ -197,6 +202,20 @@ export function createMap(container,{onSelect,onNearby,onFail,onWalk,initialPlay
   mesh(new THREE.CylinderGeometry(.62,.72,.6,12),0xe1d4bb,pavilion,0,4.4,0,true);
   mesh(new THREE.SphereGeometry(.74,16,8,0,Math.PI*2,0,Math.PI/2),0x74948d,pavilion,0,4.7,0,true);
   mesh(new THREE.ConeGeometry(.13,1,8),0x827c68,pavilion,0,5.85,0);
+  // The little rotunda receives a cornice, drum windows and metal roof ribs.
+  mesh(new THREE.CylinderGeometry(.76,.76,.09,20),0xe9dfcb,pavilion,0,4.73,0,true);
+  for(let i=0;i<12;i++){
+    const angle=i*Math.PI/6;
+    const window=box(.14,.28,.035,0x788397,pavilion,Math.sin(angle)*.685,4.42,Math.cos(angle)*.685);
+    window.rotation.y=angle;
+    const points=[];
+    for(let j=1;j<12;j++){
+      const a=(j-1)/11*Math.PI/2,b=j/11*Math.PI/2;
+      for(const t of [a,b])points.push(Math.sin(t)*.747*Math.sin(angle),4.7+Math.cos(t)*.747,Math.sin(t)*.747*Math.cos(angle));
+    }
+    const rib=new THREE.BufferGeometry();rib.setAttribute('position',new THREE.Float32BufferAttribute(points,3));
+    pavilion.add(new THREE.LineSegments(rib,ink));
+  }
 
   function bridge(z) {
     const g=new THREE.Group();g.position.z=z;g.userData.location=z<0?'bridge':'canal';world.add(g);
@@ -210,25 +229,24 @@ export function createMap(container,{onSelect,onNearby,onFail,onWalk,initialPlay
       const points=[];for(let x=-3;x<=3.01;x+=.1)points.push(new THREE.Vector3(x,1.4+.4*(1-(x/3)**2),zz));
       g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(points),new THREE.LineBasicMaterial({color:0x575b64})));
     }
+    details.bridge(g);
   }
   bridge(1.3);bridge(-5.5);
   function tree(x,z,size=1) {
-    box(.13,1.3*size,.13,0x8a786b,world,x,.65*size,z);
-    mesh(new THREE.IcosahedronGeometry(.72*size,1),0x8a9f85,world,x,1.65*size,z,true);
-    mesh(new THREE.IcosahedronGeometry(.53*size,0),0xa7b098,world,x+.24,2.15*size,z);
+    mesh(new THREE.CylinderGeometry(.055,.10,1.5*size,7),0x8a786b,world,x,.75*size,z);
+    // Overlapping, asymmetric foliage masses keep a drawn silhouette while
+    // avoiding the single geometric ball used in the early city prototype.
+    const clusters=[[-.27,1.58,.05,.53],[.30,1.74,.06,.54],[.02,1.8,-.30,.52],[-.10,2.12,.02,.48],[.21,2.12,.18,.35]];
+    clusters.forEach(([dx,y,dz,r],i)=>{
+      const crown=mesh(new THREE.IcosahedronGeometry(r*size,1),[0x879583,0x98a58f,0x8e9d8b,0xa6b097,0xb0b79d][i],world,x+dx*size,y*size,z+dz*size);
+      crown.scale.set(1,.9,1);crown.rotation.y=i*.73;
+    });
   }
   [[-7,1],[-7,-1],[-7,-4],[-10.6,7.3],[7,1],[7,3],[7,5],[10.6,-7.3],[-10.5,-7],[-4,7.7],[4,7.7]].forEach(([x,z],i)=>tree(x,z,.75+(i%3)*.15));
-  for(const x of [-3.3,3.3])for(const z of [-7,-3,3,7]) {
-    box(.07,1.4,.07,0x62656a,world,x,.75,z);
-    mesh(new THREE.SphereGeometry(.16,8,6),0xffdda2,world,x,1.5,z);
-    mesh(new THREE.ConeGeometry(.23,.18,4),0x5e6968,world,x,1.72,z);
-  }
-  for(const z of [-.8,4.1]) {
-    box(.5,.08,1.1,0x9a7f6b,world,3.1,.35,z,true);
-    box(.07,.4,1.1,0x9a7f6b,world,3.3,.52,z,true);
-    for(const zz of [-.35,.35])box(.38,.3,.06,0x65666b,world,3.1,.17,z+zz);
-  }
-  const boat=mesh(new THREE.SphereGeometry(.45,12,6),0xc9ab8c,world,-.65,.02,4.8,true);boat.scale.set(.7,.25,2);
+  // Furniture remains on the coping side, outside the player's clear walking lane.
+  for(const x of [-2.4,2.4])for(const z of [-7,-3,3,7])details.lantern(world,x,z);
+  for(const z of [-.8,4.1])details.bench(world,2.36,z);
+  details.boat(world);
   // Location hit targets are intentionally generous, while labels remain keyboard-operable.
   const pins=[];
   for(const loc of locations) {
@@ -249,31 +267,8 @@ export function createMap(container,{onSelect,onNearby,onFail,onWalk,initialPlay
   const markerLight=new THREE.DirectionalLight(0xffe4bd,2);markerLight.position.set(-3,6,5);markerScene.add(markerLight);
   const halo=new THREE.Mesh(new THREE.RingGeometry(.32,.35,48),new THREE.MeshBasicMaterial({color:0xe5bc78,side:THREE.DoubleSide,transparent:true,opacity:.8}));
   halo.rotation.x=-Math.PI/2;halo.position.y=.035;marker.add(halo);
-  const person=new THREE.Group();person.rotation.y=.32;marker.add(person);
-  // Boots, trouser legs, a flared wool coat and contrasting lapels.
-  for(const side of [-1,1]){
-    box(.115,.10,.22,0x514859,person,side*.10,.085,.045,true);
-    mesh(new THREE.CylinderGeometry(.065,.055,.30,8),0x655f76,person,side*.10,.25,0,true);
-  }
-  const coatProfile=[[.22,.33],[.20,.43],[.16,.65],[.21,.83],[.14,.91]].map(([x,y])=>new THREE.Vector2(x,y));
-  mesh(new THREE.LatheGeometry(coatProfile,14),0x67718c,person,0,0,0,true);
-  box(.025,.47,.025,0x41495e,person,0,.58,.185);
-  for(const side of [-1,1]){
-    const sleeve=mesh(new THREE.CapsuleGeometry(.065,.30,4,8),0x67718c,person,side*.235,.66,0,true);sleeve.rotation.z=side*.15;
-    mesh(new THREE.SphereGeometry(.063,10,8),0xdfb794,person,side*.26,.44,.02);
-    const lapel=box(.075,.20,.035,0xa9a5b4,person,side*.07,.79,.165,true);lapel.rotation.z=side*-.26;
-  }
-  for(const y of [.49,.60,.71])mesh(new THREE.SphereGeometry(.018,6,6),0xdfc395,person,.045,y,.19);
-  mesh(new THREE.CylinderGeometry(.055,.065,.09,10),0xdfb794,person,0,.94,0);
-  const head=mesh(new THREE.SphereGeometry(.145,16,12),0xe3bfa0,person,0,1.08,0,true);head.scale.set(.86,1.1,.9);
-  mesh(new THREE.SphereGeometry(.15,16,10,0,Math.PI*2,0,Math.PI*.54),0x625262,person,0,1.105,-.012,true);
-  const fringe=mesh(new THREE.SphereGeometry(.08,10,8),0x625262,person,-.068,1.17,.055);fringe.scale.set(1,.65,.7);
-  for(const side of [-1,1]){
-    mesh(new THREE.SphereGeometry(.025,8,6),0xdfb794,person,side*.126,1.065,0);
-    mesh(new THREE.SphereGeometry(.011,6,6),0x514958,person,side*.047,1.09,.119);
-  }
-  mesh(new THREE.SphereGeometry(.022,8,6),0xd6a889,person,0,1.055,.133);
-  box(.07,.035,.075,0xebe0cd,person,0,.915,.06);
+  const {person,animate:animateDreamer}=createDreamer(tones);
+  person.rotation.y=.32;marker.add(person);
   let routeLine,journey=null,paused=false,selectedPlace=null,hoverPlace=null,nearbyId=null;
   let walkPosition=validPlayer(initialPlayer)?[initialPlayer.x,initialPlayer.z]:[...WALK_START],walking=false,lastFrame=performance.now(),lastWalkSave=0;
   const reportWalk=()=>onWalk?.({x:walkPosition[0],z:walkPosition[1],facing:person.rotation.y});
@@ -392,7 +387,7 @@ export function createMap(container,{onSelect,onNearby,onFail,onWalk,initialPlay
     }else if(!reduced&&!interacting&&!journey&&now-lastInteraction>3000){
       camera.position.x+=Math.sin(now*.00017)*.00025;camera.position.y+=Math.cos(now*.00023)*.00012;
     }
-    person.position.y=walking&&!reduced?Math.sin(now*.017)*.025:0;
+    animateDreamer(now,walking||Boolean(journey),reduced);
     if(!reduced){halo.scale.setScalar(1+Math.sin(now*.0012)*.07);waterPaper.offset.y=now*.000003;particles.position.y=Math.sin(now*.00013)*.2;particles.position.x=Math.sin(now*.00009)*.2;}
 
     scene.fog.color.lerp(fogTarget,.035);skyDome.material.color.lerp(skyTarget,.035);sunlight.color.lerp(lightTarget,.035);ambient.intensity+=(ambientTarget-ambient.intensity)*.035;sunlight.intensity+=(sunTarget-sunlight.intensity)*.035;
