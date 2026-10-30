@@ -24,6 +24,23 @@ export function paperTexture(water=false){
   return texture;
 }
 
+// A repeating stone pattern adds scale to the promenade without thousands of
+// individual paving meshes. Top-face box UVs run across width / along length.
+export function pavingTexture(){
+  const canvas=document.createElement('canvas');canvas.width=canvas.height=256;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#b9afbc';ctx.fillRect(0,0,256,256);
+  for(let row=0;row<8;row++)for(let col=-1;col<4;col++){
+    const x=col*86+(row%2)*43,y=row*32;
+    const tone=218+Math.round(Math.sin(row*17+col*11)*7);
+    ctx.fillStyle=`rgb(${tone},${tone-5},${tone+1})`;ctx.fillRect(x+1,y+1,84,30);
+    ctx.fillStyle='rgba(255,249,235,.22)';ctx.fillRect(x+2,y+2,82,1);
+  }
+  const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
+  texture.wrapS=texture.wrapT=THREE.RepeatWrapping;texture.repeat.set(1,55);
+  return texture;
+}
+
 export function drawnEdges(geometry){
   const edges=new THREE.EdgesGeometry(geometry,25),a=edges.attributes.position,points=[];
   const from=new THREE.Vector3(),to=new THREE.Vector3(),previous=new THREE.Vector3(),next=new THREE.Vector3();
