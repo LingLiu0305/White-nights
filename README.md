@@ -72,7 +72,7 @@ npm run test:e2e
 
 Browser tests use installed Google Chrome and start or reuse the local development server. They cover all five chapters, English-only content, walking and place proximity, restart confirmation, save restoration, touch use, portraits, small-screen layouts, actual audio output, failure feedback, camera transitions and interrupted dialogs. Legacy screenshots are written to ignored `test-results/`; PC interaction captures are in `docs/screenshots/pc-*.png`. New checks cover observation/letter recovery, replay, optional full-story traversal, keepsakes, image failure and PC layouts. The 200% layout check uses a 640×360 CSS viewport, equivalent to the layout space of 1280×720 at 200% zoom; browser toolbar zoom itself is not automated.
 
-Automated checks and AI reviews do not replace the assignment’s independent human trial. That trial remains to be completed in [PROCESS.md](PROCESS.md).
+The author reports two rounds of human playtesting: an early demo trial prompted a move beyond mainly click-to-advance reading, and a follow-up trial gave positive feedback on the added interactions. The observations, resulting design changes and limits of that feedback are recorded in [PROCESS.md](PROCESS.md#human-playtesting-and-interaction-iteration). Automated checks and AI reviews are separate from these human trials.
 
 ## Project structure
 
@@ -104,7 +104,7 @@ The classroom Easel / Qwen Image API may consume classroom credits. Add `--only 
 - The city and routes are literary interpretations, not historical reconstructions. Walking stays on the canal pavements and two bridges; other streets are scenery.
 - Portraits have fixed expressions; some scenes share illustrations.
 - Saves are local to the current browser. Storage failures show feedback without blocking reading.
-- This iteration targets PC. Phone performance, other browsers and an independent human trial remain unverified.
+- This iteration targets PC. Phone performance and other browsers remain unverified.
 - The Three.js build chunk produces a size warning; it does not prevent building.
 
 [Process](PROCESS.md) · [Credits](CREDITS.md) · [Repository](https://github.com/LingLiu0305/White-nights)

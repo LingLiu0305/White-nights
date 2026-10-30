@@ -2,7 +2,7 @@
 
 ## 项目状态
 
-2026-10-22：本地可运行的双语原型，第三轮按作者反馈改为英文主导界面与独立角色肖像，新增场景插图。设计、素材、代码和自动检查已进行；**另一位真人的独立试读尚未进行**，下方保留真实记录入口。本文由 AI 辅助整理，项目作者应在提交前核对是否准确反映自己的参与和决定。
+2026-10-30 更新：项目现为英文 PC 叙事体验。作者已补充两轮真人试玩记录：早期 Demo 试玩促使交互形式扩展，迭代后的试玩对新增交互给出了积极反馈，详见 [Human playtesting and interaction iteration](#human-playtesting-and-interaction-iteration)。下方开发条目保留各阶段的设计与验证历史；早期“未记录真人试玩”的说明不代表当前状态。本文由 AI 根据作者提供的经历辅助整理。
 
 ## 从想法到交互
 
@@ -47,24 +47,45 @@
 
 这些是开发检查，**不是作业要求的另一位真人试用**。
 
-## 真人试读：待完成
+## Human playtesting and interaction iteration
 
-请至少邀请一位其他人，在解释操作方式之前独立尝试。建议只说：“请试着读完第一夜，之后随意探索。”不需要记录姓名、照片或录音。
+*Recorded on 30 October 2026 from the project author's account. This is a retrospective summary of two rounds of human playtesting, separate from automated browser tests and AI reviews.*
 
-| 待填写内容 | 实际记录 |
-| --- | --- |
-| 日期、设备和浏览器 | 待试读 |
-| 对方首先尝试了什么 | 待观察 |
-| 在哪里停顿、误点或提出问题 | 待观察 |
-| 是否理解地点介绍、章节入口和继续阅读 | 待观察 |
-| 基于观察做出的修改，或保持设计的理由 | 待决定；注明相关提交 |
+### Round 1 — Trying the early demo
 
-特别观察双语文字是否清楚、地图移动能否表达进入章节、第四夜人物离开是否可理解。不要把预期问题写成已经发生的用户反馈。
+I asked someone else to try the early demo. At that stage, the core experience mainly involved clicking to continue reading and moving on to the next chapter. From this trial, I felt that the interaction was too simple: the player could follow the story, but had few ways to participate beyond advancing the text.
+
+I decided to broaden the ways the reader could interact while keeping the novel's fixed ending. The aim was to let players participate in the places and moments of the story, without requiring alternate endings or making exploration a barrier to reading.
+
+### Design response — Adding different kinds of participation
+
+I translated that finding into the following design changes in the revised experience.
+
+| Earlier experience | Added interaction | Intended contribution to the story |
+| --- | --- | --- |
+| Clicking a chapter entry to continue | Arrow-key walking to places, nearby highlighting and Enter to inspect | Let the player approach a meeting place and explore the city at their own pace |
+| Reading descriptions of the city and waiting | Optional observations of the opening scene, bridge, river and street | Give the reader moments to notice their surroundings between passages |
+| Reading that a letter was handed over or received | Taking an envelope, opening it and reading its paper | Make an important story object something the reader can handle |
+| Advancing through a change in attention | Looking toward footsteps in Fourth Night | Give the player a small action at the moment the characters' attention shifts |
+| Reading Nastenka's recollections as text alone | A listening response and optional illustrated memories | Offer another way to engage with her account without changing its outcome |
+| Finishing a chapter and immediately moving on | Keeping a memorable sentence and revisiting place memories | Let the reader retain something from the experience |
+
+These additions remain optional. Players can continue or skip an interaction, and the original ending is preserved. The implementation is documented in the PC narrative interaction and second interaction iteration entries below.
+
+### Round 2 — Trying the revised demo
+
+After the interaction changes, I had the updated demo tried again. The feedback was positive about the newly added interaction methods. This supported keeping the expanded interaction approach instead of returning to a mainly click-to-advance experience.
+
+My decision was to retain the new forms of participation and continue refining their presentation and clarity. The feedback was general rather than a feature-by-feature evaluation.
+
+### Record boundaries
+
+This account is based on the author’s retrospective report. Exact session dates, devices and whether instructions were given before play were not recorded in that report. Automated tests remain separate evidence for technical behaviour.
 
 ## 提交前仍需完成
 
-1. 完成并记录至少一次真人试读，落实一次改进或说明保留设计的理由。
-2. 作者核对中英文本及来源，选择是否继续扩充节选。
+1. 作者核对上述两轮试玩摘要，确保反馈、迭代原因和保留设计的决定与实际经历一致。
+2. 作者核对最终英文文本、作品来源与素材署名。
 3. 按 README 从新终端运行，确认素材、截图和文档齐全。
 4. 将确认后的版本推送到自己的公开仓库，在退出 GitHub 登录后检查仓库链接。
 5. 于 2026-11-01 23:59（香港时间）前在 Canvas 提交仓库 URL。
@@ -95,7 +116,7 @@
 4. **场景扩充。** 新增夏日街景用于开头的城市与居民迁居，新增雨中河岸用于第三夜回到当日的等待。保留室内和原来的河岸场景，共四张背景。正文仍为 152 段，段落编号不变，本轮不重置已有阅读进度。
 5. **保留与改变。** 保留作者提出的左右区分说话者；放弃上一版将人物置于画面中央的做法，并移除大块胶囊式章节面板。生成肖像采用固定表情，避免在未经过设计与验证的情况下加入表情切换。地图与正文的核心交互保持可解释、可重读。
 
-复查发现 568 × 320 手机横屏的正文高度会归零，先以失败测试重现，再添加短屏布局修复。手机竖屏还修正了自动网格布局把翻页按钮放到正文上方的问题。测试覆盖人物左右切换、图片确实加载、姓名不提前揭露、肖像缺失仍能显示姓名并继续阅读，以及上下区域不重叠。真人独立试读仍待完成，不把作者反馈、AI 审查或自动测试作为替代。
+复查发现 568 × 320 手机横屏的正文高度会归零，先以失败测试重现，再添加短屏布局修复。手机竖屏还修正了自动网格布局把翻页按钮放到正文上方的问题。测试覆盖人物左右切换、图片确实加载、姓名不提前揭露、肖像缺失仍能显示姓名并继续阅读，以及上下区域不重叠。本阶段条目未记录真人独立试玩；作者后来补充的两轮试玩见上文，不把作者自身的界面反馈、AI 审查或自动测试作为替代。
 
 第三轮最终验证：14 项单元测试、15 项浏览器测试全部通过；生产打包成功。构建中的两张肖像使用相对路径，字体许可随静态网站输出。已保存新版首页、左右对话、手机及小屏横屏截图。本轮只保存在本地分支，未推送或发布。
 
@@ -145,7 +166,7 @@ The author asked to move the miniature dreamer with the arrow keys before the ne
 - Added `Restart story` to the homepage, reusing the existing confirmation. Cancel preserves progress; confirm clears the saved story and returns to First Night. Raised the primary chapter button’s size and contrast, made its action visually distinct, increased desktop control text where space permits, and made the introductory line explain that this is a story to walk through.
 - Applied the taste audit to before and after browser renders. The meaningful findings were the sparse side edges, a hard-to-see start action, and temporary title/chapter overlap as the entrance ended. I filled the edges, made the action a clear button, and separated the title fade from the chapter controls. I did not add unrelated stock photography or a video to a one-screen 3D narrative.
 
-The author’s feedback drove these revisions. The assignment still requires a separate person to try the final experience; that trial has not been claimed here. No external service or new asset was used in this round.
+The author’s feedback drove these revisions. No separate human trial was documented in this entry; the author’s later account is recorded in the human-playtesting section above. No external service or new asset was used in this round.
 
 Final code review found two small interaction gaps: a chapter journey could have only one waypoint when the dreamer was already at its destination, and proximity highlighting could mask a place explicitly selected on touch. I made same-place journeys interpolate between two identical waypoints with a short transition, and gave explicit selection priority over proximity. Regression tests cover returning to a chapter from its destination with normal motion and keeping a tapped place highlighted after focus moves. Eighteen unit tests and the targeted browser checks passed; the production build succeeded with the existing Three.js size warning. The earlier full browser suite passed before these targeted fixes. Screenshots and the [taste review](docs/taste-review-2026-10-23.md) are committed with this iteration.
 
@@ -156,7 +177,7 @@ The author found that rotating the camera still exposed empty ground and asked f
 
 The first rotated previews showed foreground roofs hiding the canal. Revised the camera envelope to rise and pull back gradually toward the side-angle limits, and brought its target toward the two bridges. Distant windows share flat geometry with wider spacing; existing static batching is retained. The first cold software-WebGL preview took about 4.5 seconds including a deliberate one-second settling wait, so this is not a real-phone performance claim.
 
-Kept the taste review's emphasis on one clear river/bridge focus and subject-specific imagery. Rejected further identical detailed houses as the only solution, and used varied near facades plus simpler perimeter streets. No new image generation was needed. Captured default, left/right rotation limits, zoomed-out and mobile previews in `docs/screenshots/city-*.png`. The assignment's separate human trial remains pending.
+Kept the taste review's emphasis on one clear river/bridge focus and subject-specific imagery. Rejected further identical detailed houses as the only solution, and used varied near facades plus simpler perimeter streets. No new image generation was needed. Captured default, left/right rotation limits, zoomed-out and mobile previews in `docs/screenshots/city-*.png`. Human-trial results were not documented in this entry; see the later human-playtesting account above.
 
 References: [White Nights, opening passages](https://www.gutenberg.org/files/36034/36034-h/36034-h.htm), and [UNESCO: Saint Petersburg historic centre](https://whc.unesco.org/en/list/540/). The geometry remains a literary interpretation, not a historical reconstruction.
 
@@ -224,14 +245,14 @@ AI assistance: Codex implemented code and tests, wrote original supplementary ob
 
 Automated iteration found an Intro-close focus race, incomplete replay restoration and letter phase loss across chapter detours. These were corrected in focus/state handling rather than hidden with animation delays. The old browser tests now explicitly enter through Intro and choose Skip or Read as dialogue where they need to inspect every original paragraph. PC captures cover 1280×720, 1440×900, 1920×1080, 1024×768 and a 640×360 effective layout viewport for 200% zoom. This is a layout-space check, not a claim that Chrome’s toolbar zoom was automated.
 
-**Human trial: still pending, to be arranged by the author.** Automated browser playthroughs and AI review are not human-user observations. Please ask one person to play before explaining the controls, record hesitation or mistakes and one resulting design decision here. No tester identity or recording is needed.
+**Human playtesting:** the author subsequently supplied the two-round account recorded above. Automated browser playthroughs and AI reviews remain separate from those human observations.
 
 
 ## Rain, chapter lighting and the letter (2026-10-28)
 
 The author asked for portraits to clear Back/Next, a progressively darker city across the four nights and brighter morning, a rainy window, a completed footsteps moment and a period-style letter. The chapter palette now changes the 3D sky, fog and lighting together. Portraits move above the control row. The letter uses an animated folded envelope, wax seal, bundled Caveat handwriting and a scrollable paper; the two parts retain the intervening reaction, and the continuation no longer repeats the salutation. Footsteps offers a text alternative and a distant selectable silhouette, with a restrained camera move, a quiet synthesized footstep cue only when sound is enabled, and reduced-motion support.
 
-The classroom Qwen API returned HTTP 502 twice when requested for a rainy room. An OpenAI image editing tool instead added rain to the existing room image; its prompt and source are recorded in the asset metadata. No credential is stored in the project. The design retains the earlier PC-only plan and fixed ending; previously deferred P3 branches remain deferred. Human trial is still pending.
+The classroom Qwen API returned HTTP 502 twice when requested for a rainy room. An OpenAI image editing tool instead added rain to the existing room image; its prompt and source are recorded in the asset metadata. No credential is stored in the project. The design retains the earlier PC-only plan and fixed ending; previously deferred P3 branches remain deferred. The author’s later human-playtesting account is recorded above.
 
 Verification: `npm test` passed 29 tests; `npm run test:e2e` passed 44 Chrome tests; `npm run build` passed with the pre-existing Three.js chunk-size warning. Screenshots of each chapter tint, the letter, footsteps and both portrait positions were inspected.
 
@@ -247,7 +268,7 @@ The author asked for a plan and direct implementation of stronger interaction wh
 
 The two listening choices offer different immediate text and a no-choice continuation. They never change the story outcome. Both memory scenes provide named buttons as well as picture hotspots, and show only information available by the paragraph that opens them. A visited memory is available again in History. The existing story, letter and walking state remain compatible with old saves.
 
-Codex helped design the interactions, write the supplementary English text and code, inspect browser screenshots and run tests. The author still needs to arrange an independent human playtest and record what was observed; automated tests are not a substitute.
+Codex helped design the interactions, write the supplementary English text and code, inspect browser screenshots and run tests. The author’s two-round human-playtesting account is recorded above; automated tests are not a substitute for those observations.
 
 Verification: 35 unit tests and 48 Chrome browser tests passed, including complete reading and interactive routes; the build passed with the existing Three.js size warning. Independent review identified two History-memory issues, which were fixed and retested.
 
@@ -257,6 +278,6 @@ The author asked to refine the homepage models and align the walking Dreamer wit
 
 The map avatar was rebuilt with swept brown hair, facial features, a grey-blue coat, brown waistcoat, cream collar and dark cravat. His limbs now articulate gently during manual and automatic walking, return to rest when stopped, and remain still with reduced motion. The portrait, story text and saved progress were retained. All new models are procedural Three.js geometry; no image API or third-party model asset was used. Visual comparisons and implementation notes are in `docs/design/2026-10-30-model-refinement.md`.
 
-AI assistance: Codex designed and implemented these model refinements, ran tests and inspected browser captures. The simpler distant buildings were deliberately retained to keep the scene readable and limit extra geometry. Human playtesting is still pending and must be arranged by the author.
+AI assistance: Codex designed and implemented these model refinements, ran tests and inspected browser captures. The simpler distant buildings were deliberately retained to keep the scene readable and limit extra geometry. The author’s two-round human-playtesting account is recorded above; it does not claim that these later model refinements received a separate human trial.
 
 Verification: 37 unit tests and 48 Chrome browser tests passed on the final city-plus-avatar version. Production build passed with the existing Three.js chunk-size warning. Default/rotated city and front/rear avatar captures were inspected; chapter-tint screenshots were refreshed by the browser suite.
